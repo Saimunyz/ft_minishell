@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:09:41 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/12 16:44:10 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/12 18:39:13 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,7 @@ void	ft_check_command(char *line, int *all_len, int len)
 	int	tmp;
 
 	tmp = *all_len;
-	if (!ft_strncmp(line, "\e[C", len))
-	{
-		if (tmp < *all_len)
-			tmp++;
-		else
-			ft_is_int(len);
-	}
-	else if (!ft_strncmp(line, "\e[D", len))
-		tmp++;
-	else if (!ft_strncmp(line, "\e[B", len))
+	if (!ft_strncmp(line, "\e[B", len))
 		printf("next\n");
 	else if (!ft_strncmp(line, "\e[A", len))
 		printf("previous\n");
@@ -67,7 +58,6 @@ void	ft_read(char *line)
 	all_len = 0;
 	buff_size = BUFF_SIZE;
 	line = (char *)malloc(sizeof(char) * buff_size);
-	tgetent(0, TERM_NAME);
 	ft_check_errno(); // Не все стандарты меняют ерно на маллок, возможн просто exit(1)
 	while (1)
 	{
@@ -79,7 +69,7 @@ void	ft_read(char *line)
 		if (all_len > buff_size)
 			buff_size = ft_extend_buff(line, buff_size);
 	}
-	write(1, "\n", 1);
+	//write(1, "\n", 1);
 }
 
 void	ft_minishell(t_term *term)
@@ -87,10 +77,16 @@ void	ft_minishell(t_term *term)
 	char	*line;
 
 	line = NULL;
-	ft_read(line);
+	if (ft_get_term_info() != 0)
+		exit(1);
+	while (1)
+	{
+		write(1, "minishell$ ", 11);
+		ft_read(line);
+		ft_check_errno();
+		free(line);
+	}
 	ft_change_term_mode(term);
-	ft_check_errno();
-	free(line);
 }
 
 int	main(void)
