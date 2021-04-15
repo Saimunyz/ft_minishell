@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:09:41 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/15 13:09:30 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/15 16:52:24 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,49 +23,77 @@ static void	ft_init_term(t_term *term)
 	ft_check_errno();
 }
 
-static int	ft_extend_buff(char *line, int buff_size)
+static int	ft_extend_buff(char *str, int buff_size)
 {
-	buff_size += BUFF_SIZE;
 	if (buff_size > 2147483647)
 		buff_size = 2147483647;
-	line = ft_realloc(line, buff_size);
+	str = ft_realloc(str, buff_size);
 	ft_check_errno();
 	return (buff_size);
 }
 
-void	ft_check_command(char *line, int *all_len, int len)
+void	ft_write_char(char *character, char *line, int *left_right, int *len)
 {
-	if (!ft_strncmp(line, "\e[B", len))
+	int	ret;
+
+	ret = ft_strlen(character);
+	if (!ft_strncmp(character, "\e[B", ret))
 		printf("next\n");
-	else if (!ft_strncmp(line, "\e[A", len))
+	else if (!ft_strncmp(character, "\e[A", ret))
 		printf("previous\n");
+	else if (!ft_strncmp(character, "\e[C", ret))
+	{
+		if (*left_right < *len)
+		{
+			write(1, character, ret);
+			left_right++;
+		}
+	}
+	else if (!ft_strncmp(character, "\e[D", ret))
+	{
+		if (*left_right > 12)
+		{
+			write(1, character, ret);
+			left_right--;
+		}
+	}
 	else
 	{
-		write(1, line, len);
-		*all_len += len;
+		write(1, character, ret);
+		*len += ret;
+		*len = ft_extend_buff(line, *len);
+		ft_strlcat(line, character, *len);
 	}
 }
 
-void	ft_read(char *line)
+int	ft_read(char *line)
 {
 	int		buff_size;
 	int		len;
-	int		all_len;
+	int		ret;
+	char	*character;
+	int		left_right;
 
-	all_len = 0;
+	len = 0;
+	left_right = 12;
 	buff_size = BUFF_SIZE;
-	line = (char *)malloc(sizeof(char) * buff_size);
+	character = (char *)malloc(sizeof(char) * buff_size);
+	line = (char *)malloc(sizeof(char) * 1);
+	line[0] = '\0';
 	ft_check_errno(); // Не все стандарты меняют ерно на маллок, возможн просто exit(1)
-	len = read(0, line, buff_size);
-	while (ft_strncmp(line, "\n", len))
+	while (1)
 	{
-		len = read(0, line, buff_size);
+		ret = read(STDIN_FILENO, character, buff_size);
+		character[ret] = '\0';
 		ft_check_errno();
-		ft_check_command(line, &all_len, len);
-		if (all_len > buff_size)
-			buff_size = ft_extend_buff(line, buff_size);
+		ft_write_char(character, line, &left_right, &len);
+		if (ret > buff_size)
+			buff_size = ft_extend_buff(line, buff_size + BUFF_SIZE);
+		if (!ft_strncmp(character, "\n", ret))
+			break;
 	}
-	//write(1, "\n", 1);
+	free(character);
+	return (len);
 }
 
 void	ft_minishell(t_term *term)
@@ -79,6 +107,7 @@ void	ft_minishell(t_term *term)
 	{
 		write(STDOUT_FILENO, "minishell$ ", 11);
 		ft_read(line);
+		//ft_parse(line, ft_strlen(line));
 		ft_check_errno();
 		free(line);
 	}

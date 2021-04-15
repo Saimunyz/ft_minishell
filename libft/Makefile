@@ -6,7 +6,7 @@
 #    By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/29 14:04:27 by swagstaf          #+#    #+#              #
-#    Updated: 2021/04/10 19:39:41 by swagstaf         ###   ########.fr        #
+#    Updated: 2021/04/15 13:52:34 by swagstaf         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,6 +53,7 @@ FILES		=	ft_memset.c \
 				ft_itoa_base.c \
 				ft_strmapi.c \
 				ft_realloc.c \
+				ft_putchar.c \
 				ft_putchar_fd.c \
 				ft_putendl_fd.c \
 				ft_putnbr_fd.c \
