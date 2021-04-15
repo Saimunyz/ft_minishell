@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:09:41 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/12 18:39:13 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/15 13:09:30 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,6 @@ static int	ft_extend_buff(char *line, int buff_size)
 
 void	ft_check_command(char *line, int *all_len, int len)
 {
-	int	tmp;
-
-	tmp = *all_len;
 	if (!ft_strncmp(line, "\e[B", len))
 		printf("next\n");
 	else if (!ft_strncmp(line, "\e[A", len))
@@ -59,13 +56,12 @@ void	ft_read(char *line)
 	buff_size = BUFF_SIZE;
 	line = (char *)malloc(sizeof(char) * buff_size);
 	ft_check_errno(); // Не все стандарты меняют ерно на маллок, возможн просто exit(1)
-	while (1)
+	len = read(0, line, buff_size);
+	while (ft_strncmp(line, "\n", len))
 	{
 		len = read(0, line, buff_size);
 		ft_check_errno();
 		ft_check_command(line, &all_len, len);
-		if (!ft_strncmp(line, "\n", len))
-			break;
 		if (all_len > buff_size)
 			buff_size = ft_extend_buff(line, buff_size);
 	}
@@ -81,7 +77,7 @@ void	ft_minishell(t_term *term)
 		exit(1);
 	while (1)
 	{
-		write(1, "minishell$ ", 11);
+		write(STDOUT_FILENO, "minishell$ ", 11);
 		ft_read(line);
 		ft_check_errno();
 		free(line);

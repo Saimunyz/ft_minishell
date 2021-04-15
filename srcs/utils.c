@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 19:13:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/12 18:39:37 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/15 12:33:57 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ int	ft_get_term_info(void)
 	char	*term;
 	int		ret;
 
+	if (!isatty(STDIN_FILENO))
+		return (ft_print_error(GET_DATA_ERR));
 	term = getenv("TERM");
 	if (term == 0)
 		return (ft_print_error(GET_DATA_ERR));
