@@ -6,7 +6,7 @@
 #    By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/10 16:14:57 by swagstaf          #+#    #+#              #
-#    Updated: 2021/04/16 14:16:15 by swagstaf         ###   ########.fr        #
+#    Updated: 2021/04/16 16:01:31 by swagstaf         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,9 +21,11 @@ ALL_INC =	-I includes/ -I $(LIBFT)
 SRC_DIR =	srcs/
 
 CFILE =		minishell.c \
-			utils.c \
+			utils_1.c \
+			utils_2.c \
 			ft_parse.c \
 			ft_pwd.c \
+			ft_echo.c \
 
 LIB_F =		$(LIBFT)/*.c
 

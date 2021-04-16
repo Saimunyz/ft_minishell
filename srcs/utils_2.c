@@ -1,23 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/15 16:58:07 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/16 15:26:27 by swagstaf         ###   ########.fr       */
+/*   Created: 2021/04/16 15:05:58 by swagstaf          #+#    #+#             */
+/*   Updated: 2021/04/16 15:13:50 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_pwd(void)
+void	ft_term_action(char *action)
 {
-	char	*res;
+	char	buf[100];
+	char	*buffer;
 
-	res = getcwd(NULL, 0);
-	ft_check_errno();
-	printf("%s\n", res);
-	free(res);
+	buffer = buf;
+	tputs(tgetstr(action, &buffer), 1, ft_putchar);
+	buffer = buf;
+	ft_bzero(buffer, 100);
 }

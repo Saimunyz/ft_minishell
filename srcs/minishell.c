@@ -6,22 +6,11 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:09:41 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/16 14:19:12 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/16 15:55:08 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	ft_init_term(t_term *term)
-{
-	tcgetattr(0, &term->basic);
-	tcgetattr(0, &term->current);
-	ft_check_errno();
-	term->current.c_lflag &= ~(ECHO);
-	term->current.c_lflag &= ~(ICANON);
-	tcsetattr(0, TCSANOW, &term->current);
-	ft_check_errno();
-}
 
 static int	ft_add_new_char(char **str, char *newchar, int buff_size)
 {
@@ -40,8 +29,8 @@ static int	ft_add_new_char(char **str, char *newchar, int buff_size)
 
 int	ft_write_char(char *character, char **line)
 {
-	int	ret;
-	int	len;
+	int		ret;
+	int		len;
 
 	ret = ft_strlen(character);
 	len = ft_strlen(*line);
@@ -49,33 +38,31 @@ int	ft_write_char(char *character, char **line)
 		printf("next\n");
 	else if (!ft_strncmp(character, "\e[A", ret))
 		printf("previous\n");
-	else
+	else if (!ft_strncmp(character, "\x7f", ret))
+		ft_term_action("dc");
+	else if (ft_strncmp(character, "\n", ret))
 	{
-		write(1, character, ret);
 		len += ret;
 		len = ft_add_new_char(line, character, len);
 	}
+	write(1, character, ret);
 	return (len);
 }
 
 int	ft_read(char **line)
 {
-	int		buff_size;
 	int		len;
 	int		ret;
 	char	*character;
-	int		left_right;
 
 	len = 0;
-	left_right = 12;
-	buff_size = BUFF_SIZE;
-	character = (char *)malloc(sizeof(char) * buff_size);
-	*line = (char *)malloc(sizeof(char) * 1);
-	line[0][0] = '\0';
+	character = (char *)ft_calloc(BUFF_SIZE, sizeof(char));
+	*line = (char *)ft_calloc(1, sizeof(char));
 	ft_check_errno(); // Не все стандарты меняют ерно на маллок, возможн просто exit(1)
+	line[0][0] = '\0';
 	while (1)
 	{
-		ret = read(STDIN_FILENO, character, buff_size);
+		ret = read(STDIN_FILENO, character, BUFF_SIZE);
 		character[ret] = '\0';
 		ft_check_errno();
 		len = ft_write_char(character, line);

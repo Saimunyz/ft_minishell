@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/16 14:15:51 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/16 16:01:23 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,13 @@ typedef struct s_term
 	struct termios	basic;
 }				t_term;
 
+void	ft_init_term(t_term *term);
 void	ft_check_errno(void);
 void	ft_change_term_mode(t_term *term);
 int		ft_get_term_info(void);
 int		ft_parse(char *line, int len);
 void	ft_pwd(void);
+void	ft_term_action(char *action);
+void	ft_echo(char *str, int flag);
 
 #endif
