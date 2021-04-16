@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:09:41 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/16 15:55:08 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/16 16:54:34 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,17 @@ int	ft_write_char(char *character, char **line)
 
 	ret = ft_strlen(character);
 	len = ft_strlen(*line);
+	len += 12;
 	if (!ft_strncmp(character, "\e[B", ret))
 		printf("next\n");
 	else if (!ft_strncmp(character, "\e[A", ret))
 		printf("previous\n");
 	else if (!ft_strncmp(character, "\x7f", ret))
-		ft_term_action("dc");
+		ft_term_action("dc", &len, line);
+	else if (!ft_strncmp(character, "\e[D", ret))
+		return (len);
+	else if (!ft_strncmp(character, "\e[C", ret))
+		return (len);
 	else if (ft_strncmp(character, "\n", ret))
 	{
 		len += ret;

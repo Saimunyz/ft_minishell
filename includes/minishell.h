@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/16 16:01:23 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/16 16:40:58 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	ft_change_term_mode(t_term *term);
 int		ft_get_term_info(void);
 int		ft_parse(char *line, int len);
 void	ft_pwd(void);
-void	ft_term_action(char *action);
+void	ft_term_action(char *action, int *len, char **line);
 void	ft_echo(char *str, int flag);
 
 #endif
