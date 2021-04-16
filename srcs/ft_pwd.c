@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_realloc.c                                       :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/10 19:23:26 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/16 13:46:04 by swagstaf         ###   ########.fr       */
+/*   Created: 2021/04/15 16:58:07 by swagstaf          #+#    #+#             */
+/*   Updated: 2021/04/15 16:58:26 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-char	*ft_realloc(char *ptr, size_t newsize)
+void	ft_pwd(void)
 {
-	char	*newstr;
+	char	*res;
 
-	if (!ptr)
-		return (malloc(sizeof(char) * (newsize + 1)));
-	newstr = (char *)malloc(sizeof(char) * (newsize + 1));
-	ft_strlcat(newstr, ptr, newsize + 1);
-	free(ptr);
-	return (newstr);
+	res = getcwd(NULL, 0);
+	ft_check_errno();
+	printf("\n%s\n", res);
+	free(res);
 }

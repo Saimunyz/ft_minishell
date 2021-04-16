@@ -6,7 +6,7 @@
 #    By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/10 16:14:57 by swagstaf          #+#    #+#              #
-#    Updated: 2021/04/10 19:17:14 by swagstaf         ###   ########.fr        #
+#    Updated: 2021/04/16 14:16:15 by swagstaf         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,8 @@ SRC_DIR =	srcs/
 
 CFILE =		minishell.c \
 			utils.c \
+			ft_parse.c \
+			ft_pwd.c \
 
 LIB_F =		$(LIBFT)/*.c
 
