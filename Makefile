@@ -6,7 +6,7 @@
 #    By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/10 16:14:57 by swagstaf          #+#    #+#              #
-#    Updated: 2021/04/16 16:01:31 by swagstaf         ###   ########.fr        #
+#    Updated: 2021/04/20 01:07:00 by swagstaf         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,9 @@ CFILE =		minishell.c \
 			ft_parse.c \
 			ft_pwd.c \
 			ft_echo.c \
+			ft_cd.c \
+			ft_exit.c \
+			ft_history.c \
 
 LIB_F =		$(LIBFT)/*.c
 
@@ -40,10 +43,10 @@ $(OBJ) : $(HEADER)
 
 $(NAME): $(LIBFT)/libft.h $(LIB_F) $(OBJ)
 		@make -C $(LIBFT)
-		gcc $(FLAGS) $(OBJ) $(LFLAGS) -o $(NAME)
+		gcc -g $(FLAGS) $(OBJ) $(LFLAGS) -o $(NAME)
 
 %.o : %.c
-		gcc $(FLAGS) $(ALL_INC) -c $< -o $@
+		gcc -g $(FLAGS) $(ALL_INC) -c $< -o $@
 
 clean:
 		@make clean -C $(LIBFT)

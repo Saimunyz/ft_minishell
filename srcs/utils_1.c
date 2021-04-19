@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 19:13:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/16 14:54:12 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/19 23:09:25 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,27 @@ void	ft_check_errno(void)
 	if (errno != 0)
 	{
 		ft_putendl_fd(strerror(errno), 2);
+		ft_change_term_mode(0);
 		exit(1);
 	}
 }
 
-void	ft_change_term_mode(t_term *term)
+void	ft_change_term_mode(int change)
 {
-	struct termios	tmp;
+	struct termios	term;
 
-	tmp = term->basic;
-	term->basic = term->current;
-	term->current = tmp;
-	tcsetattr(0, TCSANOW, &term->current);
+	tcgetattr(0, &term);
+	if (change)
+	{
+		term.c_lflag &= ~(ECHO);
+		term.c_lflag &= ~(ICANON);
+	}
+	else
+	{
+		term.c_lflag |= ECHO;
+		term.c_lflag |= ICANON;
+	}
+	tcsetattr(0, TCSANOW, &term);
 	ft_check_errno();
 }
 
@@ -57,15 +66,4 @@ int	ft_get_term_info(void)
 	if (ret < 0 || ret == 0)
 		return (ft_print_error(GET_DATA_ERR));
 	return (0);
-}
-
-void	ft_init_term(t_term *term)
-{
-	tcgetattr(0, &term->basic);
-	tcgetattr(0, &term->current);
-	ft_check_errno();
-	term->current.c_lflag &= ~(ECHO);
-	term->current.c_lflag &= ~(ICANON);
-	tcsetattr(0, TCSANOW, &term->current);
-	ft_check_errno();
 }

@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/30 12:08:10 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/16 13:23:10 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/20 00:48:08 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,15 @@
 # include "stdlib.h"
 # include "unistd.h"
 
+# define BUFFER_SIZE 100
+
 typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
 }				t_list;
 
+int				get_next_line(int fd, char **line);
 void			*ft_memset(void *b, int c, size_t len);
 void			ft_bzero(void *s, size_t n);
 void			*ft_memcpy(void *dist, const void *src, size_t n);
