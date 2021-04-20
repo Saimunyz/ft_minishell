@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/20 02:28:34 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/20 13:24:45 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,6 @@ void	ft_cd(char *path);
 void	ft_exit(void);
 void	ft_write_history(char *command);
 t_list	*ft_read_history(void);
-void	ft_put_history(int *len, char **line, int keycode, t_hist hist);
+void	ft_put_history(int *len, char **line, int keycode, t_hist *hist);
 
 #endif

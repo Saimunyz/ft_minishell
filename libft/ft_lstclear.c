@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 14:05:59 by swagstaf          #+#    #+#             */
-/*   Updated: 2020/11/03 14:37:55 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/20 13:16:31 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	ft_lstclear(t_list **lst, void (*del)(void*))
 	t_list	*free_list;
 
 	tmp = *lst;
+	if (!tmp)
+		return ;
 	while (tmp && tmp->next)
 	{
 		free_list = tmp;

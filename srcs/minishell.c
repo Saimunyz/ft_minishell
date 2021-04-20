@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:09:41 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/20 02:44:02 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/20 13:25:09 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	ft_add_new_char(char **str, char *newchar, int buff_size)
 	return (buff_size);
 }
 
-int	ft_write_char(char *character, char **line, t_hist hist)
+int	ft_write_char(char *character, char **line, t_hist *hist)
 {
 	int		ret;
 	int		len;
@@ -75,7 +75,7 @@ int	ft_read(char **line)
 		ret = read(STDIN_FILENO, character, BUFF_SIZE);
 		character[ret] = '\0';
 		ft_check_errno();
-		len = ft_write_char(character, line, hist);
+		len = ft_write_char(character, line, &hist);
 		if (!ft_strncmp(character, "\n", ret))
 			break;
 	}
