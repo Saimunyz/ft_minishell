@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/20 13:24:45 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/20 14:56:55 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,16 @@ extern char	*g_path;
 # define KEY_DOWN 0010
 # define GET_DATA_ERR 1
 
-typedef struct s_hist
+typedef struct g_global_var
 {
-	t_list	*hist;
-	t_list	*start;
-}				t_hist;
+	char	*env_home;
+	char	*path_hist;
+}			t_global_var;
 
+t_global_var	g_var;
 
+void	ft_global_init(void);
+void	ft_clear_global(void);
 void	ft_check_errno(void);
 void	ft_change_term_mode(int change);
 int		ft_get_term_info(void);
@@ -46,8 +49,9 @@ void	ft_del_line(int *len, char **line);
 void	ft_echo(char *str, int flag);
 void	ft_cd(char *path);
 void	ft_exit(void);
+int		ft_flines_counter(char *filepath);
 void	ft_write_history(char *command);
-t_list	*ft_read_history(void);
-void	ft_put_history(int *len, char **line, int keycode, t_hist *hist);
+char	*ft_read_history(int line_num);
+void	ft_put_history(int *len, char **line, int keycode, int *fsize);
 
 #endif

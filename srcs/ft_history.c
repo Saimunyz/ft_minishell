@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 02:29:53 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/20 13:30:06 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/20 16:25:29 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,71 +21,100 @@
 void	ft_write_history(char *command)
 {
 	int		fd;
-	char	*home;
 
 	if (*command == '\0')
 		return ;
-	home = ft_strjoin(getenv("HOME"), "/.minishell_history");
-	fd = open(home, O_WRONLY|O_APPEND|O_CREAT, 0755);
+	fd = open(g_var.path_hist, O_WRONLY|O_APPEND|O_CREAT, 0755);
 	ft_check_errno();
 	write(fd, command, ft_strlen(command));
 	ft_check_errno();
 	write(fd, "\n", 1);
 	ft_check_errno();
-	free(home);
 	close(fd);
 	ft_check_errno();
 }
 
-t_list	*ft_read_history(void)
+int	ft_flines_counter(char *filepath)
 {
 	int		fd;
-	char	*home;
+	int		counter;
 	char	*line;
 	int		ret;
-	t_list	*hist;
 
-	home = ft_strjoin(getenv("HOME"), "/.minishell_history");
-	fd = open(home, O_RDONLY | O_CREAT, 0755);
-	ft_check_errno();
-	hist = NULL;
+	fd = 0;
+	fd = open(filepath, O_RDONLY);
+	if (fd == -1)
+	{
+		errno = 0;
+		return (0);
+	}
+	counter = 0;
 	ret = get_next_line(fd, &line);
 	while (ret > 0)
 	{
-		ft_lstadd_front(&hist, ft_lstnew(line));
-		//free(line); НУжно ли чистить, или потом просто весь список чистить?
+		counter++;
+		free(line);
 		ret = get_next_line(fd, &line);
 	}
-	if (*line != '\0')
-		ft_lstadd_front(&hist, ft_lstnew(line));
-	//free(line);
-	free(home);
+	free(line);
 	close(fd);
-	ft_check_errno();
-	return (hist);
+	return(counter);
 }
 
-void	ft_put_history(int *len, char **line, int keycode, t_hist *hist)
+char	*ft_read_history(int line_num)
 {
-	t_list	*tmp;
+	int		fd;
+	char	*line;
+	int		ret;
+	char	*command;
 
-	tmp = hist->hist;
-	if (!tmp)
-		return ;
-	ft_del_line(len, line);
-	if (keycode == KEY_UP && tmp->next != NULL)
+	if (line_num == 0)
+		return NULL;
+	fd = open(g_var.path_hist, O_RDONLY);
+	ft_check_errno();
+	ret = get_next_line(fd, &line);
+	while (ret > 0 && line_num-- - 1)
 	{
-		*line = ft_strdup((char *)tmp->content);
-		*len = ft_strlen(*line);
-		tmp = tmp->next;
+		free(line);
+		ret = get_next_line(fd, &line);
 	}
-	else if (keycode == KEY_DOWN && hist->hist != hist->start)
+	command = ft_strdup(line);
+	while (ret > 0)
 	{
-		while (tmp->next && tmp->next != hist->hist)
-			tmp = tmp->next;
-		*line = ft_strdup((char *)tmp->content);
-		*len = ft_strlen(*line);
+		free(line);
+		ret = get_next_line(fd, &line);
 	}
-	hist->hist = tmp;
-	write(1, *line, *len);
+	close(fd);
+	ft_check_errno();
+	return (command);
+}
+
+
+
+void	ft_put_history(int *len, char **line, int keycode, int *fsize)
+{
+	int		flen;
+
+	flen = ft_flines_counter(g_var.path_hist);
+	if (keycode == KEY_UP && *fsize > 0)
+	{
+		ft_del_line(len, line);
+		*line = ft_read_history(*fsize);
+		if (!*line)
+			return ;
+		*len = ft_strlen(*line);
+		(*fsize)--;
+		write(1, *line, *len);
+	}
+	else if (keycode == KEY_DOWN && *fsize < flen)
+	{
+		ft_del_line(len, line);
+		if ((*fsize) == 0)
+			(*fsize) = 1;
+		*line = ft_read_history(++(*fsize));
+		if (!*line)
+			return ;
+		*len = ft_strlen(*line);
+		write(1, *line, *len);
+	}
 }

@@ -6,7 +6,7 @@
 #    By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/10 16:14:57 by swagstaf          #+#    #+#              #
-#    Updated: 2021/04/20 01:07:00 by swagstaf         ###   ########.fr        #
+#    Updated: 2021/04/20 14:44:17 by swagstaf         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ CFILE =		minishell.c \
 			ft_cd.c \
 			ft_exit.c \
 			ft_history.c \
+			ft_global.c \
 
 LIB_F =		$(LIBFT)/*.c
 
