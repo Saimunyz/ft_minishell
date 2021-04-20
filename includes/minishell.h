@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/20 14:56:55 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/20 17:26:17 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	ft_exit(void);
 int		ft_flines_counter(char *filepath);
 void	ft_write_history(char *command);
 char	*ft_read_history(int line_num);
-void	ft_put_history(int *len, char **line, int keycode, int *fsize);
+void	ft_put_history_down(int *len, char **line, int *fsize, char **saved);
+void	ft_put_history_up(int *len, char **line, int *fsize, char **saved);
 
 #endif

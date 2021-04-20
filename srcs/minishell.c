@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:09:41 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/20 16:51:48 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/20 17:27:05 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	ft_add_new_char(char **str, char *newchar, int buff_size)
 	return (buff_size);
 }
 
-int	ft_write_char(char *character, char **line, int *fsize)
+int	ft_write_char(char *character, char **line, int *fsize, char **prev_line)
 {
 	int		ret;
 	int		len;
@@ -35,9 +35,9 @@ int	ft_write_char(char *character, char **line, int *fsize)
 	ret = ft_strlen(character);
 	len = ft_strlen(*line);
 	if (!ft_strncmp(character, "\e[B", ret))
-		ft_put_history(&len, line, KEY_DOWN, fsize);
+		ft_put_history_down(&len, line, fsize, prev_line);
 	else if (!ft_strncmp(character, "\e[A", ret))
-		ft_put_history(&len, line, KEY_UP, fsize);
+		ft_put_history_up(&len, line, fsize, prev_line);
 	else if (!ft_strncmp(character, "\x7f", ret))
 		ft_del_char(&len, line);
 	else if (!ft_strncmp(character, "\e[D", ret))
@@ -61,11 +61,13 @@ int	ft_read(char **line)
 	int		ret;
 	char	*character;
 	int		fsize;
+	char	*saved_line;
 
 	len = 0;
 	fsize = ft_flines_counter(g_var.path_hist);
 	character = (char *)ft_calloc(BUFF_SIZE, sizeof(char));
 	*line = (char *)ft_calloc(1, sizeof(char));
+	saved_line = NULL;
 	ft_check_errno(); // Не все стандарты меняют ерно на маллок, возможн просто exit(1)
 	line[0][0] = '\0';
 	tputs(save_cursor, 1, ft_putchar);
@@ -74,11 +76,12 @@ int	ft_read(char **line)
 		ret = read(STDIN_FILENO, character, BUFF_SIZE);
 		character[ret] = '\0';
 		ft_check_errno();
-		len = ft_write_char(character, line, &fsize);
+		len = ft_write_char(character, line, &fsize, &saved_line);
 		if (!ft_strncmp(character, "\n", ret))
 			break;
 	}
 	write(1, "\n", 1);
+	free(saved_line);
 	free(character);
 	return (len);
 }

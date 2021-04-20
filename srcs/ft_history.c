@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 02:29:53 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/20 16:56:43 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/20 17:31:40 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,28 +90,44 @@ char	*ft_read_history(int line_num)
 	return (command);
 }
 
-
-
-void	ft_put_history(int *len, char **line, int keycode, int *fsize)
+void	ft_put_history_down(int *len, char **line, int *fsize, char **saved)
 {
 	int		flen;
 
 	flen = ft_flines_counter(g_var.path_hist);
-	if (keycode == KEY_UP && *fsize > 0)
-	{
-		ft_del_line(len, line);
-		*line = ft_read_history((*fsize)--);
-		if (!*line)
-			return ;
-		*len = ft_strlen(*line);
-		write(1, *line, *len);
-	}
-	else if (keycode == KEY_DOWN && *fsize < flen)
+	if (*fsize < flen)
 	{
 		ft_del_line(len, line);
 		if ((*fsize) == 0)
 			(*fsize) = 1;
 		*line = ft_read_history(++(*fsize));
+		if (!*line)
+			return ;
+		*len = ft_strlen(*line);
+		write(1, *line, *len);
+	}
+	else if (*saved) // добавить условие, чтобы постоянно не запускалось
+	{
+		ft_del_line(len, line);
+		*line = ft_strdup(*saved);
+		*len = ft_strlen(*line);
+		write(1, *line, *len);
+		free(*saved);
+		*saved = NULL;
+	}
+}
+
+void	ft_put_history_up(int *len, char **line, int *fsize, char **saved)
+{
+	int		flen;
+
+	flen = ft_flines_counter(g_var.path_hist);
+	if (!(*saved))
+		*saved = ft_strdup(*line);
+	if (*fsize > 0)
+	{
+		ft_del_line(len, line);
+		*line = ft_read_history((*fsize)--);
 		if (!*line)
 			return ;
 		*len = ft_strlen(*line);
