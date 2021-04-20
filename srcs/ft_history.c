@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 02:29:53 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/20 16:25:29 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/20 16:56:43 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ char	*ft_read_history(int line_num)
 		free(line);
 		ret = get_next_line(fd, &line);
 	}
+	free(line);
 	close(fd);
 	ft_check_errno();
 	return (command);
@@ -99,11 +100,10 @@ void	ft_put_history(int *len, char **line, int keycode, int *fsize)
 	if (keycode == KEY_UP && *fsize > 0)
 	{
 		ft_del_line(len, line);
-		*line = ft_read_history(*fsize);
+		*line = ft_read_history((*fsize)--);
 		if (!*line)
 			return ;
 		*len = ft_strlen(*line);
-		(*fsize)--;
 		write(1, *line, *len);
 	}
 	else if (keycode == KEY_DOWN && *fsize < flen)
