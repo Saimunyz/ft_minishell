@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:09:41 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/20 17:27:05 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/20 21:26:43 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	ft_read(char **line)
 	char	*saved_line;
 
 	len = 0;
-	fsize = ft_flines_counter(g_var.path_hist);
+	fsize = ft_flines_counter(g_var.path_hist) + 1;
 	character = (char *)ft_calloc(BUFF_SIZE, sizeof(char));
 	*line = (char *)ft_calloc(1, sizeof(char));
 	saved_line = NULL;
