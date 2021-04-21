@@ -6,17 +6,11 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 02:29:53 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/20 21:36:16 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/21 14:52:02 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
- * как тут ошибки то обрабатывать?
- * переписать, нужно getenv отсюда вынести и хранить в глобальной переменной
- * отредактирвоать 777
- */
 
 void	ft_write_history(char *command)
 {
@@ -24,7 +18,7 @@ void	ft_write_history(char *command)
 
 	if (*command == '\0')
 		return ;
-	fd = open(g_var.path_hist, O_WRONLY|O_APPEND|O_CREAT, 0755);
+	fd = open(g_var.path_hist, O_WRONLY | O_APPEND | O_CREAT, 0755);
 	ft_check_errno();
 	write(fd, command, ft_strlen(command));
 	ft_check_errno();
@@ -34,100 +28,72 @@ void	ft_write_history(char *command)
 	ft_check_errno();
 }
 
-int	ft_flines_counter(char *filepath)
+t_list	*ft_read_history(void)
 {
 	int		fd;
-	int		counter;
 	char	*line;
 	int		ret;
+	t_list	*tmp;
 
-	fd = 0;
-	fd = open(filepath, O_RDONLY);
+	tmp = NULL;
+	fd = open(g_var.path_hist, O_RDONLY);
 	if (fd == -1)
 	{
 		errno = 0;
-		return (0);
+		return (NULL);
 	}
-	counter = 0;
 	ret = get_next_line(fd, &line);
 	while (ret > 0)
 	{
-		counter++;
-		free(line);
+		ft_lstadd_front(&tmp, ft_lstnew(line));
 		ret = get_next_line(fd, &line);
 	}
 	free(line);
-	close(fd);
-	return(counter);
-}
-
-char	*ft_read_history(int line_num)
-{
-	int		fd;
-	char	*line;
-	int		ret;
-	char	*command;
-
-	if (line_num == 0)
-		return NULL;
-	fd = open(g_var.path_hist, O_RDONLY);
-	ft_check_errno();
-	ret = get_next_line(fd, &line);
-	while (ret > 0 && line_num-- - 1)
-	{
-		free(line);
-		ret = get_next_line(fd, &line);
-	}
-	command = ft_strdup(line);
-	while (ret > 0)
-	{
-		free(line);
-		ret = get_next_line(fd, &line);
-	}
-	free(line);
+	ft_lstadd_front(&tmp, ft_lstnew(NULL));
 	close(fd);
 	ft_check_errno();
-	return (command);
+	return (tmp);
 }
 
-void	ft_put_history_down(int *len, char **line, int *fsize, char **saved)
+void	ft_put_history_down(int *len, char **line, t_list **hist, t_list *strt)
 {
-	int		flen;
+	t_list	*tmp_strt;
+	t_list	*tmp_hist;
 
-	flen = ft_flines_counter(g_var.path_hist);
-	if (*fsize < flen)
+	tmp_hist = *hist;
+	tmp_strt = strt;
+	if (!tmp_strt)
+		return ;
+	if (tmp_hist!= strt)
 	{
+		free(tmp_hist->content);
+		tmp_hist->content = ft_strdup(*line);
 		ft_del_line(len, line);
-		if ((*fsize) == 0)
-			(*fsize) = 1;
-		*line = ft_read_history(++(*fsize));
-		if (!*line)
-			return ;
+		while (tmp_strt->next && tmp_strt->next != tmp_hist)
+			tmp_strt = tmp_strt->next;
+		*line = ft_strdup((char *)tmp_strt->content);
 		*len = ft_strlen(*line);
 		write(1, *line, *len);
-	}
-	else if (*saved) // добавить условие, чтобы постоянно не запускалось
-	{
-		ft_del_line(len, line);
-		*line = ft_strdup(*saved);
-		*len = ft_strlen(*line);
-		write(1, *line, *len);
-		free(*saved);
-		*saved = NULL;
+		*hist = tmp_strt;
 	}
 }
 
-void	ft_put_history_up(int *len, char **line, int *fsize, char **saved)
+void	ft_put_history_up(int *len, char **line, t_list **hist)
 {
-	if (!(*saved))
-		*saved = ft_strdup(*line);
-	if (*fsize > 1)
+	t_list	*tmp;
+
+	tmp = *hist;
+	if (!tmp)
+		return ;
+	if (tmp->next != NULL)
 	{
+		free(tmp->content);
+		tmp->content = ft_strdup(*line);
 		ft_del_line(len, line);
-		*line = ft_read_history((*fsize)-- - 1);
-		if (!*line)
-			return ;
+		tmp = tmp->next;
+		*line = ft_strdup((char *)tmp->content);
 		*len = ft_strlen(*line);
 		write(1, *line, *len);
+		*hist = tmp;
 	}
 }

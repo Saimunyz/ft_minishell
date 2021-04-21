@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 19:13:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/19 23:09:25 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/21 14:59:44 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,17 @@ int	ft_get_term_info(void)
 	if (ret < 0 || ret == 0)
 		return (ft_print_error(GET_DATA_ERR));
 	return (0);
+}
+
+void	ft_init_read(t_list **hist, t_list	**start, char **line, char **lettr)
+{
+	*lettr = (char *)ft_calloc(BUFF_SIZE, sizeof(char));
+	ft_check_errno();
+	*line = (char *)ft_calloc(1, sizeof(char));
+	if (!*line)
+		free(*lettr);
+	ft_check_errno();
+	line[0][0] = '\0';
+	*hist = ft_read_history();
+	*start = *hist;
 }

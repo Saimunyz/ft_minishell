@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 14:33:52 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/20 14:57:12 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/21 12:55:25 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_clear_global(void)
 {
-	free(g_var.env_home);
+	//free(g_var.env_home);
 	free(g_var.path_hist);
 }
 
