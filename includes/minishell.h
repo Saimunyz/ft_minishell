@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/23 16:42:38 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/24 00:59:06 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,8 @@
 
 # define BUFF_SIZE 10
 
-# define KEY_UP 0001
-# define KEY_DOWN 0010
 # define GET_DATA_ERR 1
+# define COMMAND_ERR 2
 
 typedef struct s_hist
 {
@@ -35,8 +34,6 @@ typedef struct s_hist
 
 int		g_error;
 
-void	ft_global_init(void);
-void	ft_clear_global(void);
 void	ft_check_errno(void);
 void	ft_change_term_mode(int change);
 int		ft_get_term_info(void);
@@ -54,5 +51,6 @@ void	ft_put_history_down(int *len, char **line, t_hist *hist);
 void	ft_put_history_up(int *len, char **line, t_hist *hist);
 int		ft_check_sigint(char **line, char *character);
 void	ft_check_eof(char **line, char *character, t_hist *hist);
+void	ft_print_bash_err(char *line);
 
 #endif

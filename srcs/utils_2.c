@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 15:05:58 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/20 02:03:57 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/24 00:58:13 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,11 @@ void	ft_del_line(int *len, char **line)
 	free(*line);
 	*len = 0;
 	*line = NULL;
+}
+
+void	ft_print_bash_err(char *line)
+{
+	g_error = 127;
+	if (*line != '\0')
+		printf("minishell: %s: command not found\n", line);
 }

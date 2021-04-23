@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:08:18 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/23 16:59:50 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/24 00:59:49 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ int	ft_parse(char *line, char *home)
 		ft_exit();
 	else if (!ft_strncmp(splt[0], "$?", ft_strlen(splt[0])) && splt_len != 0)
 		printf("minishell: %d: command not found\n", g_error);
-	else if (*line != '\0')
-		printf("minishell: %s: command not found\n", line);
+	else if (*line != '\3')
+		ft_print_bash_err(line);
 	ft_write_history(line, home);
 	free_text(splt, ft_maslen(splt));
 	return (0);

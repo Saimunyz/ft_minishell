@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 19:13:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/23 15:19:42 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/24 00:57:03 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	ft_init_read(t_hist *hist, char **line, char **lettr, char *home)
 	if (!*line)
 		free(*lettr);
 	ft_check_errno();
+	lettr[0][0] = '\0';
 	line[0][0] = '\0';
 	hist->hist = ft_read_history(home);
 	hist->start = hist->hist;

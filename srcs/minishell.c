@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:09:41 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/23 17:01:29 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/24 01:22:20 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_write_char(char *character, char **line, t_hist *hist)
 		return (len);
 	else if (!ft_strncmp(character, "\e[C", ret))
 		return (len);
-	else if (*character == '\n' || *character == '\4')
+	else if (*character == '\n' || *character == '\4' || *character == '\t') // сделать функция запрещенных символов
 		return (len);
 	else
 	{
@@ -65,7 +65,7 @@ int	ft_read(char **line, char *home)
 	len = 0;
 	ft_init_read(&hist, line, &character, home);
 	tputs(save_cursor, 1, ft_putchar);
-	while (1)
+	while (*character != '\n')
 	{
 		ret = read(STDIN_FILENO, character, BUFF_SIZE);
 		character[ret] = '\0';
@@ -74,9 +74,6 @@ int	ft_read(char **line, char *home)
 			break;
 		len = ft_write_char(character, line, &hist);
 		ft_check_eof(line, character, &hist);
-		if (!ft_strncmp(character, "\n", ret))
-			break;
-		g_error = 127; // поправить
 	}
 	write(1, "\n", 1);
 	ft_lstclear(&hist.start, free);
@@ -87,17 +84,15 @@ int	ft_read(char **line, char *home)
 void	ft_minishell(void)
 {
 	char	*line;
-	int		len;
 	char	*home;
 
 	line = NULL;
-	len = 0;
 	home = getenv("HOME");
 	g_error = 0;
 	while (1)
 	{
 		write(STDOUT_FILENO, "minishell$ ", 11);
-		len = ft_read(&line, home);
+		ft_read(&line, home);
 		if (*line == '\4')
 			break;
 		ft_parse(line, home);
