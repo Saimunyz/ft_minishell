@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/04/10 16:14:57 by swagstaf          #+#    #+#              #
-#    Updated: 2021/04/20 14:44:17 by swagstaf         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME =		minishell
 
 HEADER =	includes/*.h
@@ -29,7 +17,7 @@ CFILE =		minishell.c \
 			ft_cd.c \
 			ft_exit.c \
 			ft_history.c \
-			ft_global.c \
+			ft_signals.c \
 			ft_commands.c \
 
 LIB_F =		$(LIBFT)/*.c

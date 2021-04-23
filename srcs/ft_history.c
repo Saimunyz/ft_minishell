@@ -1,19 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_history.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/20 02:29:53 by swagstaf          #+#    #+#             */
+/*   Updated: 2021/04/23 16:04:24 by swagstaf         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
-
-/*
- * как тут ошибки то обрабатывать?
- * переписать, нужно getenv отсюда вынести и хранить в глобальной переменной
- * отредактирвоать 777
- */
-void	ft_write_history(char *command)
+void	ft_write_history(char *command, char *home)
 {
 	int		fd;
+	char	*file_path;
 
 	if (*command == '\0')
 		return ;
-	fd = open(g_var.path_hist, O_WRONLY | O_APPEND | O_CREAT, 0755);
+	file_path = ft_strjoin(home, "/.minishell_history");
+	fd = open(file_path, O_WRONLY | O_APPEND | O_CREAT, 0755);
+	free(file_path);
 	ft_check_errno();
 	write(fd, command, ft_strlen(command));
 	ft_check_errno();
@@ -23,16 +31,18 @@ void	ft_write_history(char *command)
 	ft_check_errno();
 }
 
-
-t_list	*ft_read_history(void)
+t_list	*ft_read_history(char *home)
 {
 	int		fd;
 	char	*line;
 	int		ret;
 	t_list	*tmp;
+	char	*file_path;
 
 	tmp = NULL;
-	fd = open(g_var.path_hist, O_RDONLY);
+	file_path = ft_strjoin(home, "/.minishell_history");
+	fd = open(file_path, O_RDONLY);
+	free(file_path);
 	if (fd == -1)
 	{
 		errno = 0;
@@ -47,20 +57,19 @@ t_list	*ft_read_history(void)
 	free(line);
 	ft_lstadd_front(&tmp, ft_lstnew(NULL));
 	close(fd);
-	ft_check_errno();
 	return (tmp);
 }
 
-void	ft_put_history_down(int *len, char **line, t_list **hist, t_list *strt)
+void	ft_put_history_down(int *len, char **line, t_hist *hist)
 {
 	t_list	*tmp_strt;
 	t_list	*tmp_hist;
 
-	tmp_hist = *hist;
-	tmp_strt = strt;
+	tmp_hist = hist->hist;
+	tmp_strt = hist->start;
 	if (!tmp_strt)
 		return ;
-	if (tmp_hist!= strt)
+	if (tmp_hist != hist->start)
 	{
 		free(tmp_hist->content);
 		tmp_hist->content = ft_strdup(*line);
@@ -70,15 +79,15 @@ void	ft_put_history_down(int *len, char **line, t_list **hist, t_list *strt)
 		*line = ft_strdup((char *)tmp_strt->content);
 		*len = ft_strlen(*line);
 		write(1, *line, *len);
-		*hist = tmp_strt;
+		hist->hist = tmp_strt;
 	}
 }
 
-void	ft_put_history_up(int *len, char **line, t_list **hist)
+void	ft_put_history_up(int *len, char **line, t_hist *hist)
 {
 	t_list	*tmp;
 
-	tmp = *hist;
+	tmp = hist->hist;
 	if (!tmp)
 		return ;
 	if (tmp->next != NULL)
@@ -90,6 +99,6 @@ void	ft_put_history_up(int *len, char **line, t_list **hist)
 		*line = ft_strdup((char *)tmp->content);
 		*len = ft_strlen(*line);
 		write(1, *line, *len);
-		*hist = tmp;
+		hist->hist = tmp;
 	}
 }

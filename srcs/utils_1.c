@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_1.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/10 19:13:37 by swagstaf          #+#    #+#             */
+/*   Updated: 2021/04/23 15:19:42 by swagstaf         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int		ft_print_error(int type)
+int	ft_print_error(int type)
 {
 	ft_putstr_fd("Error\n", 2);
 	if (type == GET_DATA_ERR)
@@ -29,11 +41,13 @@ void	ft_change_term_mode(int change)
 	{
 		term.c_lflag &= ~(ECHO);
 		term.c_lflag &= ~(ICANON);
+		term.c_lflag &= ~(ISIG);
 	}
 	else
 	{
 		term.c_lflag |= ECHO;
 		term.c_lflag |= ICANON;
+		term.c_lflag |= ISIG;
 	}
 	tcsetattr(0, TCSANOW, &term);
 	ft_check_errno();
@@ -56,7 +70,7 @@ int	ft_get_term_info(void)
 	return (0);
 }
 
-void	ft_init_read(t_list **hist, t_list	**start, char **line, char **lettr)
+void	ft_init_read(t_hist *hist, char **line, char **lettr, char *home)
 {
 	*lettr = (char *)ft_calloc(BUFF_SIZE, sizeof(char));
 	ft_check_errno();
@@ -65,6 +79,6 @@ void	ft_init_read(t_list **hist, t_list	**start, char **line, char **lettr)
 		free(*lettr);
 	ft_check_errno();
 	line[0][0] = '\0';
-	*hist = ft_read_history();
-	*start = *hist;
+	hist->hist = ft_read_history(home);
+	hist->start = hist->hist;
 }

@@ -46,6 +46,14 @@ char	*ft_find_command(char	*command, char **path)
 	return (0);
 }
 
+void	ft_command_not_found(char *cmd)
+{
+	char	*tmp_str;
+
+	tmp_str = ft_strjoin(cmd, ": command not found\n");
+	ft_putstr_fd(tmp_str, 1);
+	free(tmp_str);
+}
 /*
  * TODO буду рефакторить когда доделаем парсер
  * на данный моменет сделанно с огранничим количеством входящих параметров. Не более 1.
@@ -59,9 +67,9 @@ void	ft_commands(char **splt)
 	char	*newenviron[0];
 	char	*newargv[3];//переписать под маллок
 
-	//всегда можно NULL или нет?
+	//TODO всегда можно NULL или нет?
 	newenviron[0] = NULL;
-	//паф могут удалить, не должно крашится. проверить когда допишем
+	//TODO паф могут удалить, не должно крашится. проверить когда допишем
 	cmd = ft_find_command(splt[0], ft_split(getenv("PATH"), ':'));
 	if (cmd)
 	{
@@ -78,5 +86,5 @@ void	ft_commands(char **splt)
 		free(cmd);
 	}
 	else
-		ft_putstr_fd(ft_strjoin(splt[0], ": command not found\n"),1);
+		ft_command_not_found(splt[0]);
 }
