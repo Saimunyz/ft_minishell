@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 02:30:00 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/20 14:38:22 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/23 16:07:15 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,5 @@
 void	ft_exit(void)
 {
 	ft_change_term_mode(0);
-	ft_clear_global();
 	exit(0);
 }
