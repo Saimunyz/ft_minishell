@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_parse.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/16 14:08:18 by swagstaf          #+#    #+#             */
+/*   Updated: 2021/04/24 00:59:49 by swagstaf         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_parse(char *line, char *home)
@@ -17,8 +29,13 @@ int	ft_parse(char *line, char *home)
 		ft_exit();
 	else if (!ft_strncmp(splt[0], "$?", ft_strlen(splt[0])) && splt_len != 0)
 		printf("minishell: %d: command not found\n", g_error);
+//<<<<<<< HEAD
 	else if (*line != '\0')
 		ft_commands(splt);
+//=======
+	else if (*line != '\3')
+		ft_print_bash_err(line);
+//>>>>>>> 80f33e5685362b963513f8511fae5d1b2b2896ea
 	ft_write_history(line, home);
 	free_text(splt, ft_maslen(splt));
 	return (0);

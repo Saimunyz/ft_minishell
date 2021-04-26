@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 14:41:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/23 16:45:34 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/24 00:48:58 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_check_sigint(char **line, char *character)
 	if (*character == '\3')
 	{
 		free(*line);
-		*line = ft_strdup("");
+		*line = ft_strdup("\3");
 		g_error = 1;
 		return (1);
 	}

@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 02:29:53 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/23 16:04:24 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/24 01:00:43 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ft_write_history(char *command, char *home)
 	int		fd;
 	char	*file_path;
 
-	if (*command == '\0')
+	if (*command == '\0' || *command == '\3')
 		return ;
 	file_path = ft_strjoin(home, "/.minishell_history");
 	fd = open(file_path, O_WRONLY | O_APPEND | O_CREAT, 0755);
