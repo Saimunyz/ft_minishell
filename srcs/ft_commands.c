@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_commands.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/04/26 17:04:52 by swagstaf          #+#    #+#             */
+/*   Updated: 2021/04/26 17:08:07 by swagstaf         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	ft_clear_arr(char **arr)
@@ -50,6 +62,7 @@ void	ft_command_not_found(char *cmd)
 {
 	char	*tmp_str;
 
+	g_error = 127;
 	tmp_str = ft_strjoin(cmd, ": command not found\n");
 	ft_putstr_fd(tmp_str, 1);
 	free(tmp_str);

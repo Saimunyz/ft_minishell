@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/24 00:59:06 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/26 17:04:02 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,6 @@
 # include "sys/stat.h"
 
 # define BUFF_SIZE 10
-//<<<<<<< HEAD
-//# define KEY_UP 0001
-//# define KEY_DOWN 0010
-//=======
-//
-//>>>>>>> 80f33e5685362b963513f8511fae5d1b2b2896ea
 # define GET_DATA_ERR 1
 # define COMMAND_ERR 2
 

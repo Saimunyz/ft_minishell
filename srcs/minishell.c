@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:09:41 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/24 01:22:20 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/26 17:04:40 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,6 @@ int	ft_read(char **line, char *home)
 			break ;
 		len = ft_write_char(character, line, &hist);
 		ft_check_eof(line, character, &hist);
-//<<<<<<< HEAD
-//		if (!ft_strncmp(character, "\n", ret))
-//			break ;
-//		g_error = 127; // поправить
-//=======
-//>>>>>>> 80f33e5685362b963513f8511fae5d1b2b2896ea
 	}
 	write(1, "\n", 1);
 	ft_lstclear(&hist.start, free);
