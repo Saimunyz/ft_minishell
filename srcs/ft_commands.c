@@ -81,9 +81,6 @@ void	ft_commands(char **splt)
 	char	*newenviron[0];
 	char	*newargv[3];//переписать под маллок
 
-	//dell
-	ft_putstr_fd("ft_commands\n" , 1);
-
 	//TODO всегда можно NULL или нет?
 	newenviron[0] = NULL;
 	//TODO паф могут удалить, не должно крашится. проверить когда допишем
