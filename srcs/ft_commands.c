@@ -57,7 +57,7 @@ char	*ft_find_command(char	*command, char **path)
 	ft_clear_arr(tmp_path);
 	return (0);
 }
-//
+
 void	ft_command_not_found(char *cmd)
 {
 	char	*tmp_str;
@@ -81,12 +81,16 @@ void	ft_commands(char **splt)
 	char	*newenviron[0];
 	char	*newargv[3];//переписать под маллок
 
+	//dell
+	ft_putstr_fd("ft_commands\n" , 1);
+
 	//TODO всегда можно NULL или нет?
 	newenviron[0] = NULL;
 	//TODO паф могут удалить, не должно крашится. проверить когда допишем
 	cmd = ft_find_command(splt[0], ft_split(getenv("PATH"), ':'));
 	if (cmd)
 	{
+		g_error = 0;
 		newargv[0] = cmd;
 		newargv[1] = splt[1];
 		newargv[2] = NULL;

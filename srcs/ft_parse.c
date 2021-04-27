@@ -28,7 +28,10 @@ int	ft_parse(char *line, char *home)
 	else if (!ft_strncmp(splt[0], "exit", ft_strlen(splt[0])) && splt_len != 0)
 		ft_exit();
 	else if (!ft_strncmp(splt[0], "$?", ft_strlen(splt[0])) && splt_len != 0)
+	{
 		printf("minishell: %d: command not found\n", g_error);
+		g_error = 127;//sergey 27/04/2021
+	}
 //<<<<<<< HEAD
 	else if (*line != '\3')
 		ft_commands(splt);
