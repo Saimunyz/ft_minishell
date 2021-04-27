@@ -21,6 +21,7 @@
 # include "string.h"
 # include "fcntl.h"
 # include "sys/stat.h"
+# include "sys/wait.h"
 
 # define BUFF_SIZE 10
 # define GET_DATA_ERR 1
