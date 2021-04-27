@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 17:04:52 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/26 17:21:20 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/04/26 17:49:22 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ char	*ft_find_command(char	*command, char **path)
 	ft_clear_arr(tmp_path);
 	return (0);
 }
-
+//
 void	ft_command_not_found(char *cmd)
 {
 	char	*tmp_str;
