@@ -18,6 +18,7 @@ void	ft_cd(char *path)
 {
 	int ans;
 
+	g_error = 0;
 	if (!path)
 		return;
 	ans = chdir(path);

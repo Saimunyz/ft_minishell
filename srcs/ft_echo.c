@@ -17,6 +17,7 @@
  */
 void	ft_echo(char *str, int flag)
 {
+	g_error = 0;
 	while (str && *str && *str != '\n')
 	{
 		write(1, str, 1);

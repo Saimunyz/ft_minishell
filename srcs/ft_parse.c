@@ -32,13 +32,8 @@ int	ft_parse(char *line, char *home)
 		printf("minishell: %d: command not found\n", g_error);
 		g_error = 127;//sergey 27/04/2021
 	}
-//<<<<<<< HEAD
 	else if (*line != '\3')
 		ft_commands(splt);
-//=======
-	// else if (*line != '\3')
-	// 	ft_print_bash_err(line);
-//>>>>>>> 80f33e5685362b963513f8511fae5d1b2b2896ea
 	ft_write_history(line, home);
 	free_text(splt, ft_maslen(splt));
 	return (0);

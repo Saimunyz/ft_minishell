@@ -14,6 +14,7 @@
 
 void	ft_exit(void)
 {
+	g_error = 0;
 	ft_change_term_mode(0);
 	exit(0);
 }

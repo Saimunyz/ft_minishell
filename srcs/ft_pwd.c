@@ -16,6 +16,7 @@ void	ft_pwd(void)
 {
 	char	*res;
 
+	g_error = 0;
 	res = getcwd(NULL, 0);
 	ft_check_errno();
 	printf("%s\n", res);
