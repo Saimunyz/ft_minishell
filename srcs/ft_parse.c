@@ -83,12 +83,10 @@ char** ft_parse_strings(char *line)
 	return (arr_strings);
 }
 
-int	ft_parse(char *line, char *home)
+void ft_start_commands(char	**strs_cmd)
 {
-	char	**strs_cmd;
 	int		splt_len;
 
-	strs_cmd = ft_parse_strings(line);
 	splt_len = ft_strlen(strs_cmd[0]);
 	if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
@@ -101,11 +99,21 @@ int	ft_parse(char *line, char *home)
 	else if (!ft_strncmp(strs_cmd[0], "$?", ft_strlen(strs_cmd[0])) && splt_len != 0)
 	{
 		printf("minishell: %d: command not found\n", g_error);
-		g_error = 127;//sergey 27/04/2021
+		g_error = 127;//sergey 27/04/2021 так в оригинале
 	}
-	else if (*line != '\3')
+	else if (*strs_cmd[0] != '\3')
 		ft_commands(strs_cmd);
-	ft_write_history(line, home);
 	free_text(strs_cmd, ft_maslen(strs_cmd));
-	return (0);
+}
+
+
+int	ft_parse(char *line, char *home)
+{
+	char	**strs_cmd;
+
+	strs_cmd = ft_parse_strings(line);
+	ft_start_commands(strs_cmd);
+
+	ft_write_history(line, home);
+	return (0);	//TODO а зачем тут нам 0 ? почему метод не void если мы всегда 0 возвращаем?
 }
