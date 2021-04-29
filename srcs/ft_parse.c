@@ -27,7 +27,7 @@ int	ft_str_len_space(char *line)
 
 void ft_go_end_space(char **line)
 {
-	if (**line && **line == ' ')
+	while (**line && **line == ' ')
 		(*line)++;
 }
 
