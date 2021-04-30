@@ -31,7 +31,7 @@ void ft_go_end_space(char **line)
 		(*line)++;
 }
 
-int	ft_count_str(char *line)
+int	ft_count_commands(char *line)
 {
 	int count;
 
@@ -59,7 +59,7 @@ char** ft_parse_strings(char *line)
 	int i;
 	int j;
 
-	count_lines = ft_count_str(line);
+	count_lines = ft_count_commands(line);
 	arr_strings = (char **) malloc(sizeof (char **) * (count_lines + 1));
 	ft_go_end_space(&line);
 	i = 0;
@@ -69,7 +69,8 @@ char** ft_parse_strings(char *line)
 		arr_strings[i] = (char *) malloc(sizeof (char *) * (ft_str_len_space(line) + 1));
 		while (*line) {
 			arr_strings[i][j] = *line;
-			if (*line == ' ' || !line) {
+			if (*line == ' ' || !line )
+			{
 				ft_go_end_space(&line);
 				break;
 			}
@@ -106,11 +107,58 @@ void ft_start_commands(char	**strs_cmd)
 	free_text(strs_cmd, ft_maslen(strs_cmd));
 }
 
+int	ft_count_strs(char *line)
+{
+	int count;
+
+	if (*line)
+		count = 1;
+	else
+		return (0);
+	while (*line)
+	{
+		if (*line == ';' || *line == '|')
+		{
+			line++;
+			count++;
+		}
+		line++;
+	}
+	return count;
+}
+
+char	***ft_split_string(char *line)
+{
+	char ***arr_strs;
+	int count_strs;
+	int	i;
+//	char *ft_substr(char const *s, unsigned int start, size_t maxlen);
+
+	count_strs = ft_count_strs(line);
+	if (count_strs == 0)
+		return NULL;
+	arr_strs = (char ***) malloc(sizeof(char ***) * (count_strs + 1));
+	i = 0;
+	while (i < count_strs)
+	{
+		arr_strs[i] = ft_parse_strings("echo commands");
+		count_strs--;
+		i++;
+	}
+	arr_strs[i] = NULL;
+	return (arr_strs);
+}
 
 int	ft_parse(char *line, char *home)
 {
+	char	***arr_strs;
 	char	**strs_cmd;
 
+	arr_strs = ft_split_string(line);
+	while (arr_strs && *arr_strs)
+	{
+		(*arr_strs)++;
+	}
 	strs_cmd = ft_parse_strings(line);
 	ft_start_commands(strs_cmd);
 
