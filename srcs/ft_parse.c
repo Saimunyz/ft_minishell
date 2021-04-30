@@ -104,7 +104,7 @@ void ft_start_commands(char	**strs_cmd)
 	}
 	else if (*strs_cmd[0] != '\3')
 		ft_commands(strs_cmd);
-	free_text(strs_cmd, ft_maslen(strs_cmd));
+//	free_text(strs_cmd, ft_maslen(strs_cmd));	тут больше не фришем, делаем это на уровень выше
 }
 
 int	ft_count_strs(char *line)
@@ -127,11 +127,28 @@ int	ft_count_strs(char *line)
 	return count;
 }
 
+int ft_find_char(char *str, int i)
+{
+	if (!str)
+		return (0);
+	i = 0;
+	while (str[i])
+	{
+		if(str[i] == ';')
+			return (i);
+		i++;
+	}
+	return (ft_strlen(str));
+}
+
 char	***ft_split_string(char *line)
 {
 	char ***arr_strs;
 	int count_strs;
 	int	i;
+	int start;
+	int end;
+	char *tmp;
 //	char *ft_substr(char const *s, unsigned int start, size_t maxlen);
 
 	count_strs = ft_count_strs(line);
@@ -139,10 +156,14 @@ char	***ft_split_string(char *line)
 		return NULL;
 	arr_strs = (char ***) malloc(sizeof(char ***) * (count_strs + 1));
 	i = 0;
+	start = 0;
 	while (i < count_strs)
 	{
-		arr_strs[i] = ft_parse_strings("echo commands");
-		count_strs--;
+		end = ft_find_char(line, start);
+		tmp = ft_substr(line, start, end - start);
+		arr_strs[i] = ft_parse_strings(tmp);
+		start = end + 1;
+//		count_strs--;
 		i++;
 	}
 	arr_strs[i] = NULL;
@@ -152,16 +173,17 @@ char	***ft_split_string(char *line)
 int	ft_parse(char *line, char *home)
 {
 	char	***arr_strs;
-	char	**strs_cmd;
+//	char	**strs_cmd;
 
 	arr_strs = ft_split_string(line);
 	while (arr_strs && *arr_strs)
 	{
-		(*arr_strs)++;
+		//strs_cmd = ft_parse_strings(**arr_strs);
+		ft_start_commands(*arr_strs);
+		arr_strs++;
 	}
-	strs_cmd = ft_parse_strings(line);
-	ft_start_commands(strs_cmd);
-
+//	strs_cmd = ft_parse_strings(line);
+//	ft_start_commands(strs_cmd);
 	ft_write_history(line, home);
 	return (0);	//TODO а зачем тут нам 0 ? почему метод не void если мы всегда 0 возвращаем?
 }
