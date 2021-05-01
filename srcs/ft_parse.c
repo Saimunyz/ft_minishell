@@ -135,7 +135,6 @@ int ft_find_char(char *str, int i)
 {
 	if (!str)
 		return (0);
-	i = 0;
 	while (str[i])
 	{
 		if(str[i] == ';')
@@ -173,9 +172,11 @@ char	***ft_split_string(char *line)
 }
 
 
-//errors
-//minishell$   ls   ; echo 1  ; echo 2 ; echo 3
-//minishell$   ls   ; echo 1  ; echo 2
+//доделать
+//""  ''
+//  \
+// |
+// << >> <
 int	ft_parse(char *line, char *home)
 {
 	char	***arr_commands;
