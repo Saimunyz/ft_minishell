@@ -12,6 +12,31 @@
 
 #include "minishell.h"
 
+
+void ft_start_commands(char	**strs_cmd)
+{
+	int		splt_len;
+
+	splt_len = ft_strlen(strs_cmd[0]);
+	if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
+		ft_pwd();
+	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)
+		ft_echo(strs_cmd[1], 1);
+	else if (!ft_strncmp(strs_cmd[0], "cd", ft_strlen(strs_cmd[0])) && splt_len != 0)
+		ft_cd(strs_cmd[1]);
+	else if (!ft_strncmp(strs_cmd[0], "exit", ft_strlen(strs_cmd[0])) && splt_len != 0)
+		ft_exit();
+	else if (!ft_strncmp(strs_cmd[0], "$?", ft_strlen(strs_cmd[0])) && splt_len != 0)
+	{
+		printf("minishell: %d: command not found\n", g_error);
+		g_error = 127;//sergey 27/04/2021 так в оригинале
+	}
+	else if (*strs_cmd[0] != '\3')
+		ft_commands(strs_cmd);
+	free_text(strs_cmd, ft_maslen(strs_cmd));
+}
+
+
 int	ft_str_len_space(char *line)
 {
 	int	count;
@@ -85,29 +110,6 @@ char** ft_parse_strings(char *line)
 	return (arr_strings);
 }
 
-void ft_start_commands(char	**strs_cmd)
-{
-	int		splt_len;
-
-	splt_len = ft_strlen(strs_cmd[0]);
-	if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_pwd();
-	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_echo(strs_cmd[1], 1);
-	else if (!ft_strncmp(strs_cmd[0], "cd", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_cd(strs_cmd[1]);
-	else if (!ft_strncmp(strs_cmd[0], "exit", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_exit();
-	else if (!ft_strncmp(strs_cmd[0], "$?", ft_strlen(strs_cmd[0])) && splt_len != 0)
-	{
-		printf("minishell: %d: command not found\n", g_error);
-		g_error = 127;//sergey 27/04/2021 так в оригинале
-	}
-	else if (*strs_cmd[0] != '\3')
-		ft_commands(strs_cmd);
-	free_text(strs_cmd, ft_maslen(strs_cmd));	//тут больше не фришем, делаем это на уровень выше
-}
-
 int	ft_count_strs(char *line)
 {
 	int count;
@@ -118,12 +120,13 @@ int	ft_count_strs(char *line)
 		return (0);
 	while (*line)
 	{
-		if (*line == ';' || *line == '|')
+		if ((*line == ';' || *line == '|') && *(line + 1))
 		{
 			line++;
 			count++;
 		}
-		line++;
+		if (*line)
+			line++;
 	}
 	return count;
 }
@@ -169,6 +172,10 @@ char	***ft_split_string(char *line)
 	return (arr_strs);
 }
 
+
+//errors
+//minishell$   ls   ; echo 1  ; echo 2 ; echo 3
+//minishell$   ls   ; echo 1  ; echo 2
 int	ft_parse(char *line, char *home)
 {
 	char	***arr_commands;
