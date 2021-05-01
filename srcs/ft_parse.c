@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:08:18 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/26 17:11:20 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/02 00:40:56 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char** ft_parse_strings(char *line)
 	return (arr_strings);
 }
 
-void ft_start_commands(char	**strs_cmd)
+void ft_start_commands(char	**strs_cmd, t_env *env)
 {
 	int		splt_len;
 
@@ -93,9 +93,11 @@ void ft_start_commands(char	**strs_cmd)
 	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_echo(strs_cmd[1], 1);
 	else if (!ft_strncmp(strs_cmd[0], "cd", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_cd(strs_cmd[1]);
+		ft_cd(strs_cmd[1], env);
 	else if (!ft_strncmp(strs_cmd[0], "exit", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_exit();
+	else if (!ft_strncmp(strs_cmd[0], "env", ft_strlen(strs_cmd[0])) && splt_len != 0)
+		ft_env(*env);
 	else if (!ft_strncmp(strs_cmd[0], "$?", ft_strlen(strs_cmd[0])) && splt_len != 0)
 	{
 		printf("minishell: %d: command not found\n", g_error);
@@ -107,13 +109,12 @@ void ft_start_commands(char	**strs_cmd)
 }
 
 
-int	ft_parse(char *line, char *home)
+int	ft_parse(char *line, char *home, t_env *env)
 {
 	char	**strs_cmd;
 
 	strs_cmd = ft_parse_strings(line);
-	ft_start_commands(strs_cmd);
-
+	ft_start_commands(strs_cmd, env);
 	ft_write_history(line, home);
 	return (0);	//TODO а зачем тут нам 0 ? почему метод не void если мы всегда 0 возвращаем?
 }

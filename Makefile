@@ -19,6 +19,8 @@ CFILE =		minishell.c \
 			ft_history.c \
 			ft_signals.c \
 			ft_commands.c \
+			ft_init.c \
+			ft_env.c \
 
 LIB_F =		$(LIBFT)/*.c
 
