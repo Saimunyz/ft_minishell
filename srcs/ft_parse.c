@@ -45,7 +45,8 @@ int	ft_count_commands(char *line)
 		if (*line == ' ')
 		{
 			ft_go_end_space(&line);
-			count++;
+			if (*line)
+				count++;
 		}
 		line++;
 	}
@@ -55,15 +56,15 @@ int	ft_count_commands(char *line)
 char** ft_parse_strings(char *line)
 {
 	char **arr_strings;
-	int count_lines;
+	int count_commands;
 	int i;
 	int j;
 
-	count_lines = ft_count_commands(line);
-	arr_strings = (char **) malloc(sizeof (char **) * (count_lines + 1));
+	count_commands = ft_count_commands(line);
+	arr_strings = (char **) malloc(sizeof (char **) * (count_commands + 1));
 	ft_go_end_space(&line);
 	i = 0;
-	while (i < count_lines)
+	while (i < count_commands)
 	{
 		j = 0;
 		arr_strings[i] = (char *) malloc(sizeof (char *) * (ft_str_len_space(line) + 1));
@@ -104,7 +105,7 @@ void ft_start_commands(char	**strs_cmd)
 	}
 	else if (*strs_cmd[0] != '\3')
 		ft_commands(strs_cmd);
-//	free_text(strs_cmd, ft_maslen(strs_cmd));	тут больше не фришем, делаем это на уровень выше
+	free_text(strs_cmd, ft_maslen(strs_cmd));	//тут больше не фришем, делаем это на уровень выше
 }
 
 int	ft_count_strs(char *line)
@@ -149,7 +150,6 @@ char	***ft_split_string(char *line)
 	int start;
 	int end;
 	char *tmp;
-//	char *ft_substr(char const *s, unsigned int start, size_t maxlen);
 
 	count_strs = ft_count_strs(line);
 	if (count_strs == 0)
@@ -163,7 +163,6 @@ char	***ft_split_string(char *line)
 		tmp = ft_substr(line, start, end - start);
 		arr_strs[i] = ft_parse_strings(tmp);
 		start = end + 1;
-//		count_strs--;
 		i++;
 	}
 	arr_strs[i] = NULL;
@@ -172,18 +171,17 @@ char	***ft_split_string(char *line)
 
 int	ft_parse(char *line, char *home)
 {
-	char	***arr_strs;
-//	char	**strs_cmd;
+	char	***arr_commands;
+	int	i;
 
-	arr_strs = ft_split_string(line);
-	while (arr_strs && *arr_strs)
+	i = 0;
+	arr_commands = ft_split_string(line);
+	while (arr_commands && arr_commands[i])
 	{
-		//strs_cmd = ft_parse_strings(**arr_strs);
-		ft_start_commands(*arr_strs);
-		arr_strs++;
+		ft_start_commands(arr_commands[i]);
+		i++;
 	}
-//	strs_cmd = ft_parse_strings(line);
-//	ft_start_commands(strs_cmd);
+	free(arr_commands);
 	ft_write_history(line, home);
 	return (0);	//TODO а зачем тут нам 0 ? почему метод не void если мы всегда 0 возвращаем?
 }
