@@ -67,19 +67,15 @@ void	ft_command_not_found(char *cmd)
 	ft_putstr_fd(tmp_str, 1);
 	free(tmp_str);
 }
+
 /*
- * Test
  * TODO буду рефакторить когда доделаем парсер
- * на данный моменет сделанно с огранничим количеством входящих параметров. Не более 1.
- * переписать когда разберемся с парсером... или наоброт :)
- * добавить ошибку если нет такой команды
  */
 void	ft_commands(char **splt)
 {
 	pid_t	pid;
 	char	*cmd;
 	char	*newenviron[0];
-	char	*newargv[3];//переписать под маллок
 
 	//TODO всегда можно NULL или нет?
 	newenviron[0] = NULL;
@@ -88,17 +84,14 @@ void	ft_commands(char **splt)
 	if (cmd)
 	{
 		g_error = 0;
-		newargv[0] = cmd;
-		newargv[1] = splt[1];
-		newargv[2] = NULL;
+		splt[0] = cmd;
 		pid = fork();
 		if (pid == 0)
 		{
-			execve(cmd, newargv, newenviron);
+			execve(cmd, splt, newenviron);
 			exit(0);
 		}
 		wait(&pid);
-		free(cmd);
 	}
 	else
 		ft_command_not_found(splt[0]);

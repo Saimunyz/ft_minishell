@@ -172,11 +172,12 @@ char	***ft_split_string(char *line)
 }
 
 
-//доделать
-//""  ''
-//  \
+//TODO Доделать
+//	""  ''
+//  "\"
 // |
 // << >> <
+//  git checkout  main (несколько параметров)
 int	ft_parse(char *line, char *home)
 {
 	char	***arr_commands;
