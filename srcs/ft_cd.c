@@ -6,15 +6,13 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 02:30:05 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/04/20 02:30:06 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/02 00:55:51 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-/*
- * вроде бы еще  env надо менять, проверить после обработки env
- */
-void	ft_cd(char *path)
+
+void	ft_cd(char *path, t_env *env)
 {
 	int ans;
 
@@ -29,5 +27,9 @@ void	ft_cd(char *path)
 		write(1, ": No such file or directory\n", 28);
 		errno = 0;
 	}
-	ft_check_errno(); //это тут надо?
+	free(env->oldpwd->content);
+	env->oldpwd->content = ft_strjoin("OLD", env->pwd->content);
+	free(env->pwd->content);
+	env->pwd->content = ft_strjoin("PWD=", getcwd(NULL, 0));
+	ft_check_errno();
 }
