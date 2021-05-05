@@ -12,13 +12,37 @@
 
 #include "minishell.h"
 
+int ft_check_var(char	**strs_cmd, t_list **var)
+{
+
+	char	**commans;
+//	char 	**plus;
+	t_list	*tmp;
+	t_var	tmp_var;
+
+
+	commans = ft_split(*strs_cmd, '=');
+	if (commans[1] == NULL || strs_cmd[1])
+		return (0);
+	tmp_var.name = ft_strdup(commans[0]);
+	tmp_var.value = ft_strdup(commans[1]);
+	tmp = ft_lstnew(&tmp_var);
+	ft_lstadd_back(var, tmp);
+	return (1);
+}
 
 void ft_start_commands(char	**strs_cmd, t_env *env)
 {
 	int		splt_len;
+	t_list 	*var;
 
+	var = NULL;
 	splt_len = ft_strlen(strs_cmd[0]);
-	if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
+	if (ft_check_var(strs_cmd, &var))
+	{
+
+	}
+	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
 	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_echo(strs_cmd[1], 1);

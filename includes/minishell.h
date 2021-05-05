@@ -27,6 +27,12 @@
 # define GET_DATA_ERR 1
 # define COMMAND_ERR 2
 
+typedef struct	s_var
+{
+	char	*name;
+	char 	*value;
+}				t_var;
+
 typedef struct s_hist
 {
 	t_list	*hist;
