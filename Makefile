@@ -21,6 +21,7 @@ CFILE =		minishell.c \
 			ft_commands.c \
 			ft_init.c \
 			ft_env.c \
+			ft_export.c \
 
 LIB_F =		$(LIBFT)/*.c
 

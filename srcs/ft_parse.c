@@ -6,52 +6,60 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:08:18 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/05 14:56:51 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/05 18:56:57 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_check_var(char	**strs_cmd, t_list **var)
+int	ft_check_var(char **strs_cmd, t_memory *mem)
 {
-
-	char	**commans;
-//	char 	**plus;
-	t_list	*tmp;
-	t_var	tmp_var;
-
-
-	commans = ft_split(*strs_cmd, '=');
-	if (commans[1] == NULL || strs_cmd[1])
-		return (0);
-	tmp_var.name = ft_strdup(commans[0]);
-	tmp_var.value = ft_strdup(commans[1]);
-	tmp = ft_lstnew(&tmp_var);
-	ft_lstadd_back(var, tmp);
-	return (1);
-}
-
-void ft_start_commands(char	**strs_cmd, t_env *env)
-{
-	int		splt_len;
-	t_list 	*var;
-
-	var = NULL;
-	splt_len = ft_strlen(strs_cmd[0]);
-	if (ft_check_var(strs_cmd, &var))
+	if (ft_strnstr(strs_cmd[0], "+=", ft_strlen(strs_cmd[0])))
 	{
 
 	}
+	else if (ft_strnstr(strs_cmd[0], "=", ft_strlen(strs_cmd[0])))
+		ft_add_var(strs_cmd, mem);
+	else
+		return (0);
+	return (1);
+}
+
+void	ft_add_var(char	**strs_cmd, t_memory *mem)
+{
+
+	char	**commans;
+	t_var	tmp_var;
+
+	commans = ft_split(*strs_cmd, '=');
+	if (commans[1] == NULL || strs_cmd[1])
+		return ;
+	tmp_var.name = ft_strdup(commans[0]);
+	tmp_var.value = ft_strdup(commans[1]);
+	ft_lstadd_back(&mem->var, ft_lstnew(&tmp_var));
+}
+
+void ft_start_commands(char	**strs_cmd, t_memory *mem)
+{
+	int		splt_len;
+
+	splt_len = ft_strlen(strs_cmd[0]);
+	if (ft_check_var(strs_cmd, mem))
+		return (free_text(strs_cmd, ft_maslen(strs_cmd)));
 	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
 	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_echo(strs_cmd[1], 1);
 	else if (!ft_strncmp(strs_cmd[0], "cd", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_cd(strs_cmd[1], env);
+		ft_cd(strs_cmd[1], mem);
 	else if (!ft_strncmp(strs_cmd[0], "exit", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_exit();
 	else if (!ft_strncmp(strs_cmd[0], "env", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_env(*env);
+		ft_env(*mem);
+	// else if (!ft_strncmp(strs_cmd[0], "export", ft_strlen(strs_cmd[0])) && splt_len != 0)
+	// 	ft_export(mem, strs_cmd);
+	// else if (!ft_strncmp(strs_cmd[0], "unset", ft_strlen(strs_cmd[0])) && splt_len != 0)
+	// 	ft_unset(*env);
 	else if (!ft_strncmp(strs_cmd[0], "$?", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_print_bash_err();
 	else if (*strs_cmd[0] != '\3')
@@ -202,7 +210,7 @@ char	***ft_split_string(char *line)
 //// << >> <
 ////  git checkout  main (несколько параметров)
 //int	ft_parse(char *line, char *home)
-void	ft_parse(char *line, char *home, t_env *env)
+void	ft_parse(char *line, char *home, t_memory *mem)
 {
 	char	***arr_commands;
 	int	i;
@@ -211,7 +219,7 @@ void	ft_parse(char *line, char *home, t_env *env)
 	arr_commands = ft_split_string(line);
 	while (arr_commands && arr_commands[i])
 	{
-		ft_start_commands(arr_commands[i], env);
+		ft_start_commands(arr_commands[i], mem);
 		i++;
 	}
 	free(arr_commands);

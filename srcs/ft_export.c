@@ -1,23 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_env.c                                           :+:      :+:    :+:   */
+/*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/02 00:20:55 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/05 18:07:40 by swagstaf         ###   ########.fr       */
+/*   Created: 2021/05/05 17:45:27 by swagstaf          #+#    #+#             */
+/*   Updated: 2021/05/05 18:54:42 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_env(t_memory mem)
+void	ft_export(t_memory *mem, char **strs_cmd)
 {
-	while (mem.env)
-	{
-		ft_putstr_fd((char *)mem.env->content, 1);
-		write(1, "\n", 1);
-		mem.env = mem.env->next;
-	}
+	if (strs_cmd[1] == NULL)
+		ft_lstadd_back(&mem->env, ft_lstnew(strs_cmd[0]));
 }

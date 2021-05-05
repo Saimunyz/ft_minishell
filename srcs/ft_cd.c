@@ -6,13 +6,13 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 02:30:05 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/02 00:55:51 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/05 18:05:00 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_cd(char *path, t_env *env)
+void	ft_cd(char *path, t_memory *mem)
 {
 	int ans;
 
@@ -27,9 +27,9 @@ void	ft_cd(char *path, t_env *env)
 		write(1, ": No such file or directory\n", 28);
 		errno = 0;
 	}
-	free(env->oldpwd->content);
-	env->oldpwd->content = ft_strjoin("OLD", env->pwd->content);
-	free(env->pwd->content);
-	env->pwd->content = ft_strjoin("PWD=", getcwd(NULL, 0));
+	free(mem->oldpwd->content);
+	mem->oldpwd->content = ft_strjoin("OLD", mem->pwd->content);
+	free(mem->pwd->content);
+	mem->pwd->content = ft_strjoin("PWD=", getcwd(NULL, 0));
 	ft_check_errno();
 }

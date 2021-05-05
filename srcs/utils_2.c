@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 15:05:58 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/05 14:55:56 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/05 17:29:55 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	ft_del_char(int *len, char **line)
 
 	if ((*len) + 12 > 12)
 	{
-		tputs(tgetstr("ho", NULL), 1, ft_putchar);
 		tputs(restore_cursor, 1, ft_putchar);
 		tputs(tgetstr("cd", NULL), 1, ft_putchar);
 		(*len)--;
@@ -31,7 +30,6 @@ void	ft_del_char(int *len, char **line)
 
 void	ft_del_line(int *len, char **line)
 {
-	tputs(tgetstr("ho", NULL), 1, ft_putchar);
 	tputs(restore_cursor, 1, ft_putchar);
 	tputs(tgetstr("cd", NULL), 1, ft_putchar);
 	free(*line);

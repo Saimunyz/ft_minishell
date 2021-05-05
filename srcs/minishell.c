@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:09:41 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/05 14:53:20 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/05 18:44:27 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	ft_read(char **line, char *home)
 	return (len);
 }
 
-void	ft_minishell(t_env *env)
+void	ft_minishell(t_memory *mem)
 {
 	char	*line;
 	char	*home;
@@ -93,7 +93,7 @@ void	ft_minishell(t_env *env)
 	{
 		write(STDOUT_FILENO, "minishell$ ", 11);
 		ft_read(&line, home);
-		ft_parse(line, home, env);
+		ft_parse(line, home, mem);
 		ft_check_errno();
 		free(line);
 	}
@@ -101,17 +101,17 @@ void	ft_minishell(t_env *env)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_env	env;
+	t_memory	mem;
 
 	errno = 0;
 	(void)argc;
 	(void)argv;
 	if (ft_get_term_info() != 0)
 		exit(1);
-	ft_init_env(&env, envp);
+	ft_init_mem(&mem, envp);
 	ft_change_term_mode(1);
-	ft_minishell(&env);
-	ft_lstclear(&env.env, free);
+	ft_minishell(&mem);
+	ft_lstclear(&mem.env, free);
 	ft_change_term_mode(0);
 	return (0);
 }
