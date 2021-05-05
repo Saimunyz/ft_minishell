@@ -6,37 +6,63 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:08:18 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/05 18:56:57 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/06 01:07:43 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_check_var(char **strs_cmd, t_memory *mem)
+int	ft_check_var(char *strs_cmd, t_memory *mem)
 {
-	if (ft_strnstr(strs_cmd[0], "+=", ft_strlen(strs_cmd[0])))
-	{
+	char	**splt;
+	char	*tmp;
 
+	if (ft_strnstr(strs_cmd, "+=", ft_strlen(strs_cmd)))
+	{
+		splt = ft_split(strs_cmd, '+');
+		if (ft_maslen(splt) == 2)
+		{
+			tmp = splt[1];
+			splt[1] = ft_strdup(tmp + 1);
+			free(tmp);
+			ft_add_var(splt, mem, 1);
+		}
 	}
-	else if (ft_strnstr(strs_cmd[0], "=", ft_strlen(strs_cmd[0])))
-		ft_add_var(strs_cmd, mem);
+	else if (ft_strnstr(strs_cmd, "=", ft_strlen(strs_cmd)))
+	{
+		splt = ft_split(strs_cmd, '=');
+		if (ft_maslen(splt) == 2)
+			ft_add_var(splt, mem, 0);
+	}
 	else
 		return (0);
+	free_text(splt, ft_maslen(splt));
 	return (1);
 }
 
-void	ft_add_var(char	**strs_cmd, t_memory *mem)
+void	ft_add_var(char	**splt, t_memory *mem, int is_plus)
 {
+	t_var	*tmp_var;
+	t_list	*tmp_lst;
+	char	*value;
 
-	char	**commans;
-	t_var	tmp_var;
-
-	commans = ft_split(*strs_cmd, '=');
-	if (commans[1] == NULL || strs_cmd[1])
-		return ;
-	tmp_var.name = ft_strdup(commans[0]);
-	tmp_var.value = ft_strdup(commans[1]);
-	ft_lstadd_back(&mem->var, ft_lstnew(&tmp_var));
+	tmp_lst = ft_lstfind_struct(mem->var, splt[0]);
+	if (tmp_lst)
+	{
+		value = ((t_var *)tmp_lst->content)->value;
+		if (is_plus)
+			((t_var *)tmp_lst->content)->value = ft_strjoin(value, splt[1]);
+		else
+			((t_var *)tmp_lst->content)->value = ft_strdup(splt[1]);
+		free(value);
+	}
+	else
+	{
+		tmp_var = (t_var *)malloc(sizeof(t_var));
+		tmp_var->name = ft_strdup(splt[0]);
+		tmp_var->value = ft_strdup(splt[1]);
+		ft_lstadd_back(&mem->var, ft_lstnew(tmp_var));
+	}
 }
 
 void ft_start_commands(char	**strs_cmd, t_memory *mem)
@@ -44,7 +70,7 @@ void ft_start_commands(char	**strs_cmd, t_memory *mem)
 	int		splt_len;
 
 	splt_len = ft_strlen(strs_cmd[0]);
-	if (ft_check_var(strs_cmd, mem))
+	if (strs_cmd[1] == NULL && ft_check_var(strs_cmd[0], mem))
 		return (free_text(strs_cmd, ft_maslen(strs_cmd)));
 	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
@@ -56,8 +82,8 @@ void ft_start_commands(char	**strs_cmd, t_memory *mem)
 		ft_exit();
 	else if (!ft_strncmp(strs_cmd[0], "env", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_env(*mem);
-	// else if (!ft_strncmp(strs_cmd[0], "export", ft_strlen(strs_cmd[0])) && splt_len != 0)
-	// 	ft_export(mem, strs_cmd);
+	else if (!ft_strncmp(strs_cmd[0], "export", ft_strlen(strs_cmd[0])) && splt_len != 0)
+		ft_export(mem, strs_cmd);
 	// else if (!ft_strncmp(strs_cmd[0], "unset", ft_strlen(strs_cmd[0])) && splt_len != 0)
 	// 	ft_unset(*env);
 	else if (!ft_strncmp(strs_cmd[0], "$?", ft_strlen(strs_cmd[0])) && splt_len != 0)

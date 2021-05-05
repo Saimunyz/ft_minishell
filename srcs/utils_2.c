@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 15:05:58 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/05 17:29:55 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/06 00:39:02 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,22 @@ void	ft_print_bash_err(void)
 {
 	printf("minishell: %d: command not found\n", g_error);
 	g_error = 127;
+}
+
+t_list	*ft_lstfind_struct(t_list *lst, void *name)
+{
+	int		len;
+	char	*lst_name;
+
+	len = ft_strlen((char *)name);
+	if (!lst || !name)
+		return (NULL);
+	while (lst)
+	{
+		lst_name = ((t_var *)lst->content)->name;
+		if (!ft_strncmp(lst_name, (char *)name, len))
+			return (lst);
+		lst = lst->next;
+	}
+	return (NULL);
 }
