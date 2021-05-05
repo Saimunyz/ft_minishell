@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:08:18 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/02 02:20:55 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/05 14:56:51 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,7 @@ void ft_start_commands(char	**strs_cmd, t_env *env)
 	else if (!ft_strncmp(strs_cmd[0], "env", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_env(*env);
 	else if (!ft_strncmp(strs_cmd[0], "$?", ft_strlen(strs_cmd[0])) && splt_len != 0)
-	{
-		printf("minishell: %d: command not found\n", g_error);
-		g_error = 127;
-	}
+		ft_print_bash_err();
 	else if (*strs_cmd[0] != '\3')
 		ft_commands(strs_cmd);
 	free_text(strs_cmd, ft_maslen(strs_cmd));
@@ -174,7 +171,6 @@ char	***ft_split_string(char *line)
 }
 
 
-//<<<<<<< HEAD
 ////TODO Доделать
 ////	""  ''
 ////  "\"
@@ -182,15 +178,7 @@ char	***ft_split_string(char *line)
 //// << >> <
 ////  git checkout  main (несколько параметров)
 //int	ft_parse(char *line, char *home)
-//=======
-/*доделать
-*""  ''
-*  \
-* |
-* << >> <
-*/
 void	ft_parse(char *line, char *home, t_env *env)
-//>>>>>>> 50effa6f31425eb0e9c955029142d6b252b6e019
 {
 	char	***arr_commands;
 	int	i;

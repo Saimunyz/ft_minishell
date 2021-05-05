@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/02 02:18:23 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/05 14:56:05 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	ft_put_history_down(int *len, char **line, t_hist *hist);
 void	ft_put_history_up(int *len, char **line, t_hist *hist);
 int		ft_check_sigint(char **line, char *character);
 void	ft_check_eof(char **line, char *character, t_hist *hist);
-void	ft_print_bash_err(char *line);
+void	ft_print_bash_err(void);
 void	ft_init_env(t_env *env, char **envp);
 void	ft_env(t_env env);
 
