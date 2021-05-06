@@ -75,7 +75,7 @@ void ft_start_commands(char	**strs_cmd, t_memory *mem)
 	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
 	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_echo(strs_cmd[1], 1);
+		ft_echo(strs_cmd[1], 1);	//Todo не работает флаг -n
 	else if (!ft_strncmp(strs_cmd[0], "cd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_cd(strs_cmd[1], mem);
 	else if (!ft_strncmp(strs_cmd[0], "exit", ft_strlen(strs_cmd[0])) && splt_len != 0)
@@ -234,8 +234,6 @@ char	***ft_split_string(char *line)
 ////  "\"
 //// |
 //// << >> <
-////  git checkout  main (несколько параметров)
-//int	ft_parse(char *line, char *home)
 void	ft_parse(char *line, char *home, t_memory *mem)
 {
 	char	***arr_commands;
