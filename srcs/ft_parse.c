@@ -136,7 +136,8 @@ int	ft_count_commands(char *line)
 			if (*line)
 				count++;
 		}
-		line++;
+		if (*line)
+			line++;
 	}
 	return count;
 }
