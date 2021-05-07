@@ -81,13 +81,13 @@ void ft_start_commands(char	**strs_cmd, t_memory *mem)
 	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
 	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_echo(strs_cmd[1], 1);
+		ft_echo(strs_cmd);	//Todo не работает флаг -n и конвеер команд
 	else if (!ft_strncmp(strs_cmd[0], "cd", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_cd(strs_cmd[1], mem);
+		ft_cd(strs_cmd[1], mem);		//Todo доделать "-bash: cd: too many arguments"
 	else if (!ft_strncmp(strs_cmd[0], "exit", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_exit();
 	else if (!ft_strncmp(strs_cmd[0], "env", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_env(mem);
+		ft_env(mem);	//Todo он вроде как то с параметрами работает, надо распросить как
 	else if (!ft_strncmp(strs_cmd[0], "export", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_export(mem, strs_cmd);
 	// else if (!ft_strncmp(strs_cmd[0], "unset", ft_strlen(strs_cmd[0])) && splt_len != 0)
@@ -241,8 +241,6 @@ char	***ft_split_string(char *line)
 ////  "\"
 //// |
 //// << >> <
-////  git checkout  main (несколько параметров)
-//int	ft_parse(char *line, char *home)
 void	ft_parse(char *line, char *home, t_memory *mem)
 {
 	char	***arr_commands;

@@ -23,7 +23,7 @@ static t_var	*ft_init_val(char *envp)
 	if (ft_maslen(splt) != 2)
 		ft_check_errno(); // не уверен, что не нул просто
 	tmp_var->name = ft_strdup(splt[0]);
-	if (!splt[1])	//Сергей, тут нал бывает
+	if (!splt[1])	//Сергей, тут нал бывает и крашится
 		tmp_var->value = ft_strdup("");
 	else
 		tmp_var->value = ft_strdup(splt[1]);
