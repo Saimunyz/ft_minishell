@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:08:18 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/06 01:07:43 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/07 18:12:18 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,13 @@ int	ft_check_var(char *strs_cmd, t_memory *mem)
 			tmp = splt[1];
 			splt[1] = ft_strdup(tmp + 1);
 			free(tmp);
-			ft_add_var(splt, mem, 1);
 		}
+		ft_add_var(splt, mem, 1);
 	}
 	else if (ft_strnstr(strs_cmd, "=", ft_strlen(strs_cmd)))
 	{
 		splt = ft_split(strs_cmd, '=');
-		if (ft_maslen(splt) == 2)
-			ft_add_var(splt, mem, 0);
+		ft_add_var(splt, mem, 0);
 	}
 	else
 		return (0);
@@ -46,17 +45,21 @@ void	ft_add_var(char	**splt, t_memory *mem, int is_plus)
 	t_list	*tmp_lst;
 	char	*value;
 
-	tmp_lst = ft_lstfind_struct(mem->var, splt[0]);
+	tmp_lst = ft_lstfind_struct(mem->env, splt[0]);
+	if (!tmp_lst)
+		tmp_lst = ft_lstfind_struct(mem->var, splt[0]);
 	if (tmp_lst)
 	{
 		value = ((t_var *)tmp_lst->content)->value;
-		if (is_plus)
+		if (is_plus && splt[1] && value)
 			((t_var *)tmp_lst->content)->value = ft_strjoin(value, splt[1]);
-		else
+		else if (splt[1])
 			((t_var *)tmp_lst->content)->value = ft_strdup(splt[1]);
+		else
+			((t_var *)tmp_lst->content)->value = ft_strdup("");
 		free(value);
 	}
-	else
+	else if (ft_maslen(splt) == 2)
 	{
 		tmp_var = (t_var *)malloc(sizeof(t_var));
 		tmp_var->name = ft_strdup(splt[0]);
@@ -70,8 +73,11 @@ void ft_start_commands(char	**strs_cmd, t_memory *mem)
 	int		splt_len;
 
 	splt_len = ft_strlen(strs_cmd[0]);
-	if (strs_cmd[1] == NULL && ft_check_var(strs_cmd[0], mem))
-		return (free_text(strs_cmd, ft_maslen(strs_cmd)));
+	if (ft_check_var(strs_cmd[0], mem))
+	{
+		free_text(strs_cmd, ft_maslen(strs_cmd));
+		return ;
+	}
 	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
 	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)
@@ -81,7 +87,7 @@ void ft_start_commands(char	**strs_cmd, t_memory *mem)
 	else if (!ft_strncmp(strs_cmd[0], "exit", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_exit();
 	else if (!ft_strncmp(strs_cmd[0], "env", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_env(*mem);
+		ft_env(mem);
 	else if (!ft_strncmp(strs_cmd[0], "export", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_export(mem, strs_cmd);
 	// else if (!ft_strncmp(strs_cmd[0], "unset", ft_strlen(strs_cmd[0])) && splt_len != 0)
@@ -221,6 +227,7 @@ char	***ft_split_string(char *line)
 		end = ft_find_char(line, start);
 		tmp = ft_substr(line, start, end - start);
 		arr_strs[i] = ft_parse_strings(tmp);
+		free(tmp);
 		start = end + 1;
 		i++;
 	}

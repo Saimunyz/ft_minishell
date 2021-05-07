@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:09:41 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/05 18:44:27 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/07 17:44:41 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	ft_read(char **line, char *home)
 	t_hist	hist;
 
 	len = 0;
+	ft_change_term_mode(1);
 	ft_init_read(&hist, line, &character, home);
 	tputs(save_cursor, 1, ft_putchar);
 	while (*character != '\n')
@@ -78,6 +79,7 @@ int	ft_read(char **line, char *home)
 	write(1, "\n", 1);
 	ft_lstclear(&hist.start, free);
 	free(character);
+	ft_change_term_mode(0);
 	return (len);
 }
 
@@ -109,9 +111,7 @@ int	main(int argc, char **argv, char **envp)
 	if (ft_get_term_info() != 0)
 		exit(1);
 	ft_init_mem(&mem, envp);
-	ft_change_term_mode(1);
 	ft_minishell(&mem);
 	ft_lstclear(&mem.env, free);
-	ft_change_term_mode(0);
 	return (0);
 }

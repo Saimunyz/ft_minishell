@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/06 00:51:09 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/07 15:27:37 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,10 @@ int		ft_check_sigint(char **line, char *character);
 void	ft_check_eof(char **line, char *character, t_hist *hist);
 void	ft_print_bash_err(void);
 void	ft_init_mem(t_memory *env, char **envp);
-void	ft_env(t_memory mem);
+void	ft_env(t_memory *mem);
 void	ft_add_var(char	**splt, t_memory *mem, int is_plus);
 int		ft_check_var(char *strs_cmd, t_memory *mem);
 void	ft_export(t_memory *mem, char **strs_cmd);
+void	ft_free_content(void *content);
 
 #endif
