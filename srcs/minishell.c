@@ -112,6 +112,6 @@ int	main(int argc, char **argv, char **envp)
 		exit(1);
 	ft_init_mem(&mem, envp);
 	ft_minishell(&mem);
-	ft_lstclear(&mem.env, free);
+//	ft_lstclear(&mem.env, free); //Сергей мы же сюда никогда не попадаем
 	return (0);
 }

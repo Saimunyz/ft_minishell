@@ -86,6 +86,7 @@ void	ft_commands(char **splt)
 	if (cmd)
 	{
 		g_error = 0;
+		free(splt[0]);
 		splt[0] = cmd;
 		pid = fork();
 		if (pid == 0)
