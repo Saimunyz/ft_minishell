@@ -6,18 +6,25 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/02 00:20:55 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/05 18:07:40 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/07 16:17:40 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_env(t_memory mem)
+void	ft_env(t_memory *mem)
 {
-	while (mem.env)
+	t_list	*tmp;
+	char	*name;
+	char	*value;
+
+	tmp = mem->env;
+	while (tmp)
 	{
-		ft_putstr_fd((char *)mem.env->content, 1);
-		write(1, "\n", 1);
-		mem.env = mem.env->next;
+		name = ((t_var *)tmp->content)->name;
+		value = ((t_var *)tmp->content)->value;
+		if (value)
+			printf("%s=%s\n", name, value);
+		tmp = tmp->next;
 	}
 }

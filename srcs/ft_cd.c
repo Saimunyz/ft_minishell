@@ -6,15 +6,29 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 02:30:05 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/05 18:05:00 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/07 16:41:20 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static void	ft_set_pwd(t_memory *mem)
+{
+	char	*value;
+	if (mem->oldpwd)
+		ft_free_content(mem->oldpwd->content);
+	value = ((t_var *)mem->pwd->content)->value;
+	((t_var *)mem->oldpwd->content)->name = ft_strdup("OLDPWD");
+	((t_var *)mem->oldpwd->content)->value = ft_strdup(value);
+	ft_free_content(mem->pwd->content);
+	((t_var *)mem->pwd->content)->name = ft_strdup("PWD");
+	((t_var *)mem->pwd->content)->value = getcwd(NULL, 0);
+	ft_check_errno();
+}
+
 void	ft_cd(char *path, t_memory *mem)
 {
-	int ans;
+	int		ans;
 
 	g_error = 0;
 	if (!path)
@@ -27,9 +41,5 @@ void	ft_cd(char *path, t_memory *mem)
 		write(1, ": No such file or directory\n", 28);
 		errno = 0;
 	}
-	free(mem->oldpwd->content);
-	mem->oldpwd->content = ft_strjoin("OLD", mem->pwd->content);
-	free(mem->pwd->content);
-	mem->pwd->content = ft_strjoin("PWD=", getcwd(NULL, 0));
-	ft_check_errno();
+	ft_set_pwd(mem);
 }
