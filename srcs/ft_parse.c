@@ -39,6 +39,18 @@ int	ft_check_var(char *strs_cmd, t_memory *mem)
 	return (1);
 }
 
+char	ft_spec_char(char spec_char, char line)
+{
+	if(spec_char == 0)
+	{
+		if (line == '"' || line == 39)
+			return line;
+	}
+	else if (spec_char == line)
+		return (0);
+	return (spec_char);
+}
+
 void	ft_add_var(char	**splt, t_memory *mem, int is_plus)
 {
 	t_var	*tmp_var;
@@ -122,7 +134,9 @@ void ft_go_end_space(char **line)
 int	ft_count_commands(char *line)
 {
 	int count;
+	char spec_char;
 
+	spec_char = 0;
 	ft_go_end_space(&line);
 	if (*line)
 		count = 1;
@@ -130,12 +144,14 @@ int	ft_count_commands(char *line)
 		return (0);
 	while (*line)
 	{
-		if (*line == ' ')
+		spec_char = ft_spec_char(spec_char, *line);
+		if (*line == ' ' && !spec_char)
 		{
 			ft_go_end_space(&line);
 			if (*line)
 				count++;
 		}
+		spec_char = ft_spec_char(spec_char, *line);
 		if (*line)
 			line++;
 	}
@@ -148,7 +164,9 @@ char** ft_parse_strings(char *line)
 	int count_commands;
 	int i;
 	int j;
+	char spec_char;
 
+	spec_char = 0;
 	count_commands = ft_count_commands(line);
 	arr_strings = (char **) malloc(sizeof (char **) * (count_commands + 1));
 	ft_go_end_space(&line);
@@ -158,8 +176,9 @@ char** ft_parse_strings(char *line)
 		j = 0;
 		arr_strings[i] = (char *) malloc(sizeof (char *) * (ft_str_len_space(line) + 1));
 		while (*line) {
+			spec_char = ft_spec_char(spec_char, *line);
 			arr_strings[i][j] = *line;
-			if (*line == ' ' || !line )
+			if ((*line == ' ' || !line) && !spec_char)
 			{
 				ft_go_end_space(&line);
 				break;
@@ -174,17 +193,22 @@ char** ft_parse_strings(char *line)
 	return (arr_strings);
 }
 
+
+
 int	ft_count_strs(char *line)
 {
 	int count;
+	char spec_char;
 
+	spec_char = 0;
 	if (*line)
 		count = 1;
 	else
 		return (0);
 	while (*line)
 	{
-		if ((*line == ';' || *line == '|') && *(line + 1))
+		spec_char = ft_spec_char(spec_char, *line);
+		if ((*line == ';' || *line == '|') && *(line + 1) && !spec_char)
 		{
 			line++;
 			count++;
@@ -192,16 +216,22 @@ int	ft_count_strs(char *line)
 		if (*line)
 			line++;
 	}
+	if (spec_char != 0)
+		printf("error!"); //TODO доделать
 	return count;
 }
 
 int ft_find_char(char *str, int i)
 {
+	char spec_char;
+
+	spec_char = 0;
 	if (!str)
 		return (0);
 	while (str[i])
 	{
-		if(str[i] == ';')
+		spec_char = ft_spec_char(spec_char, str[i]);
+		if(str[i] == ';' && !spec_char)
 			return (i);
 		i++;
 	}
