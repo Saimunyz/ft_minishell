@@ -43,7 +43,7 @@ char	ft_spec_char(char spec_char, char line)
 {
 	if(spec_char == 0)
 	{
-		if (line == '"' || line == 39)
+		if (line == 34 || line == 39)
 			return line;
 	}
 	else if (spec_char == line)
@@ -151,8 +151,7 @@ int	ft_count_commands(char *line)
 			if (*line)
 				count++;
 		}
-		spec_char = ft_spec_char(spec_char, *line);
-		if (*line)
+		else if(*line)
 			line++;
 	}
 	return count;
@@ -217,7 +216,10 @@ int	ft_count_strs(char *line)
 			line++;
 	}
 	if (spec_char != 0)
-		printf("error!"); //TODO доделать
+	{
+		printf("minishell: syntax error\n"); //TODO доделать
+		return 0;
+	}
 	return count;
 }
 

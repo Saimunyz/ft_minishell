@@ -1,1 +1,2 @@
-ls "; asdf" ; echo ; ls "   //07.05.2021
+ls "; asdf" ; echo ; ls " //fix   //07.05.2021
+echo "asdf asd"   "asd  dsdfas" //07.05.2021
