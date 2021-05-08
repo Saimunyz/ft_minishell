@@ -51,6 +51,26 @@ char	ft_spec_char(char spec_char, char line)
 	return (spec_char);
 }
 
+char	ft_spec_char_step(char spec_char, char **line)
+{
+	if(spec_char == 0)
+	{
+		if (**line == 34 || **line == 39)
+		{
+			spec_char = **line;
+			(*line)++;
+			return spec_char;
+
+		}
+	}
+	else if (spec_char == **line)
+	{
+		(*line)++;
+		return (0);
+	}
+	return (spec_char);
+}
+
 void	ft_add_var(char	**splt, t_memory *mem, int is_plus)
 {
 	t_var	*tmp_var;
@@ -93,13 +113,13 @@ void ft_start_commands(char	**strs_cmd, t_memory *mem)
 	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
 	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_echo(strs_cmd);	//Todo не работает флаг -n и конвеер команд
+		ft_echo(strs_cmd);
 	else if (!ft_strncmp(strs_cmd[0], "cd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_cd(strs_cmd[1], mem);		//Todo доделать "-bash: cd: too many arguments"
 	else if (!ft_strncmp(strs_cmd[0], "exit", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_exit();
 	else if (!ft_strncmp(strs_cmd[0], "env", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_env(mem);	//Todo он вроде как то с параметрами работает, надо распросить как
+		ft_env(mem);	//Todo он вроде как то с параметрами работает, надо расспросить как
 	else if (!ft_strncmp(strs_cmd[0], "export", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_export(mem, strs_cmd);
 	// else if (!ft_strncmp(strs_cmd[0], "unset", ft_strlen(strs_cmd[0])) && splt_len != 0)
@@ -175,7 +195,8 @@ char** ft_parse_strings(char *line)
 		j = 0;
 		arr_strings[i] = (char *) malloc(sizeof (char *) * (ft_str_len_space(line) + 1));
 		while (*line) {
-			spec_char = ft_spec_char(spec_char, *line);
+//			spec_char = ft_spec_char(spec_char, *line);
+			spec_char = ft_spec_char_step(spec_char, &line);
 			arr_strings[i][j] = *line;
 			if ((*line == ' ' || !line) && !spec_char)
 			{
