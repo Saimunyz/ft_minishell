@@ -11,46 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	ft_check_var(char *strs_cmd, t_memory *mem)
-{
-	char	**splt;
-	char	*tmp;
-
-	if (ft_strnstr(strs_cmd, "+=", ft_strlen(strs_cmd)))
-	{
-		splt = ft_split(strs_cmd, '+');
-		if (ft_maslen(splt) == 2)
-		{
-			tmp = splt[1];
-			splt[1] = ft_strdup(tmp + 1);
-			free(tmp);
-		}
-		ft_add_var(splt, mem, 1);
-	}
-	else if (ft_strnstr(strs_cmd, "=", ft_strlen(strs_cmd)))
-	{
-		splt = ft_split(strs_cmd, '=');
-		ft_add_var(splt, mem, 0);
-	}
-	else
-		return (0);
-	free_text(splt, ft_maslen(splt));
-	return (1);
-}
-
-char	ft_spec_char(char spec_char, char line)
-{
-	if(spec_char == 0)
-	{
-		if (line == 34 || line == 39)
-			return line;
-	}
-	else if (spec_char == line)
-		return (0);
-	return (spec_char);
-}
-
 char	ft_spec_char_step(char spec_char, char **line)
 {
 	if(spec_char == 0)
@@ -69,6 +29,63 @@ char	ft_spec_char_step(char spec_char, char **line)
 		return (0);
 	}
 	return (spec_char);
+}
+
+char *ft_spec_char_loop(char **str)
+{
+	int i;
+	char *tmp;
+	char spec_char;
+	char *tmp_str;
+
+	tmp_str = *str;
+	spec_char = 0;
+	tmp = (char *) malloc(sizeof(char) * (ft_strlen(*str) + 1));
+	while (**str)
+	{
+		spec_char = ft_spec_char_step(spec_char, str);
+		tmp[i] = **str;
+		(*str)++;
+		i++;
+	}
+	tmp[i] = '\0';
+	free(tmp_str);
+	return tmp;
+}
+
+int	ft_check_var(char *strs_cmd, t_memory *mem)
+{
+	char	**splt;
+	char	*tmp;
+	int		isPlus;  //Сергей
+
+	if (ft_strnstr(strs_cmd, "+=", ft_strlen(strs_cmd)))
+	{
+		splt = ft_split(strs_cmd, '+');
+		if (ft_maslen(splt) == 2)
+		{
+			tmp = splt[1];
+			splt[1] = ft_strdup(tmp + 1);
+			free(tmp);
+		}
+		isPlus = 1;	//Сергей
+//		ft_add_var(splt, mem, 1);
+	}
+	else if (ft_strnstr(strs_cmd, "=", ft_strlen(strs_cmd)))
+	{
+		splt = ft_split(strs_cmd, '=');
+//		ft_add_var(splt, mem, 0);
+		isPlus = 0; //Сергей
+	}
+	else
+		return (0);
+	if(splt[2])
+		return (0); //TODO тут надо дописать, остаток команды исполняется, надо отправить ее снова в парсер, но данные переменной не попадают в энв
+			//по сути надо сместить массив на 1
+	splt[1] = ft_spec_char_loop(&splt[1]); //Сергей
+	ft_add_var(splt, mem, isPlus); //Сергей
+	free_text(splt, ft_maslen(splt));
+	return (1);
 }
 
 void	ft_add_var(char	**splt, t_memory *mem, int is_plus)
@@ -100,6 +117,18 @@ void	ft_add_var(char	**splt, t_memory *mem, int is_plus)
 	}
 }
 
+char	ft_spec_char(char spec_char, char line)
+{
+	if(spec_char == 0)
+	{
+		if (line == 34 || line == 39)
+			return line;
+	}
+	else if (spec_char == line)
+		return (0);
+	return (spec_char);
+}
+
 void ft_start_commands(char	**strs_cmd, t_memory *mem)
 {
 	int		splt_len;
@@ -108,7 +137,7 @@ void ft_start_commands(char	**strs_cmd, t_memory *mem)
 	if (ft_check_var(strs_cmd[0], mem))
 	{
 		free_text(strs_cmd, ft_maslen(strs_cmd));
-		return ;
+		return ;		//TODO тут должно быть не ретёрн. Код ниже должен выполняться (a=1 echo abc), но массив **strs_cmd надо сместить. И есть кейс a=1 b=2
 	}
 	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
@@ -195,7 +224,6 @@ char** ft_parse_strings(char *line)
 		j = 0;
 		arr_strings[i] = (char *) malloc(sizeof (char *) * (ft_str_len_space(line) + 1));
 		while (*line) {
-//			spec_char = ft_spec_char(spec_char, *line);
 			spec_char = ft_spec_char_step(spec_char, &line);
 			arr_strings[i][j] = *line;
 			if ((*line == ' ' || !line) && !spec_char)
@@ -291,7 +319,7 @@ char	***ft_split_string(char *line)
 
 
 ////TODO Доделать
-////	""  ''
+////	$var
 ////  "\"
 //// |
 //// << >> <

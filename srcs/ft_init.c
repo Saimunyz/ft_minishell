@@ -17,7 +17,7 @@ static t_var	*ft_init_val(char *envp)
 	t_var	*tmp_var;
 	char	**splt;
 
-	tmp_var = (t_var *)malloc(sizeof(t_var));
+	tmp_var = (t_var *)malloc(sizeof(t_var)); //TODO нет обработки на null
 	ft_check_errno();
 	splt = ft_split(envp, '=');
 	if (ft_maslen(splt) != 2)

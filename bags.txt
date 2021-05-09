@@ -1,2 +1,6 @@
 ls "; asdf" ; echo ; ls " //fix   //07.05.2021
-echo "asdf asd"   "asd  dsdfas" //07.05.2021
+echo "asdf asd"   "asd  dsdfas" //fix //07.05.2021
+
+./minishell //повторный вызов это баг? 09.05.2021
+
+a=1 echo abc //09.05.2021
