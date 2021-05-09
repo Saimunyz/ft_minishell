@@ -38,6 +38,7 @@ char *ft_spec_char_loop(char **str)
 	char spec_char;
 	char *tmp_str;
 
+	i = 0;
 	tmp_str = *str;
 	spec_char = 0;
 	tmp = (char *) malloc(sizeof(char) * (ft_strlen(*str) + 1));
@@ -232,7 +233,8 @@ char** ft_parse_strings(char *line)
 				break;
 			}
 			j++;
-			line++;
+			if (*line)
+				line++;
 		}
 		arr_strings[i][j] = '\0';
 		i++;
