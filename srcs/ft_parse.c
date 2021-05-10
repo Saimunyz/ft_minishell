@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:08:18 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/07 18:12:18 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/10 16:10:08 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ char	ft_spec_char(char spec_char, char line)
 	return (spec_char);
 }
 
-void ft_start_commands(char	**strs_cmd, t_memory *mem)
+void	ft_start_commands(char	**strs_cmd, t_memory *mem)
 {
 	int		splt_len;
 
@@ -143,7 +143,7 @@ void ft_start_commands(char	**strs_cmd, t_memory *mem)
 	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
 	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_echo(strs_cmd);
+		ft_echo(strs_cmd, mem);
 	else if (!ft_strncmp(strs_cmd[0], "cd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_cd(strs_cmd[1], mem);		//Todo доделать "-bash: cd: too many arguments"
 	else if (!ft_strncmp(strs_cmd[0], "exit", ft_strlen(strs_cmd[0])) && splt_len != 0)
@@ -154,8 +154,8 @@ void ft_start_commands(char	**strs_cmd, t_memory *mem)
 		ft_export(mem, strs_cmd);
 	// else if (!ft_strncmp(strs_cmd[0], "unset", ft_strlen(strs_cmd[0])) && splt_len != 0)
 	// 	ft_unset(*env);
-	else if (!ft_strncmp(strs_cmd[0], "$?", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_print_bash_err();
+	else if (strs_cmd[0][0] == '$')
+		ft_print_var(strs_cmd[0], mem);
 	else if (*strs_cmd[0] != '\3')
 		ft_commands(strs_cmd);
 	free_text(strs_cmd, ft_maslen(strs_cmd));

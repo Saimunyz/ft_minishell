@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/07 15:27:37 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/10 16:10:23 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	ft_parse(char *line, char *home, t_memory *mem);
 void	ft_pwd(void);
 void	ft_del_char(int *len, char **line);
 void	ft_del_line(int *len, char **line);
-void	ft_echo(char **str);
+void	ft_echo(char **str, t_memory *mem);
 void	ft_cd(char *path, t_memory *mem);
 void	ft_exit(void);
 void	ft_commands(char **splt);
@@ -69,12 +69,13 @@ void	ft_put_history_down(int *len, char **line, t_hist *hist);
 void	ft_put_history_up(int *len, char **line, t_hist *hist);
 int		ft_check_sigint(char **line, char *character);
 void	ft_check_eof(char **line, char *character, t_hist *hist);
-void	ft_print_bash_err(void);
+void	ft_print_var(char *command, t_memory *mem);
 void	ft_init_mem(t_memory *env, char **envp);
 void	ft_env(t_memory *mem);
 void	ft_add_var(char	**splt, t_memory *mem, int is_plus);
 int		ft_check_var(char *strs_cmd, t_memory *mem);
 void	ft_export(t_memory *mem, char **strs_cmd);
 void	ft_free_content(void *content);
+void	ft_start_commands(char	**strs_cmd, t_memory *mem);
 
 #endif
