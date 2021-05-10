@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:08:18 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/10 16:10:08 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/11 00:16:43 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,39 +54,59 @@ char *ft_spec_char_loop(char **str)
 	return tmp;
 }
 
-int	ft_check_var(char *strs_cmd, t_memory *mem)
+int	ft_check_for_equal_sign(char ***strs_cmd, t_memory *mem)
+{
+	int		i;
+	char	**new_str_cmd;
+
+	i = 0;
+	while (strs_cmd && (*strs_cmd)[i])
+	{
+		if (!(ft_strnstr(strs_cmd[0][i], "+=", ft_strlen(strs_cmd[0][i]))
+				|| ft_strnstr(strs_cmd[0][i], "=", ft_strlen(strs_cmd[0][i]))))
+		{
+			if (i)
+			{
+				new_str_cmd = ft_strarrcopy(*(strs_cmd) + i);
+				free_text(*strs_cmd, ft_maslen(*strs_cmd));
+				*strs_cmd = new_str_cmd;
+			}
+			return (0);
+		}
+		i++;
+	}
+	i = 0;
+	while (strs_cmd && (*strs_cmd)[i])
+		ft_check_var(strs_cmd[0][i++], mem);
+	free_text(*strs_cmd, ft_maslen(*strs_cmd));
+	return (1);
+}
+
+void	ft_check_var(char *strs_cmd, t_memory *mem)
 {
 	char	**splt;
-	char	*tmp;
-	int		isPlus;  //Сергей
+	char	*tmp_splt;
+	int		isPlus;
 
 	if (ft_strnstr(strs_cmd, "+=", ft_strlen(strs_cmd)))
 	{
 		splt = ft_split(strs_cmd, '+');
 		if (ft_maslen(splt) == 2)
 		{
-			tmp = splt[1];
-			splt[1] = ft_strdup(tmp + 1);
-			free(tmp);
+			tmp_splt = splt[1];
+			splt[1] = ft_strdup(tmp_splt + 1);
+			free(tmp_splt);
 		}
-		isPlus = 1;	//Сергей
-//		ft_add_var(splt, mem, 1);
+		isPlus = 1;
 	}
 	else if (ft_strnstr(strs_cmd, "=", ft_strlen(strs_cmd)))
 	{
 		splt = ft_split(strs_cmd, '=');
-//		ft_add_var(splt, mem, 0);
 		isPlus = 0; //Сергей
 	}
-	else
-		return (0);
-	if(splt[2])
-		return (0); //TODO тут надо дописать, остаток команды исполняется, надо отправить ее снова в парсер, но данные переменной не попадают в энв
-			//по сути надо сместить массив на 1
-	splt[1] = ft_spec_char_loop(&splt[1]); //Сергей
-	ft_add_var(splt, mem, isPlus); //Сергей
+	splt[1] = ft_spec_char_loop(&splt[1]);
+	ft_add_var(splt, mem, isPlus);
 	free_text(splt, ft_maslen(splt));
-	return (1);
 }
 
 void	ft_add_var(char	**splt, t_memory *mem, int is_plus)
@@ -135,11 +155,8 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem)
 	int		splt_len;
 
 	splt_len = ft_strlen(strs_cmd[0]);
-	if (ft_check_var(strs_cmd[0], mem))
-	{
-		free_text(strs_cmd, ft_maslen(strs_cmd));
-		return ;		//TODO тут должно быть не ретёрн. Код ниже должен выполняться (a=1 echo abc), но массив **strs_cmd надо сместить. И есть кейс a=1 b=2
-	}
+	if (ft_check_for_equal_sign(&strs_cmd, mem))
+		return ;
 	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
 	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)

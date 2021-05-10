@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/30 12:08:10 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/05 14:34:14 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/10 21:44:44 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int				ft_is_int(double n);
 void			free_text(char **text, size_t i);
 int				ft_isalpha(int c);
 int				ft_maslen(char **str);
+char			**ft_strarrcopy(char **arr);
 int				ft_it_pow(int nb, int power);
 int				ft_isdigit(int c);
 int				ft_isalnum(int c);

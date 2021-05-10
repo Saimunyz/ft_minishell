@@ -6,15 +6,14 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 17:45:27 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/07 18:21:08 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/11 00:14:14 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// поменять лист на разбитый по name value
-// и добавть сортировку с ковычками на вывод
-// починить дублирование после починки листа
+// TODO
+// и добавть сортировку export
 
 void	ft_print_export(t_memory *mem)
 {
@@ -53,7 +52,7 @@ void	ft_export_set(t_memory *mem, char *name, t_list *find_var)
 			((t_var *)find_env->content)->value = ft_strdup(value);
 		}
 	}
-	else
+	else if (!ft_lstfind_struct(mem->env, name))
 	{
 		tmp = (t_var *)malloc(sizeof(t_var));
 		tmp->name = ft_strdup(name);
@@ -62,22 +61,47 @@ void	ft_export_set(t_memory *mem, char *name, t_list *find_var)
 	}
 }
 
+char	**ft_wise_split(char *strs_cmd)
+{
+	char	**splt;
+	char	*tmp_splt;
+
+	splt = NULL;
+	if (ft_strnstr(strs_cmd, "+=", ft_strlen(strs_cmd)))
+	{
+		splt = ft_split(strs_cmd, '+');
+		tmp_splt = splt[1];
+		splt[1] = ft_strdup(tmp_splt + 1);
+		free(tmp_splt);
+	}
+	else if (ft_strnstr(strs_cmd, "=", ft_strlen(strs_cmd)))
+		splt = ft_split(strs_cmd, '=');
+	return (splt);
+}
+
 void	ft_export(t_memory *mem, char **strs_cmd)
 {
-	char	*name;
+	char	**splt;
 	t_list	*find_var;
+	int		i;
+	char	*name;
 
+	i = 1;
 	if (!strs_cmd[1])
-	{
 		ft_print_export(mem);
-		return ;
+	else
+		while (strs_cmd && strs_cmd[i])
+		{
+			name = strs_cmd[i];
+			splt = ft_wise_split(strs_cmd[i]);
+			if (splt)
+			{
+				name = splt[0];
+				ft_check_var(strs_cmd[i], mem);
+			}
+			find_var = ft_lstfind_struct(mem->var, name);
+			ft_export_set(mem, name, find_var);
+			free_text(splt, ft_maslen(splt));
+			i++;
 	}
-	name = strs_cmd[1];
-	if (ft_strnstr(name, "=", ft_strlen(name)))
-	{
-		ft_check_var(name, mem);
-		name = ((t_var *)ft_lstlast(mem->var)->content)->name;
-	}
-	find_var = ft_lstfind_struct(mem->var, name);
-	ft_export_set(mem, name, find_var);
 }

@@ -6,7 +6,7 @@
 #    By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/29 14:04:27 by swagstaf          #+#    #+#              #
-#    Updated: 2021/05/06 01:31:02 by swagstaf         ###   ########.fr        #
+#    Updated: 2021/05/10 19:44:49 by swagstaf         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -69,6 +69,7 @@ FILES		=	ft_memset.c \
 				ft_lstmap.c \
 				ft_lstfind.c \
 				ft_get_next_line.c \
+				ft_strarrcopy.c \
 
 OBJ			= $(FILES:.c=.o)
 

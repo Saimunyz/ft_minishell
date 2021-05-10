@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/10 16:10:23 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/05/10 23:48:30 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,10 @@ void	ft_print_var(char *command, t_memory *mem);
 void	ft_init_mem(t_memory *env, char **envp);
 void	ft_env(t_memory *mem);
 void	ft_add_var(char	**splt, t_memory *mem, int is_plus);
-int		ft_check_var(char *strs_cmd, t_memory *mem);
+void	ft_check_var(char *strs_cmd, t_memory *mem);
 void	ft_export(t_memory *mem, char **strs_cmd);
 void	ft_free_content(void *content);
 void	ft_start_commands(char	**strs_cmd, t_memory *mem);
+char	**ft_wise_split(char *strs_cmd);
 
 #endif
