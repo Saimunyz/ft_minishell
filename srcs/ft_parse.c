@@ -310,56 +310,15 @@ int ft_find_char(char *str, int i)
 	return (ft_strlen(str));
 }
 
-void ft_chenge_var(char **line, char *str_find)
-{
-	char	*tmp;
-	int 	i;
-	int 	j;
-
-	i = 0;
-	j = 0;
-	tmp = (char *) malloc((ft_strlen(str_find) + ft_strlen(*line) + 1) * sizeof (char));
-	if(!tmp)
-		return ;//TODO тут какая то ошибка
-	while ((*line)[i])
-	{
-		if ((*line)[i] != '$')
-		{
-			tmp[j] = (*line)[i];
-			i++;
-			j++;
-		}
-		else
-		{
-			while(*str_find || ((*line)[i] && (*line)[i] != ' '))
-			{
-				if (*str_find)
-				{
-					tmp[j] = *str_find;
-					j++;
-					str_find++;
-				}
-				if ((*line)[i])
-					i++;
-			}
-		}
-	}
-	tmp[j] = '\0';
-	free(*line);
-	*line = tmp;
-}
 
 int ft_find_space(char *str)
 {
 	int i = 1;
-//	char spec_char;
 
-//	spec_char = 0;
 	if (!str)
 		return (0);
 	while (str[i])
 	{
-//		spec_char = ft_spec_char(spec_char, str[i]);
 		if(str[i] == ' ' || str[i] == '$')
 			return (i);
 		i++;
@@ -367,38 +326,107 @@ int ft_find_space(char *str)
 	return (i);
 }
 
-void ft_read_var(char **line, t_memory *mem)
+char *ft_find_doll(char *line, t_memory *mem)
 {
 	t_list	*find;
-	char 	*str_find;
+	char	*str_find;
+	int		end;
+	char	*tmp;
+
+	end = ft_find_space(line);
+	tmp = ft_substr(line, 0, end);
+	find = ft_lstfind_struct(mem->env, tmp + 1);
+	if (!find)
+		find = ft_lstfind_struct(mem->var, tmp + 1);
+	if (find) {
+		str_find = (char *) ((t_var *) find->content)->value; //TODO тут каст char * можно?
+		free(tmp);
+		return (str_find);
+	}
+	free(tmp);
+	return (0);
+}
+
+int ft_len_doll(char *line)
+{
+	int	len;
+	int	doll;
+
+	len = 0;
+	doll = 1;
+	while (*line)
+	{
+		if (*line == '$')
+			doll = 1;
+		if (doll && *line == ' ')
+			doll = 0;
+		if (doll)
+			len++;
+		line++;
+	}
+	return (len);
+}
+
+void ft_change_var(char **line,  t_memory *mem)
+{
+	int 	i;
+	int 	j;
+	char	*tmp;
+	char	*str_find;
 	char 	*tmp_line;
-	int end;
-	char *tmp;
 
 
 	tmp_line = *line;
+	j = 0;
+	tmp = (char *) malloc((ft_strlen(*line) + ft_len_doll(*line) + 1) * sizeof (char));
+	if(!tmp)
+		return ;//TODO тут какая то ошибка должна выводится
 	while (**line)
 	{
-		if (**line == '$')
+		if (**line != '$')
 		{
-			end = ft_find_space(*line);
-			tmp = ft_substr(*line, 0, end);
-
-//			find = ft_lstfind_struct(mem->env, *line + 1);
-			find = ft_lstfind_struct(mem->env, tmp + 1);
-			if (!find)
-				find = ft_lstfind_struct(mem->var, tmp + 1);
-//				find = ft_lstfind_struct(mem->var, *line + 1);
-			if (find)
-				str_find = (char *)((t_var *)find->content)->value;		//TODO тут каст char * можно?
-			if (str_find)
-				ft_chenge_var(&tmp_line, str_find);
-		}
-		if (**line)
+			tmp[j] = **line;
 			(*line)++;
+			j++;
+		}
+		else
+		{
+			if(j > 0)
+				tmp[j++] = ' ';
+			str_find = ft_find_doll(*line, mem);
+			i++;
+			while(*str_find || (**line && **line != ' ' && **line != '$'))
+			{
+				if (*str_find)
+				{
+					tmp[j] = *str_find;
+					j++;
+					str_find++;
+				}
+				if (**line || **line != '$')
+					(*line)++;
+			}
+		}
 	}
-	*line = tmp_line;
+	tmp[j] = '\0';
+	free(tmp_line);
+	*line = tmp;
 }
+
+//void ft_read_var(char **line, t_memory *mem)
+//{
+//	char 	*tmp_line;
+//
+//	tmp_line = *line;
+//	while (**line)
+//	{
+//		if (**line == '$')
+//				ft_change_var(&tmp_line, mem);
+//		if (**line)
+//			(*line)++;
+//	}
+//	*line = tmp_line;
+//}
 
 char	***ft_split_string(char *line, t_memory *mem)
 {
@@ -419,7 +447,7 @@ char	***ft_split_string(char *line, t_memory *mem)
 	{
 		end = ft_find_char(line, start);
 		tmp = ft_substr(line, start, end - start);
-		ft_read_var(&tmp, mem);//преобразовываем $
+		ft_change_var(&tmp, mem);//преобразовываем $
 		arr_strs[i] = ft_parse_strings(tmp);
 		free(tmp);
 		start = end + 1;
@@ -429,6 +457,7 @@ char	***ft_split_string(char *line, t_memory *mem)
 	return (arr_strs);
 }
 
+/*
 char	*ft_check_doll(char spec_char, char **str, t_memory *mem)
 {
 	t_list	*find;
@@ -449,8 +478,7 @@ char	*ft_check_doll(char spec_char, char **str, t_memory *mem)
 	}
 	return (0);
 }
-
-
+*/
 
 
 ////TODO Доделать
