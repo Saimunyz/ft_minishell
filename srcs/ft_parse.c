@@ -319,7 +319,7 @@ int ft_find_space(char *str)
 		return (0);
 	while (str[i])
 	{
-		if(str[i] == ' ' || str[i] == '$')
+		if(str[i] == ' ' || str[i] == '$' || str[i] == '"')
 			return (i);
 		i++;
 	}
@@ -347,7 +347,7 @@ char *ft_find_doll(char *line, t_memory *mem)
 	return (0);
 }
 
-int ft_len_doll(char *line)
+int ft_len_doll(char *line, t_memory *mem)
 {
 	int	len;
 	int	doll;
@@ -357,7 +357,10 @@ int ft_len_doll(char *line)
 	while (*line)
 	{
 		if (*line == '$')
+		{
 			doll = 1;
+			len = len + ft_strlen(ft_find_doll(line, mem));
+		}
 		if (doll && *line == ' ')
 			doll = 0;
 		if (doll)
@@ -369,7 +372,6 @@ int ft_len_doll(char *line)
 
 void ft_change_var(char **line,  t_memory *mem)
 {
-	int 	i;
 	int 	j;
 	char	*tmp;
 	char	*str_find;
@@ -378,7 +380,7 @@ void ft_change_var(char **line,  t_memory *mem)
 
 	tmp_line = *line;
 	j = 0;
-	tmp = (char *) malloc((ft_strlen(*line) + ft_len_doll(*line) + 1) * sizeof (char));
+	tmp = (char *) malloc((ft_strlen(*line) + ft_len_doll(*line, mem) + 1) * sizeof (char));
 	if(!tmp)
 		return ;//TODO тут какая то ошибка должна выводится
 	while (**line)
@@ -391,20 +393,27 @@ void ft_change_var(char **line,  t_memory *mem)
 		}
 		else
 		{
-			if(j > 0)
-				tmp[j++] = ' ';
 			str_find = ft_find_doll(*line, mem);
-			i++;
-			while(*str_find || (**line && **line != ' ' && **line != '$'))
+			if (!str_find)
 			{
-				if (*str_find)
-				{
-					tmp[j] = *str_find;
-					j++;
-					str_find++;
-				}
-				if (**line || **line != '$')
+				(*line)++;
+				while (**line && **line != ' ' && **line != '$' )
 					(*line)++;
+			}
+			else
+			{
+				(*line)++;
+				while (*str_find || (**line && **line != ' ' && **line != '$'))
+				{
+					if (*str_find)
+					{
+						tmp[j] = *str_find;
+						j++;
+						str_find++;
+					}
+					if (**line && **line != ' ' && **line != '$')
+						(*line)++;
+				}
 			}
 		}
 	}
