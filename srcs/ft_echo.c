@@ -12,29 +12,31 @@
 
 #include "minishell.h"
 
-void	ft_echo_write(char *str, int space, t_memory *mem)
+//void	ft_echo_write(char *str, int space, t_memory *mem)
+void	ft_echo_write(char *str, int space)
 {
-	t_list	*find;
+//	t_list	*find;
 
 	g_error = 0;
 	if (space)
 		write(1, " ", 1);
 	if (str)
-	{
-		if (str[0] == '$')
-		{
-			find = ft_lstfind_struct(mem->env, str + 1);
-			if (!find)
-				find = ft_lstfind_struct(mem->var, str + 1);
-			if (find)
-				ft_putstr_fd(((t_var *)find->content)->value, 1);
-		}
-		else
+//	{		//Сергей $ теперь не тут
+//		if (str[0] == '$')
+//		{
+//			find = ft_lstfind_struct(mem->env, str + 1);
+//			if (!find)
+//				find = ft_lstfind_struct(mem->var, str + 1);
+//			if (find)
+//				ft_putstr_fd(((t_var *)find->content)->value, 1);
+//		}
+//		else
 			ft_putstr_fd(str, 1);
-	}
+//	}
 }
 
-void	ft_echo(char **str, t_memory *mem)
+//void	ft_echo(char **str, t_memory *mem)
+void	ft_echo(char **str)
 {
 	int i;
 	int	flag;
@@ -52,7 +54,7 @@ void	ft_echo(char **str, t_memory *mem)
 			i = 2;
 		}
 		while (str[i]) {
-			ft_echo_write(str[i], space, mem);
+			ft_echo_write(str[i], space);
 			i++;
 			space = 1;
 		}
