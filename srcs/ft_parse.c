@@ -30,8 +30,6 @@ char	ft_spec_char_step(char spec_char, char **line)
 	return (spec_char);
 }
 
-
-
 char	*ft_spec_char_loop(char **str)
 {
 	int i;
@@ -376,8 +374,11 @@ void ft_change_var(char **line,  t_memory *mem)
 	char	*tmp;
 	char	*str_find;
 	char 	*tmp_line;
+	char	spec_char;
 
+	spec_char = 0;
 
+	tmp = 0; //возможно избыточно
 	tmp_line = *line;
 	j = 0;
 	tmp = (char *) malloc((ft_strlen(*line) + ft_len_doll(*line, mem) + 1) * sizeof (char));
@@ -385,14 +386,19 @@ void ft_change_var(char **line,  t_memory *mem)
 		return ;//TODO тут какая то ошибка должна выводится
 	while (**line)
 	{
-		if (**line != '$')
+		spec_char = ft_spec_char(spec_char, **line);
+
+		if (**line != '$' || (**line == '$' && spec_char))
 		{
 			tmp[j] = **line;
 			(*line)++;
 			j++;
 		}
+		else if(**line == 39)
+			(*line)++;
 		else
 		{
+//			if (spec_char != 39) //03.06.2021
 			str_find = ft_find_doll(*line, mem);
 			if (!str_find)
 			{
@@ -421,21 +427,6 @@ void ft_change_var(char **line,  t_memory *mem)
 	free(tmp_line);
 	*line = tmp;
 }
-
-//void ft_read_var(char **line, t_memory *mem)
-//{
-//	char 	*tmp_line;
-//
-//	tmp_line = *line;
-//	while (**line)
-//	{
-//		if (**line == '$')
-//				ft_change_var(&tmp_line, mem);
-//		if (**line)
-//			(*line)++;
-//	}
-//	*line = tmp_line;
-//}
 
 char	***ft_split_string(char *line, t_memory *mem)
 {
@@ -466,31 +457,15 @@ char	***ft_split_string(char *line, t_memory *mem)
 	return (arr_strs);
 }
 
-/*
-char	*ft_check_doll(char spec_char, char **str, t_memory *mem)
-{
-	t_list	*find;
-	char 	*str_find;
-
-
-	if (spec_char)	//TODO доделать "'
-		spec_char = spec_char;
-	if (**str == '$')
-	{
-		find = ft_lstfind_struct(mem->env, *str + 1);
-		if (!find)
-			find = ft_lstfind_struct(mem->var, *str + 1);
-		if (find)
-			str_find = (char *)((t_var *)find->content)->value;		//TODO тут каст char * можно?
-		if (str_find)
-			return (str_find);
-	}
-	return (0);
-}
-*/
-
 
 ////TODO Доделать
+
+//// одинарные двойные кавычки, разницы нет, надо сделать
+//// a=1
+//	echo "$a"
+//	echo '$a'
+////
+
 ////	$var
 ////  "\"
 //// |
