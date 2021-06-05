@@ -377,8 +377,8 @@ void ft_change_var(char **line,  t_memory *mem)
 	char	spec_char;
 
 	spec_char = 0;
-
-	tmp = 0; //возможно избыточно
+//
+//	tmp = 0; //возможно избыточно
 	tmp_line = *line;
 	j = 0;
 	tmp = (char *) malloc((ft_strlen(*line) + ft_len_doll(*line, mem) + 1) * sizeof (char));
@@ -387,8 +387,7 @@ void ft_change_var(char **line,  t_memory *mem)
 	while (**line)
 	{
 		spec_char = ft_spec_char(spec_char, **line);
-
-		if (**line != '$' || (**line == '$' && spec_char))
+		if (**line != '$' || (**line == '$' && spec_char == 39))
 		{
 			tmp[j] = **line;
 			(*line)++;
@@ -398,7 +397,11 @@ void ft_change_var(char **line,  t_memory *mem)
 			(*line)++;
 		else
 		{
-//			if (spec_char != 39) //03.06.2021
+			if (*((*line) + 1) == '?')
+			{
+				printf("minishell: %d: command not found\n", g_error);
+				g_error = 127;
+			}
 			str_find = ft_find_doll(*line, mem);
 			if (!str_find)
 			{
