@@ -70,6 +70,7 @@ FILES		=	ft_memset.c \
 				ft_lstfind.c \
 				ft_get_next_line.c \
 				ft_strarrcopy.c \
+				ft_lstremove.c \
 
 OBJ			= $(FILES:.c=.o)
 

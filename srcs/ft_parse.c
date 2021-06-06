@@ -171,8 +171,8 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem)
 		ft_env(mem);	//Todo он вроде как то с параметрами работает, надо расспросить как
 	else if (!ft_strncmp(strs_cmd[0], "export", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_export(mem, strs_cmd);
-	// else if (!ft_strncmp(strs_cmd[0], "unset", ft_strlen(strs_cmd[0])) && splt_len != 0)
-	// 	ft_unset(*env);
+	else if (!ft_strncmp(strs_cmd[0], "unset", ft_strlen(strs_cmd[0])) && splt_len != 0)
+		ft_unset(mem, strs_cmd);
 //	else if (strs_cmd[0][0] == '$')		//Это теперь не здесь иначе не работает "$a  $b"
 //		ft_print_var(strs_cmd[0], mem);
 	else if (*strs_cmd[0] != '\3')

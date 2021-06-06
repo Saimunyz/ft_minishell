@@ -79,5 +79,6 @@ void	ft_export(t_memory *mem, char **strs_cmd);
 void	ft_free_content(void *content);
 void	ft_start_commands(char	**strs_cmd, t_memory *mem);
 char	**ft_wise_split(char *strs_cmd);
+void	ft_unset(t_memory *mem, char **var);
 
 #endif
