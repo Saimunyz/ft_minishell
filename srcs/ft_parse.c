@@ -149,7 +149,7 @@ char	ft_spec_char(char spec_char, char line)
 	return (spec_char);
 }
 
-void	ft_start_commands(char	**strs_cmd, t_memory *mem, pid_t *fd)
+void	ft_start_commands(char	**strs_cmd, t_memory *mem, t_pipe *fd)
 {
 	int		splt_len;
 
@@ -476,21 +476,22 @@ char	***ft_split_string(char *line, t_memory *mem)
 //// << >> <
 void	ft_parse(char *line, char *home, t_memory *mem)
 {
-	int	fd[2]; //07.06.2021
+	t_pipe	fd; //07.06.2021
 	char	***arr_commands;
 	int	i;
 
-
+	fd.order = 0;
 	i = 0;
+	pipe(fd.fd);
 	arr_commands = ft_split_string(line, mem);
 	while (arr_commands && arr_commands[i])
 	{
 //		fd[0] = dup(0);
 //		fd[1] = dup(1);
-		pipe(fd);
+
 
 		//тут добавить функцию которая добавляет переменные, или нет
-		ft_start_commands(arr_commands[i], mem, fd);
+		ft_start_commands(arr_commands[i], mem, &fd);
 		i++;
 	}
 	free(arr_commands);

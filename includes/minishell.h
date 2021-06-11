@@ -33,6 +33,12 @@ typedef struct	s_var
 	char 	*value;
 }				t_var;
 
+typedef struct	s_pipe
+{
+	int		fd[2];
+	int 	order;
+}				t_pipe;
+
 typedef struct s_hist
 {
 	t_list	*hist;
@@ -61,7 +67,7 @@ void	ft_del_line(int *len, char **line);
 void	ft_echo(char **str);
 void	ft_cd(char *path, t_memory *mem);
 void	ft_exit(void);
-void	ft_commands(char **splt, pid_t *fd);
+void	ft_commands(char **splt, t_pipe *fd);
 void	ft_init_read(t_hist *hist, char **line, char **lettr, char *home);
 void	ft_write_history(char *command, char *home);
 t_list	*ft_read_history(char *home);
@@ -77,7 +83,7 @@ void	ft_add_var(char	**splt, t_memory *mem, int is_plus);
 void	ft_check_var(char *strs_cmd, t_memory *mem);
 void	ft_export(t_memory *mem, char **strs_cmd);
 void	ft_free_content(void *content);
-void	ft_start_commands(char	**strs_cmd, t_memory *mem, pid_t *fd);
+void	ft_start_commands(char	**strs_cmd, t_memory *mem, t_pipe *fd);
 char	**ft_wise_split(char *strs_cmd);
 
 #endif

@@ -12,16 +12,14 @@
 
 #include "minishell.h"
 
-void	ft_clear_arr(char **arr)
-{
-	char	*tmp;
-	char	**tmp_arr;
+void ft_clear_arr(char **arr) {
+	char *tmp;
+	char **tmp_arr;
 
 	if (!arr)
-		return ;
+		return;
 	tmp_arr = arr;
-	while (*arr)
-	{
+	while (*arr) {
 		tmp = *arr;
 		arr++;
 		free(tmp);
@@ -29,25 +27,22 @@ void	ft_clear_arr(char **arr)
 	free(tmp_arr);
 }
 
-char	*ft_find_command(char	*command, char **path)
-{
-	int			st;
-	struct stat	buf;
-	char		*tmp_cmd;
-	char		*cmd;
-	char		**tmp_path;
+char *ft_find_command(char *command, char **path) {
+	int st;
+	struct stat buf;
+	char *tmp_cmd;
+	char *cmd;
+	char **tmp_path;
 
 	tmp_path = path;
-	while (*path)
-	{
+	while (*path) {
 		tmp_cmd = ft_strjoin(*path, "/");
 		cmd = ft_strjoin(tmp_cmd, command);
 		free(tmp_cmd);
 		st = stat(cmd, &buf); //TODO это что и откуда?
 		if (st == -1)
 			errno = 0;
-		else
-		{
+		else {
 			ft_clear_arr(tmp_path);
 			return (cmd);
 		}
@@ -58,9 +53,8 @@ char	*ft_find_command(char	*command, char **path)
 	return (0);
 }
 
-void	ft_command_not_found(char *cmd)
-{
-	char	*tmp_str;
+void ft_command_not_found(char *cmd) {
+	char *tmp_str;
 
 	g_error = 127;
 	tmp_str = ft_strjoin(cmd, ": command not found\n");
@@ -73,47 +67,81 @@ void	ft_command_not_found(char *cmd)
  * мы в минишел, так что изначально он 1, когда запустим что-то еще нужно увеличить на 1
  * TODO буду рефакторить когда доделаем парсер
  */
-void	ft_commands(char **splt, pid_t *fd)
-{
-	pid_t	pid;
-	char	*cmd;
-	char	*newenviron[0];
+void ft_commands(char **splt, t_pipe *fd) {
+	pid_t pid;
+	char *cmd;
+	char *newenviron[0];
 
 	//TODO всегда можно NULL или нет?
 	newenviron[0] = NULL;
 	//TODO паф могут удалить, не должно крашится. проверить когда допишем
 	cmd = ft_find_command(splt[0], ft_split(getenv("PATH"), ':'));
-	if (cmd)
-	{
+	if (cmd) {
 		g_error = 0;
-		free(splt[0]);
+		free(splt[0]); //TODO вынести из if проверить что нет утечки.
 		splt[0] = cmd;
 //		ft_putstr_fd("From heaven!\n", 2);
-		dup2(fd[1], 1);
+//		dup2(fd[1], 1);
+
+//		if (fd->order > 0) {
+//			dup2(fd->fd[0], 0);
+//			char ch = '0' + fd->fd[0];
+//			write(1, &ch, 1);
+//			ft_putstr_fd("\nFrom heaven2\n", 1);
+//			close(fd->fd[1]);
+//		}
+
 		pid = fork();
 
-		if (pid == 0)
-		{
 
-//			ft_putstr_fd("From hell!\n", 1);
-//			close(fd[0]);
-//			close(fd[1]);
+		if (pid == 0) {
 
-//			dup2(fd[1], STDOUT_FILENO);
-			dup2(fd[1], 1);
+			//++
+			if (fd->order == 0) {
+				dup2(fd->fd[1], 1);
+				close(fd->fd[0]);
+				char ch = '0' + fd->fd[1];
+				write(2, &ch, 1);
+				ft_putstr_fd("\nFrom hell1!\n", 2);
+			}
+			else {
+				dup2(fd->fd[0], 0);
+				char ch = '0' + fd->fd[0];
+				write(1, &ch, 1);
+				ft_putstr_fd("\nFrom hell2!\n", 1);
+				close(fd -> fd[1]);
+			}
+			//--
+
 			execve(cmd, splt, newenviron);
 			//++
-//			close(fd[0]);
-//			close(fd[1]);
+//			close(fd -> fd[1]);
+			if (fd->order == 0) {
+//				close(fd->fd[0]);
+				close(fd -> fd[1]);
+			}
 			//--
 
 			exit(0);
 
+		} else {
+//			dup2(fd->fd[0], 0);
+//			close(fd -> fd[1]);
 		}
 		wait(&pid);
-		close(fd[0]);
-		close(fd[1]);
-	}
-	else
+		if (fd->order > 0)
+			close(fd->fd[0]);
+
+
+//		close(fd->fd[0]);
+		//++
+//		if (fd->order != 0) {
+//			close(fd->fd[0]);
+//			close(fd->fd[1]);
+//		}
+
+		fd->order++;
+		//--
+	} else
 		ft_command_not_found(splt[0]);
 }
