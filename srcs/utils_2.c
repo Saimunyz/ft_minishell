@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 15:05:58 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/10 16:08:09 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/06/11 15:47:45 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,18 @@ void	ft_print_var(char *command, t_memory *mem)
 
 void	ft_free_content(void *content)
 {
-	free(((t_var *)content)->name);
-	free(((t_var *)content)->value);
+	if (((t_var *)content)->name)
+	{
+		free(((t_var *)content)->name);
+		((t_var *)content)->name = NULL;
+	}
+	if (((t_var *)content)->value)
+	{
+		free(((t_var *)content)->value);
+		((t_var *)content)->name = NULL;
+	}
+	free(content);
+	content = NULL;
 }
 
 t_list	*ft_lstfind_struct(t_list *lst, void *name)

@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/30 12:08:10 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/10 21:44:44 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/06/11 14:54:10 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ int				ft_lstsize(t_list *lst);
 t_list			*ft_lstlast(t_list *lst);
 void			ft_lstadd_back(t_list **lst, t_list *new);
 void			ft_lstdelone(t_list *lst, void (*del)(void*));
-void			ft_lstremove(t_list **begin_list, t_list *delete);
+void			ft_lstremove(t_list **begin_list, t_list *delete,
+					void (*del)(void *));
 void			ft_lstclear(t_list **lst, void (*del)(void*));
 void			ft_lstiter(t_list *lst, void (*f)(void *));
 t_list			*ft_lstfind(t_list *lst, void *content);

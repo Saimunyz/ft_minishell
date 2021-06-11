@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:08:18 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/11 00:16:43 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/06/11 13:46:43 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ void	ft_check_var(char *strs_cmd, t_memory *mem)
 	char	*tmp_splt;
 	int		isPlus;
 
+	splt = NULL; // Исправить, так как будет сега!!!!!
+	isPlus = 0; // Вышли за кол-во строк :-)
 	if (ft_strnstr(strs_cmd, "+=", ft_strlen(strs_cmd)))
 	{
 		splt = ft_split(strs_cmd, '+');
@@ -109,6 +111,8 @@ void	ft_check_var(char *strs_cmd, t_memory *mem)
 	ft_add_var(splt, mem, isPlus);
 	free_text(splt, ft_maslen(splt));
 }
+
+
 
 void	ft_add_var(char	**splt, t_memory *mem, int is_plus)
 {

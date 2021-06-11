@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_commands.c                                      :+:      :+:    :+:   */
+/*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 17:04:52 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/02 00:53:53 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/06/11 13:44:22 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ void	ft_unset(t_memory *mem, char **var)
 			}
 			tmp = ft_lstfind_struct(mem->env, var[i]);
 			if (tmp)
-				ft_lstremove(&mem->env, tmp);
+				ft_lstremove(&mem->env, tmp, ft_free_content);
 			tmp = ft_lstfind_struct(mem->var, var[i]);
 			if (tmp)
-				ft_lstremove(&mem->var, tmp);
+				ft_lstremove(&mem->var, tmp, ft_free_content);
 			i++;
 		}
 	}
