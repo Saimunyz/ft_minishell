@@ -149,13 +149,13 @@ char	ft_spec_char(char spec_char, char line)
 	return (spec_char);
 }
 
-void	ft_start_commands(char	**strs_cmd, t_memory *mem)
+void	ft_start_commands(char	**strs_cmd, t_memory *mem, pid_t *fd)
 {
 	int		splt_len;
 
 	splt_len = ft_strlen(strs_cmd[0]);
 	if (ft_check_for_equal_sign(&strs_cmd, mem))
-		return ;
+		return ; //TODO тут наверное ошибка?
 	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
 	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)
@@ -174,7 +174,7 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem)
 //	else if (strs_cmd[0][0] == '$')		//Это теперь не здесь иначе не работает "$a  $b"
 //		ft_print_var(strs_cmd[0], mem);
 	else if (*strs_cmd[0] != '\3')
-		ft_commands(strs_cmd);
+		ft_commands(strs_cmd, fd);
 	free_text(strs_cmd, ft_maslen(strs_cmd));
 }
 
@@ -301,7 +301,8 @@ int ft_find_char(char *str, int i)
 	while (str[i])
 	{
 		spec_char = ft_spec_char(spec_char, str[i]);
-		if(str[i] == ';' && !spec_char)
+//		if(str[i] == ';' && !spec_char)
+		if((str[i] == ';' || str[i] == '|') && !spec_char) //07.06.2021
 			return (i);
 		i++;
 	}
@@ -475,15 +476,21 @@ char	***ft_split_string(char *line, t_memory *mem)
 //// << >> <
 void	ft_parse(char *line, char *home, t_memory *mem)
 {
+	int	fd[2]; //07.06.2021
 	char	***arr_commands;
 	int	i;
+
 
 	i = 0;
 	arr_commands = ft_split_string(line, mem);
 	while (arr_commands && arr_commands[i])
 	{
+//		fd[0] = dup(0);
+//		fd[1] = dup(1);
+		pipe(fd);
+
 		//тут добавить функцию которая добавляет переменные, или нет
-		ft_start_commands(arr_commands[i], mem);
+		ft_start_commands(arr_commands[i], mem, fd);
 		i++;
 	}
 	free(arr_commands);

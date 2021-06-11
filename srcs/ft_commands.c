@@ -43,7 +43,7 @@ char	*ft_find_command(char	*command, char **path)
 		tmp_cmd = ft_strjoin(*path, "/");
 		cmd = ft_strjoin(tmp_cmd, command);
 		free(tmp_cmd);
-		st = stat(cmd, &buf);
+		st = stat(cmd, &buf); //TODO это что и откуда?
 		if (st == -1)
 			errno = 0;
 		else
@@ -73,7 +73,7 @@ void	ft_command_not_found(char *cmd)
  * мы в минишел, так что изначально он 1, когда запустим что-то еще нужно увеличить на 1
  * TODO буду рефакторить когда доделаем парсер
  */
-void	ft_commands(char **splt)
+void	ft_commands(char **splt, pid_t *fd)
 {
 	pid_t	pid;
 	char	*cmd;
@@ -88,13 +88,31 @@ void	ft_commands(char **splt)
 		g_error = 0;
 		free(splt[0]);
 		splt[0] = cmd;
+//		ft_putstr_fd("From heaven!\n", 2);
+		dup2(fd[1], 1);
 		pid = fork();
+
 		if (pid == 0)
 		{
+
+//			ft_putstr_fd("From hell!\n", 1);
+//			close(fd[0]);
+//			close(fd[1]);
+
+//			dup2(fd[1], STDOUT_FILENO);
+			dup2(fd[1], 1);
 			execve(cmd, splt, newenviron);
+			//++
+//			close(fd[0]);
+//			close(fd[1]);
+			//--
+
 			exit(0);
+
 		}
 		wait(&pid);
+		close(fd[0]);
+		close(fd[1]);
 	}
 	else
 		ft_command_not_found(splt[0]);

@@ -37,30 +37,30 @@ void	ft_del_line(int *len, char **line)
 	*line = NULL;
 }
 
-void	ft_print_var(char *command, t_memory *mem)
-{
-	t_list	*find;
-	char	**splt;
-
-	if (*(command + 1) =='?')
-	{
-		printf("minishell: %d: command not found\n", g_error);
-		g_error = 127;
-	}
-	else
-	{
-		find = ft_lstfind_struct(mem->env, command + 1);
-		if (!find)
-			find = ft_lstfind_struct(mem->var, command + 1);
-		if (find)
-		{
-			splt = ft_split(((t_var *)find->content)->value, ' ');
-			//printf("%s: command not found\n", splt[0]);
-			ft_start_commands(splt, mem);
-			g_error = 127;
-		}
-	}
-}
+//void	ft_print_var(char *command, t_memory *mem)
+//{
+//	t_list	*find;
+//	char	**splt;
+//
+//	if (*(command + 1) =='?')
+//	{
+//		printf("minishell: %d: command not found\n", g_error);
+//		g_error = 127;
+//	}
+//	else
+//	{
+//		find = ft_lstfind_struct(mem->env, command + 1);
+//		if (!find)
+//			find = ft_lstfind_struct(mem->var, command + 1);
+//		if (find)
+//		{
+//			splt = ft_split(((t_var *)find->content)->value, ' ');
+//			//printf("%s: command not found\n", splt[0]);
+//			ft_start_commands(splt, mem);
+//			g_error = 127;
+//		}
+//	}
+//}
 
 void	ft_free_content(void *content)
 {
