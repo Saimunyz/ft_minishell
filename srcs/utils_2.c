@@ -64,18 +64,19 @@ void	ft_print_var(char *command, t_memory *mem)
 
 void	ft_free_content(void *content)
 {
-	if (((t_var *)content)->name)
+	if (content)
 	{
-		free(((t_var *)content)->name);
-		((t_var *)content)->name = NULL;
+		if (((t_var *)content)->name)
+		{
+			free(((t_var *)content)->name);
+			((t_var *)content)->name = NULL;
+		}
+		if (((t_var *)content)->value)
+		{
+			free(((t_var *)content)->value);
+			((t_var *)content)->value = NULL;
+		}
 	}
-	if (((t_var *)content)->value)
-	{
-		free(((t_var *)content)->value);
-		((t_var *)content)->name = NULL;
-	}
-	free(content);
-	content = NULL;
 }
 
 t_list	*ft_lstfind_struct(t_list *lst, void *name)
@@ -88,7 +89,7 @@ t_list	*ft_lstfind_struct(t_list *lst, void *name)
 		return (NULL);
 	while (lst)
 	{
-		lst_name = ((t_var *)lst->content)->name;
+		lst_name = (char *)((t_var *)lst->content)->name;
 		if (!ft_strncmp(lst_name, (char *)name, len))
 			return (lst);
 		lst = lst->next;

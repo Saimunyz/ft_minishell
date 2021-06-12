@@ -20,6 +20,8 @@ void	ft_lstremove(t_list **begin_list, t_list *delete, void (*del)(void *))
 	{
 		*begin_list = (*begin_list)->next;
 		del(delete->content);
+		free(delete->content);
+		delete->content = NULL;
 		delete->next = NULL;
 		free(delete);
 		delete = NULL;
@@ -31,6 +33,8 @@ void	ft_lstremove(t_list **begin_list, t_list *delete, void (*del)(void *))
 		{
 			tmp->next = delete->next;
 			del(delete->content);
+			free(delete->content);
+			delete->content = NULL;
 			delete->next = NULL;
 			free(delete);
 			delete = NULL;

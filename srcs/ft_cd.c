@@ -12,14 +12,20 @@
 
 #include "minishell.h"
 
-static void	ft_set_pwd(t_memory *mem)
+static void	ft_set_pwd(t_memory *mem, t_list *tmp)
 {
 	char	*value;
-	if (mem->oldpwd)
+	if (tmp)
+	{
+		mem->oldpwd = tmp;
 		ft_free_content(mem->oldpwd->content);
+	}
 	value = ((t_var *)mem->pwd->content)->value;
-	((t_var *)mem->oldpwd->content)->name = ft_strdup("OLDPWD");
-	((t_var *)mem->oldpwd->content)->value = ft_strdup(value);
+	if (tmp)
+	{
+		((t_var *)mem->oldpwd->content)->name = ft_strdup("OLDPWD");
+		((t_var *)mem->oldpwd->content)->value = ft_strdup(value);
+	}
 	ft_free_content(mem->pwd->content);
 	((t_var *)mem->pwd->content)->name = ft_strdup("PWD");
 	((t_var *)mem->pwd->content)->value = getcwd(NULL, 0);
@@ -29,6 +35,7 @@ static void	ft_set_pwd(t_memory *mem)
 void	ft_cd(char *path, t_memory *mem)
 {
 	int		ans;
+	t_list	*tmp;
 
 	g_error = 0;
 	if (!path)
@@ -41,5 +48,6 @@ void	ft_cd(char *path, t_memory *mem)
 		write(1, ": No such file or directory\n", 28);
 		errno = 0;
 	}
-	ft_set_pwd(mem);
+	tmp = ft_lstfind_struct(mem->env, "OLDPWD");
+	ft_set_pwd(mem, tmp);
 }
