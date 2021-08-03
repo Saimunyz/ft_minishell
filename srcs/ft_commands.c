@@ -77,76 +77,62 @@ void ft_commands(char **splt, t_pipe *fd) {
 	//TODO паф могут удалить, не должно крашится. проверить когда допишем
 	cmd = ft_find_command(splt[0], ft_split(getenv("PATH"), ':'));
 	if (cmd) {
+		//todo отрефакторить
+		int fd0 = fd->fd[0];
+		int fd1 = fd->fd[1];
+
 		g_error = 0;
 		free(splt[0]); //TODO вынести из if проверить что нет утечки.
 		splt[0] = cmd;
-
-
-
 		pid = fork();
-
-
 		if (pid == 0) {
 
 			//++
 			if (fd->order == 0) {
 				dup2(fd->fd[1], 1);
 				close(fd->fd[0]);
+				execve(cmd, splt, newenviron);
+//				dup2(fd->fd[1], 1);
+//				close(fd->fd[0]);
 				char ch = '0' + fd->fd[1];
 				write(2, &ch, 1);
 				ft_putstr_fd("\nFrom hell1!\n", 2);
-			}
-			else {
+			} else {
+				dup2(fd->fd[0], 0);
+				close(fd->fd[1]);
+				execve(cmd, splt, newenviron);
 //				dup2(fd->fd[0], 0);
 //				char ch = '0' + fd->fd[0];
 //				write(1, &ch, 1);
 //				ft_putstr_fd("\nFrom hell2!\n", 1);
 //				close(fd -> fd[1]);
 			}
-			//--
 
-			execve(cmd, splt, newenviron);
-			//++
-//			close(fd -> fd[1]);
-			if (fd->order == 0) {
-//				close(fd->fd[0]);
-//				close(fd -> fd[1]);
-			} else
+//			execve(cmd, splt, newenviron);
+
+
+			wait(&pid);
+
+//			if (fd->order == 0) {
+//				dup2(fd->fd[0], 0);
+//				char ch = '0' + fd->fd[0];
+//				write(1, &ch, 1);
+////			close(fd->fd[1]);
+//				ft_putstr_fd("\nFrom heaven2\n", 1);
+//			}
+
+
+			if (fd->order == 1)
 			{
-				ft_putstr_fd("\nexecve 2!\n", 1);
-//				close(fd -> fd[1]);
-//				close(fd->fd[0]);
+				close(fd1);
+				close(fd0); //не понятно, надо ли этот закрывать или нет
+//				waitpid(pid, &status, 0);
 			}
+			wait(&pid);
+
+			fd->order++;
 			//--
-
-			exit(0);
-
-		} else {
-//			dup2(fd->fd[0], 0);
-//			close(fd -> fd[1]);
-		}
-		wait(&pid);
-
-		if (fd->order == 0) {
-			dup2(fd->fd[0], 0);
-			char ch = '0' + fd->fd[0];
-			write(1, &ch, 1);
-//			close(fd->fd[1]);
-			ft_putstr_fd("\nFrom heaven2\n", 1);
-		}
-//		if (fd->order > 0)
-//			close(fd->fd[0]);
-
-
-//		close(fd->fd[0]);
-		//++
-//		if (fd->order != 0) {
-//			close(fd->fd[0]);
-//			close(fd->fd[1]);
-//		}
-
-		fd->order++;
-		//--
-	} else
-		ft_command_not_found(splt[0]);
+		} else
+			ft_command_not_found(splt[0]);
+	}
 }
