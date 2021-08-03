@@ -80,16 +80,8 @@ void ft_commands(char **splt, t_pipe *fd) {
 		g_error = 0;
 		free(splt[0]); //TODO вынести из if проверить что нет утечки.
 		splt[0] = cmd;
-//		ft_putstr_fd("From heaven!\n", 2);
-//		dup2(fd[1], 1);
 
-//		if (fd->order > 0) {
-//			dup2(fd->fd[0], 0);
-//			char ch = '0' + fd->fd[0];
-//			write(1, &ch, 1);
-//			ft_putstr_fd("\nFrom heaven2\n", 1);
-//			close(fd->fd[1]);
-//		}
+
 
 		pid = fork();
 
@@ -105,11 +97,11 @@ void ft_commands(char **splt, t_pipe *fd) {
 				ft_putstr_fd("\nFrom hell1!\n", 2);
 			}
 			else {
-				dup2(fd->fd[0], 0);
-				char ch = '0' + fd->fd[0];
-				write(1, &ch, 1);
-				ft_putstr_fd("\nFrom hell2!\n", 1);
-				close(fd -> fd[1]);
+//				dup2(fd->fd[0], 0);
+//				char ch = '0' + fd->fd[0];
+//				write(1, &ch, 1);
+//				ft_putstr_fd("\nFrom hell2!\n", 1);
+//				close(fd -> fd[1]);
 			}
 			//--
 
@@ -118,7 +110,12 @@ void ft_commands(char **splt, t_pipe *fd) {
 //			close(fd -> fd[1]);
 			if (fd->order == 0) {
 //				close(fd->fd[0]);
-				close(fd -> fd[1]);
+//				close(fd -> fd[1]);
+			} else
+			{
+				ft_putstr_fd("\nexecve 2!\n", 1);
+//				close(fd -> fd[1]);
+//				close(fd->fd[0]);
 			}
 			//--
 
@@ -129,8 +126,16 @@ void ft_commands(char **splt, t_pipe *fd) {
 //			close(fd -> fd[1]);
 		}
 		wait(&pid);
-		if (fd->order > 0)
-			close(fd->fd[0]);
+
+		if (fd->order == 0) {
+			dup2(fd->fd[0], 0);
+			char ch = '0' + fd->fd[0];
+			write(1, &ch, 1);
+//			close(fd->fd[1]);
+			ft_putstr_fd("\nFrom heaven2\n", 1);
+		}
+//		if (fd->order > 0)
+//			close(fd->fd[0]);
 
 
 //		close(fd->fd[0]);

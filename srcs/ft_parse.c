@@ -482,13 +482,13 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 
 	fd.order = 0;
 	i = 0;
-	pipe(fd.fd);
+//	pipe(fd.fd);
 	arr_commands = ft_split_string(line, mem);
 	while (arr_commands && arr_commands[i])
 	{
 //		fd[0] = dup(0);
 //		fd[1] = dup(1);
-
+		pipe(fd.fd);
 
 		//тут добавить функцию которая добавляет переменные, или нет
 		ft_start_commands(arr_commands[i], mem, &fd);
