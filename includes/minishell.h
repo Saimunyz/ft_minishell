@@ -35,6 +35,8 @@ typedef struct	s_var
 
 typedef struct	s_pipe
 {
+	int		fd0;
+	int		fd1;
 	int		fd[2];
 	int 	order;
 }				t_pipe;
