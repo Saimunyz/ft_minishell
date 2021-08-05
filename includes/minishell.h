@@ -27,6 +27,13 @@
 # define GET_DATA_ERR 1
 # define COMMAND_ERR 2
 
+typedef struct	s_cmd
+{
+	char	**cmd;
+	int 	*p_next;
+	int 	*p_priv;
+}				t_cmd;
+
 typedef struct	s_var
 {
 	char	*name;
