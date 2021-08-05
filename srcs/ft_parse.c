@@ -149,7 +149,8 @@ char	ft_spec_char(char spec_char, char line)
 	return (spec_char);
 }
 
-void	ft_start_commands(char	**strs_cmd, t_memory *mem, t_pipe *fd)
+//void	ft_start_commands(char	**strs_cmd, t_memory *mem, t_pipe *fd, )
+void	ft_start_commands(char	**strs_cmd, t_memory *mem, t_pipe *fd, t_cmd  a_cmd) //add ref
 {
 	int		splt_len;
 
@@ -174,7 +175,7 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem, t_pipe *fd)
 //	else if (strs_cmd[0][0] == '$')		//Это теперь не здесь иначе не работает "$a  $b"
 //		ft_print_var(strs_cmd[0], mem);
 	else if (*strs_cmd[0] != '\3')
-		ft_commands(strs_cmd, fd);
+		ft_commands(a_cmd, fd);
 	free_text(strs_cmd, ft_maslen(strs_cmd));
 }
 
@@ -491,38 +492,19 @@ t_cmd *ft_split_string(char *line, t_memory *mem)
 void	ft_parse(char *line, char *home, t_memory *mem)
 {
 	t_pipe	fd; //07.06.2021
-//	char	***arr_commands;
 	t_cmd  *a_cmd;
 	int	i;
 
 	fd.order = 0;
 	i = 0;
 	pipe(fd.fd);
-//	arr_commands = ft_split_string(line, mem);
 	a_cmd = ft_split_string(line, mem);
 	while (a_cmd && a_cmd[i].cmd)
 	{
-//		fd[0] = dup(0);
-//		fd[1] = dup(1);
-//		pipe(fd.fd);
-
 		//тут добавить функцию которая добавляет переменные, или нет
-		ft_start_commands(a_cmd[i].cmd, mem, &fd);
+		ft_start_commands(a_cmd[i].cmd, mem, &fd, a_cmd[i]);
 		i++;
 	}
-//	free(arr_commands);
-
-
-//	while (arr_commands && arr_commands[i])
-//	{
-////		fd[0] = dup(0);
-////		fd[1] = dup(1);
-////		pipe(fd.fd);
-//
-//		//тут добавить функцию которая добавляет переменные, или нет
-//		ft_start_commands(arr_commands[i], mem, &fd);
-//		i++;
-//	}
 //	free(arr_commands);
 	ft_write_history(line, home);
 }

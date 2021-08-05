@@ -67,7 +67,8 @@ void ft_command_not_found(char *cmd) {
  * мы в минишел, так что изначально он 1, когда запустим что-то еще нужно увеличить на 1
  * TODO буду рефакторить когда доделаем парсер
  */
-void ft_commands(char **splt, t_pipe *fd) {
+//void ft_commands(char **splt, t_pipe *fd) {
+void ft_commands(t_cmd a_cmd, t_pipe *fd) {
 	pid_t pid;
 	char *cmd;
 	char *newenviron[0];
@@ -75,7 +76,7 @@ void ft_commands(char **splt, t_pipe *fd) {
 	//TODO всегда можно NULL или нет?
 	newenviron[0] = NULL;
 	//TODO паф могут удалить, не должно крашится. проверить когда допишем
-	cmd = ft_find_command(splt[0], ft_split(getenv("PATH"), ':'));
+	cmd = ft_find_command(a_cmd.cmd[0], ft_split(getenv("PATH"), ':'));
 	if (cmd) {
 		//todo отрефакторить
 		if (fd->order == 0) {
@@ -84,8 +85,8 @@ void ft_commands(char **splt, t_pipe *fd) {
 		}
 
 		g_error = 0;
-		free(splt[0]); //TODO вынести из if проверить что нет утечки.
-		splt[0] = cmd;
+		free(a_cmd.cmd[0]); //TODO вынести из if проверить что нет утечки.
+		a_cmd.cmd[0] = cmd;
 		pid = fork();
 		if (pid == 0) {
 			if (fd->order == 0) {
@@ -94,7 +95,7 @@ void ft_commands(char **splt, t_pipe *fd) {
 				char ch = '0' + fd->fd[1];
 				write(2, &ch, 1);
 				ft_putstr_fd("\nFrom hell1!\n\n", 2);
-				execve(cmd, splt, newenviron);
+				execve(cmd, a_cmd.cmd, newenviron);
 
 			} else {
 				dup2(fd->fd[0], 0);
@@ -102,7 +103,7 @@ void ft_commands(char **splt, t_pipe *fd) {
 				char ch = '0' + fd->fd[0];
 				write(2, &ch, 1);
 				ft_putstr_fd("\nFrom hell2!\n", 1);
-				execve(cmd, splt, newenviron);
+				execve(cmd, a_cmd.cmd, newenviron);
 			}
 		}
 
@@ -111,9 +112,7 @@ void ft_commands(char **splt, t_pipe *fd) {
 			close(fd->fd0); //не понятно, надо ли этот закрывать или нет
 		}
 		wait(&pid);
-
 		fd->order++;
-		//--
 	} else
-		ft_command_not_found(splt[0]);
+		ft_command_not_found(a_cmd.cmd[0]);
 }
