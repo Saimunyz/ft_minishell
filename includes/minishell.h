@@ -30,8 +30,8 @@
 typedef struct	s_cmd
 {
 	char	**cmd;
-	int 	*p_next;
-	int 	*p_priv;
+	int 	p_next;
+	int 	p_priv;
 }				t_cmd;
 
 typedef struct	s_var

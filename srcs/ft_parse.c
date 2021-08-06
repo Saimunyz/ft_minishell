@@ -225,31 +225,39 @@ int	ft_count_commands(char *line)
 	return count;
 }
 
+void clean_a_cmd(t_cmd *a_cmd)
+{
+	a_cmd->p_priv = 0;
+	a_cmd->p_next = 0;
+}
+
 //char** ft_parse_strings(char *line)
-t_cmd ft_parse_strings(char *line)
+//t_cmd ft_parse_strings(char *line)
+char **ft_parse_strings(char *line)
 {
 	char **arr_strings;
 	int count_commands;
 	int i;
 	int j;
 	char spec_char;
-	t_cmd	a_cmd;
+//	t_cmd	a_cmd;
 
 	spec_char = 0;
 	count_commands = ft_count_commands(line);
 	arr_strings = (char **) malloc(sizeof (char **) * (count_commands + 1));
-	a_cmd.cmd = (char **) malloc(sizeof (char **) * (count_commands + 1)); //add ref
+//	clean_a_cmd(&a_cmd);
+//	a_cmd.cmd = (char **) malloc(sizeof (char **) * (count_commands + 1)); //add ref
 	ft_go_end_space(&line);
 	i = 0;
 	while (i < count_commands)
 	{
 		j = 0;
 		arr_strings[i] = (char *) malloc(sizeof (char *) * (ft_str_len_space(line) + 1));
-		a_cmd.cmd[i] = (char *) malloc(sizeof (char *) * (ft_str_len_space(line) + 1)); //add ref
+//		a_cmd.cmd[i] = (char *) malloc(sizeof (char *) * (ft_str_len_space(line) + 1)); //add ref
 		while (*line) {
 			spec_char = ft_spec_char_step(spec_char, &line);
 			arr_strings[i][j] = *line;
-			a_cmd.cmd[i][j] = *line; //add ref
+//			a_cmd.cmd[i][j] = *line; //add ref
 			if ((*line == ' ' || !line) && !spec_char)
 			{
 				ft_go_end_space(&line);
@@ -260,13 +268,13 @@ t_cmd ft_parse_strings(char *line)
 				line++;
 		}
 		arr_strings[i][j] = '\0';
-		a_cmd.cmd[i][j] = '\0'; //add ref
+//		a_cmd.cmd[i][j] = '\0'; //add ref
 		i++;
 	}
 	arr_strings[i] = NULL;
-	a_cmd.cmd[i] = NULL; //add ref
-//	return (arr_strings);
-	return (a_cmd); //add ref
+//	a_cmd.cmd[i] = NULL; //add ref
+	return (arr_strings);
+//	return (a_cmd); //add ref
 }
 
 
@@ -300,7 +308,7 @@ int	ft_count_strs(char *line)
 	return count;
 }
 
-int ft_find_char(char *str, int i)
+int ft_find_char(char *str, int i, t_cmd *a_cmd)
 {
 	char spec_char;
 
@@ -311,8 +319,11 @@ int ft_find_char(char *str, int i)
 	{
 		spec_char = ft_spec_char(spec_char, str[i]);
 //		if(str[i] == ';' && !spec_char)
-		if((str[i] == ';' || str[i] == '|') && !spec_char) //07.06.2021
+		if((str[i] == ';' || str[i] == '|') && !spec_char) {
+			if (str[i] == '|')
+				a_cmd->p_next = 1;
 			return (i);
+		}
 		i++;
 	}
 	return (ft_strlen(str));
@@ -383,13 +394,13 @@ void ft_change_var(char **line,  t_memory *mem)
 	int 	j;
 	char	*tmp;
 	char	*str_find;
-	char 	*tmp_line;
+//	char 	*tmp_line;
 	char	spec_char;
 
 	spec_char = 0;
 //
 //	tmp = 0; //возможно избыточно
-	tmp_line = *line;
+//	tmp_line = *line;
 	j = 0;
 	tmp = (char *) malloc((ft_strlen(*line) + ft_len_doll(*line, mem) + 1) * sizeof (char));
 	if(!tmp)
@@ -437,9 +448,11 @@ void ft_change_var(char **line,  t_memory *mem)
 		}
 	}
 	tmp[j] = '\0';
-	free(tmp_line);
+//	free(tmp_line);  //todo ref вернуть, крашится
 	*line = tmp;
 }
+
+
 
 //char	***ft_split_string(char *line, t_memory *mem)
 t_cmd *ft_split_string(char *line, t_memory *mem)
@@ -461,12 +474,15 @@ t_cmd *ft_split_string(char *line, t_memory *mem)
 	start = 0;
 	while (i < count_strs)
 	{
-		end = ft_find_char(line, start);
+		clean_a_cmd(&a_cmd[i]);
+		end = ft_find_char(line, start, &a_cmd[i]);
+		if (i > 0)
+			a_cmd[i].p_priv = a_cmd[i - 1].p_next;
 		tmp = ft_substr(line, start, end - start);
 		ft_change_var(&tmp, mem);//преобразовываем $
 //		arr_strs[i] = ft_parse_strings(tmp);
-		a_cmd[i] = ft_parse_strings(tmp); //add ref
-		free(tmp);
+		a_cmd[i].cmd = ft_parse_strings(tmp); //add ref
+//		free(tmp);  //todo вернуть, крашится
 		start = end + 1;
 		i++;
 	}

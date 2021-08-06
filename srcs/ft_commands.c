@@ -85,11 +85,11 @@ void ft_commands(t_cmd a_cmd, t_pipe *fd) {
 		}
 
 		g_error = 0;
-		free(a_cmd.cmd[0]); //TODO вынести из if проверить что нет утечки.
+//		free(a_cmd.cmd[0]); //TODO вынести из if проверить что нет утечки.
 		a_cmd.cmd[0] = cmd;
 		pid = fork();
 		if (pid == 0) {
-			if (fd->order == 0) {
+			if (a_cmd.p_next) {
 				dup2(fd->fd[1], 1);
 				close(fd->fd[0]);
 				char ch = '0' + fd->fd[1];
@@ -97,22 +97,27 @@ void ft_commands(t_cmd a_cmd, t_pipe *fd) {
 				ft_putstr_fd("\nFrom hell1!\n\n", 2);
 				execve(cmd, a_cmd.cmd, newenviron);
 
-			} else {
+			} else if (a_cmd.p_priv) {
 				dup2(fd->fd[0], 0);
 				close(fd->fd[1]);
 				char ch = '0' + fd->fd[0];
 				write(2, &ch, 1);
 				ft_putstr_fd("\nFrom hell2!\n", 1);
 				execve(cmd, a_cmd.cmd, newenviron);
+			} else {
+				char ch = '0' + fd->fd[1];
+				write(2, &ch, 1);
+				ft_putstr_fd("\nFrom hell3!\n\n", 2);
+				execve(cmd, a_cmd.cmd, newenviron);
 			}
 		}
 
-		if (fd->order == 1) {
+		if (!a_cmd.p_next) {
 			close(fd->fd1);
 			close(fd->fd0); //не понятно, надо ли этот закрывать или нет
 		}
 		wait(&pid);
-		fd->order++;
+//		fd->order++;
 	} else
 		ft_command_not_found(a_cmd.cmd[0]);
 }
