@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 15:05:58 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/06/11 15:47:45 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/07 22:25:51 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,29 +37,10 @@ void	ft_del_line(int *len, char **line)
 	*line = NULL;
 }
 
-void	ft_print_var(char *command, t_memory *mem)
+void	ft_print_varr_err(void)
 {
-	t_list	*find;
-	char	**splt;
-
-	if (*(command + 1) =='?')
-	{
-		printf("minishell: %d: command not found\n", g_error);
-		g_error = 127;
-	}
-	else
-	{
-		find = ft_lstfind_struct(mem->env, command + 1);
-		if (!find)
-			find = ft_lstfind_struct(mem->var, command + 1);
-		if (find)
-		{
-			splt = ft_split(((t_var *)find->content)->value, ' ');
-			//printf("%s: command not found\n", splt[0]);
-			ft_start_commands(splt, mem);
-			g_error = 127;
-		}
-	}
+	printf("%d: command not found\n", g_error);
+	g_error = 127;
 }
 
 void	ft_free_content(void *content)

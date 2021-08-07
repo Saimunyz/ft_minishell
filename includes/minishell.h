@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/06/11 14:55:24 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/07 21:38:05 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include "errno.h"
 # include "string.h"
 # include "fcntl.h"
+# include "signal.h"
 # include "sys/stat.h"
 # include "sys/wait.h"
 
@@ -80,5 +81,8 @@ void	ft_free_content(void *content);
 void	ft_start_commands(char	**strs_cmd, t_memory *mem);
 char	**ft_wise_split(char *strs_cmd);
 void	ft_unset(t_memory *mem, char **var);
+void	ft_sigint_handler(int num);
+void	ft_print_varr_err(void);
+t_list	*ft_bubble_sort(t_list *lst);
 
 #endif

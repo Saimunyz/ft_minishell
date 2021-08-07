@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/16 14:08:18 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/06/11 13:46:43 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/07 19:16:17 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,7 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem)
 	int		splt_len;
 
 	splt_len = ft_strlen(strs_cmd[0]);
+
 	if (ft_check_for_equal_sign(&strs_cmd, mem))
 		return ;
 	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
@@ -177,8 +178,8 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem)
 		ft_export(mem, strs_cmd);
 	else if (!ft_strncmp(strs_cmd[0], "unset", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_unset(mem, strs_cmd);
-//	else if (strs_cmd[0][0] == '$')		//Это теперь не здесь иначе не работает "$a  $b"
-//		ft_print_var(strs_cmd[0], mem);
+	else if (strs_cmd[0][0] == '$' && strs_cmd[0][1] == '?')		//Это теперь не здесь иначе не работает "$a  $b"
+		ft_print_varr_err();
 	else if (*strs_cmd[0] != '\3')
 		ft_commands(strs_cmd);
 	free_text(strs_cmd, ft_maslen(strs_cmd));
@@ -377,14 +378,17 @@ int ft_len_doll(char *line, t_memory *mem)
 void ft_change_var(char **line,  t_memory *mem)
 {
 	int 	j;
+	int		i;
 	char	*tmp;
 	char	*str_find;
-	char 	*tmp_line;
-
+	char	*tmp_line;
+	char	*num;
+	int		size;
 
 	tmp_line = *line;
 	j = 0;
-	tmp = (char *) malloc((ft_strlen(*line) + ft_len_doll(*line, mem) + 1) * sizeof (char));
+	size = (ft_strlen(*line) + ft_len_doll(*line, mem) + 1);
+	tmp = (char *) malloc(size * sizeof (char)); // Перепроверить
 	if(!tmp)
 		return ;//TODO тут какая то ошибка должна выводится
 	while (**line)
@@ -394,6 +398,16 @@ void ft_change_var(char **line,  t_memory *mem)
 			tmp[j] = **line;
 			(*line)++;
 			j++;
+		}
+		else if (!ft_strncmp(*line, "$?", ft_strlen(*line)))
+		{
+			i = 0;
+			num = ft_itoa(g_error);
+			tmp = ft_realloc(tmp, size + ft_strlen(num));
+			while (num[i])
+				tmp[j++] = num[i++];
+			free(num);
+			(*line) += 2;
 		}
 		else
 		{

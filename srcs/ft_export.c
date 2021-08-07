@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 17:45:27 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/11 00:14:14 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/07 21:39:59 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_print_export(t_memory *mem)
 	char	*name;
 	char	*value;
 
-	tmp = mem->env;
+	tmp = ft_bubble_sort(mem->env);
 	while (tmp)
 	{
 		name = ((t_var *)tmp->content)->name;
