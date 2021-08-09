@@ -72,7 +72,7 @@ int		get_next_line(int fd, char **line)
 	if (rem && *line)
 	{
 		tmp = save_buff(rem, line);
-//		free(rem); //todo ref зачем тут free? гд мы rem обьявляли?
+		free(rem);
 		rem = tmp;
 		if (rem && *line)
 			return (1);
