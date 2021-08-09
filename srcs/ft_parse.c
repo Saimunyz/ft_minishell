@@ -149,7 +149,6 @@ char	ft_spec_char(char spec_char, char line)
 	return (spec_char);
 }
 
-//void	ft_start_commands(char	**strs_cmd, t_memory *mem, t_pipe *fd, )
 void	ft_start_commands(char	**strs_cmd, t_memory *mem, t_cmd  *a_cmd, int i) //add ref
 {
 	int		splt_len;
@@ -308,7 +307,6 @@ int ft_find_char(char *str, int i, t_cmd *a_cmd)
 	while (str[i])
 	{
 		spec_char = ft_spec_char(spec_char, str[i]);
-//		if(str[i] == ';' && !spec_char)
 		if((str[i] == ';' || str[i] == '|') && !spec_char) {
 			if (str[i] == '|')
 				a_cmd->p_next = 1;
@@ -438,16 +436,12 @@ void ft_change_var(char **line,  t_memory *mem)
 		}
 	}
 	tmp[j] = '\0';
-	free(tmp_line);  //todo ref вернуть, крашится
+	free(tmp_line);
 	*line = tmp;
 }
 
-
-
-//char	***ft_split_string(char *line, t_memory *mem)
 t_cmd *ft_split_string(char *line, t_memory *mem)
 {
-//	char ***arr_strs;
 	int count_strs;
 	int	i;
 	int start;
@@ -458,7 +452,6 @@ t_cmd *ft_split_string(char *line, t_memory *mem)
 	count_strs = ft_count_strs(line);
 	if (count_strs == 0)
 		return NULL;
-//	arr_strs = (char ***) malloc(sizeof(char ***) * (count_strs + 1));
 	a_cmd = (t_cmd *) malloc(sizeof(t_cmd) * (count_strs + 1));
 	i = 0;
 	start = 0;
@@ -470,17 +463,13 @@ t_cmd *ft_split_string(char *line, t_memory *mem)
 			a_cmd[i].p_priv = a_cmd[i - 1].p_next;
 		tmp = ft_substr(line, start, end - start);
 		ft_change_var(&tmp, mem);	//преобразовываем $
-//		arr_strs[i] = ft_parse_strings(tmp);
 		a_cmd[i].cmd = ft_parse_strings(tmp);	//add ref
 		pipe(a_cmd[i].fd);
-//		free(tmp);  //todo вернуть, крашится
+		free(tmp);  //todo вернуть, крашится
 		start = end + 1;
 		i++;
 	}
 	a_cmd[i].cmd = 0; //add ref
-
-//	arr_strs[i] = NULL;
-//	return (arr_strs);
 	return (a_cmd); //add ref
 }
 
@@ -499,23 +488,16 @@ t_cmd *ft_split_string(char *line, t_memory *mem)
 //// << >> <
 void	ft_parse(char *line, char *home, t_memory *mem)
 {
-//	t_pipe	fd; //07.06.2021
 	t_cmd  *a_cmd;
 	int	i;
 
-//	fd.order = 0;
 	i = 0;
-//	pipe(fd.fd);
 	a_cmd = ft_split_string(line, mem);
 	while (a_cmd && a_cmd[i].cmd)
 	{
-
-//		pipe(a_cmd[i].fd);
-
 		//тут добавить функцию которая добавляет переменные, или нет
 		ft_start_commands(a_cmd[i].cmd, mem, a_cmd, i);
 		i++;
 	}
-//	free(arr_commands);
 	ft_write_history(line, home);
 }
