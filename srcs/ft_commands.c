@@ -68,56 +68,88 @@ void ft_command_not_found(char *cmd) {
  * TODO буду рефакторить когда доделаем парсер
  */
 //void ft_commands(char **splt, t_pipe *fd) {
-void ft_commands(t_cmd a_cmd, t_pipe *fd) {
+void ft_commands(t_cmd *a_cmd, t_pipe *fd, int i) {
 	pid_t pid;
 	char *cmd;
 	char *newenviron[0];
+	int		status;
 
 	//TODO всегда можно NULL или нет?
 	newenviron[0] = NULL;
 	//TODO паф могут удалить, не должно крашится. проверить когда допишем
-	cmd = ft_find_command(a_cmd.cmd[0], ft_split(getenv("PATH"), ':'));
+	cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(getenv("PATH"), ':'));
 	if (cmd) {
 		//todo отрефакторить
-		if (fd->order == 0) {
-			fd->fd0 = fd->fd[0];
-			fd->fd1 = fd->fd[1];
-		}
+//		if (fd->order == 0) {
+//			fd->fd0 = fd->fd[0];
+//			fd->fd1 = fd->fd[1];
+//		}
 
 		g_error = 0;
-//		free(a_cmd.cmd[0]); //TODO вынести из if проверить что нет утечки.
-		a_cmd.cmd[0] = cmd;
+		free(a_cmd[i].cmd[0]); //TODO вынести из if проверить что нет утечки.
+		a_cmd[i].cmd[0] = cmd;
 		pid = fork();
 		if (pid == 0) {
-			if (a_cmd.p_next) {
-				dup2(fd->fd[1], 1);
-				close(fd->fd[0]);
+			if (a_cmd[i].p_next && a_cmd[i].p_priv)
+			{
+				dup2(a_cmd[i - 1].fd[0], 0);
+				close(a_cmd[i - 1].fd[0]);
+				close(a_cmd[i - 1].fd[1]);
+
+				dup2(a_cmd[i].fd[1], 1);
+				close(a_cmd[i].fd[0]);
+				close(a_cmd[i].fd[1]);
+
 				char ch = '0' + fd->fd[1];
 				write(2, &ch, 1);
-				ft_putstr_fd("\nFrom hell1!\n\n", 2);
-				execve(cmd, a_cmd.cmd, newenviron);
-
-			} else if (a_cmd.p_priv) {
-				dup2(fd->fd[0], 0);
-				close(fd->fd[1]);
-				char ch = '0' + fd->fd[0];
+				ft_putstr_fd("\nFrom hell2!\n\n", 2);
+				execve(cmd, a_cmd[i].cmd, newenviron);
+			}
+			else if (a_cmd[i].p_next) {
+				dup2(a_cmd[i].fd[1], 1);
+				close(a_cmd[i].fd[0]);
+				close(a_cmd[i].fd[1]);
+				char ch = '0' + a_cmd[i].fd[1];
 				write(2, &ch, 1);
-				ft_putstr_fd("\nFrom hell2!\n", 1);
-				execve(cmd, a_cmd.cmd, newenviron);
+				ft_putstr_fd("\nFrom hell1!\n\n", 2);
+				execve(cmd, a_cmd[i].cmd, newenviron);
+
+			} else if (a_cmd[i].p_priv) {
+				dup2(a_cmd[i - 1].fd[0], 0);
+				close(a_cmd[i - 1].fd[0]);
+				close(a_cmd[i - 1].fd[1]);
+				char ch = '0' + a_cmd[i].fd[1];
+				write(2, &ch, 1);
+				ft_putstr_fd("\nFrom hell3!\n", 1);
+				execve(cmd, a_cmd[i].cmd, newenviron);
 			} else {
 				char ch = '0' + fd->fd[1];
 				write(2, &ch, 1);
 				ft_putstr_fd("\nFrom hell3!\n\n", 2);
-				execve(cmd, a_cmd.cmd, newenviron);
+				execve(cmd, a_cmd[i].cmd, newenviron);
 			}
 		}
 
-		if (!a_cmd.p_next) {
-			close(fd->fd1);
-			close(fd->fd0); //не понятно, надо ли этот закрывать или нет
+		if (a_cmd[i].p_next && a_cmd[i].p_priv){
+			close(a_cmd[i - 1].fd[0]);
+			close(a_cmd[i].fd[1]);
 		}
-		wait(&pid);
+		else if (a_cmd[i].p_next){
+			close(a_cmd[i].fd[1]);
+		}
+		else if (a_cmd[i].p_priv) {
+			close(a_cmd[i - 1].fd[0]);
+			close(a_cmd[i].fd[0]);
+			close(a_cmd[i].fd[1]);
+		}
+
+
+		if (!a_cmd[i].p_next) {
+//			close(fd->fd1);
+//			close(fd->fd0); //не понятно, надо ли этот закрывать или нет
+		}
+		waitpid(pid, &status, 0);
 //		fd->order++;
 	} else
-		ft_command_not_found(a_cmd.cmd[0]);
+		ft_command_not_found(a_cmd[i].cmd[0]);
 }
