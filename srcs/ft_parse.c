@@ -30,8 +30,6 @@ char	ft_spec_char_step(char spec_char, char **line)
 	return (spec_char);
 }
 
-
-
 char	*ft_spec_char_loop(char **str)
 {
 	int i;
@@ -155,22 +153,26 @@ char	ft_spec_char(char spec_char, char line)
 	return (spec_char);
 }
 
-void	ft_start_commands(char	**strs_cmd, t_memory *mem)
+void	ft_start_commands(char	**strs_cmd, t_memory *mem) //add ref
 {
 	int		splt_len;
 
 	splt_len = ft_strlen(strs_cmd[0]);
 	if (ft_check_for_equal_sign(&strs_cmd, mem))
-		return ;
-	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
+		return ; //TODO тут наверное ошибка?
+	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0) {
+		printf("это наше pwd \n");
 		ft_pwd();
+	}
 	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)
 //		ft_echo(strs_cmd, mem);
 		ft_echo(strs_cmd);
 	else if (!ft_strncmp(strs_cmd[0], "cd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_cd(strs_cmd[1], mem);		//Todo доделать "-bash: cd: too many arguments"
-	else if (!ft_strncmp(strs_cmd[0], "exit", ft_strlen(strs_cmd[0])) && splt_len != 0)
+	else if (!ft_strncmp(strs_cmd[0], "exit", ft_strlen(strs_cmd[0])) && splt_len != 0) {
+		printf("это наш эксит \n");
 		ft_exit();
+	}
 	else if (!ft_strncmp(strs_cmd[0], "env", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_env(mem);	//Todo он вроде как то с параметрами работает, надо расспросить как
 	else if (!ft_strncmp(strs_cmd[0], "export", ft_strlen(strs_cmd[0])) && splt_len != 0)
@@ -179,9 +181,13 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem)
 		ft_unset(mem, strs_cmd);
 //	else if (strs_cmd[0][0] == '$')		//Это теперь не здесь иначе не работает "$a  $b"
 //		ft_print_var(strs_cmd[0], mem);
-	else if (*strs_cmd[0] != '\3')
-		ft_commands(strs_cmd);
-	free_text(strs_cmd, ft_maslen(strs_cmd));
+	else if (*strs_cmd[0] != '\3') {
+		char *newenviron[0]; //todo изменить
+		newenviron[0] = NULL;
+		execve(strs_cmd[0], strs_cmd, newenviron);
+	}
+//		ft_commands(a_cmd, i);
+//	free_text(strs_cmd, ft_maslen(strs_cmd));  //todo ref разобратся с косяком и врнуть
 }
 
 
@@ -230,7 +236,13 @@ int	ft_count_commands(char *line)
 	return count;
 }
 
-char** ft_parse_strings(char *line)
+void clean_a_cmd(t_cmd *a_cmd)
+{
+	a_cmd->p_priv = 0;
+	a_cmd->p_next = 0;
+}
+
+char **ft_parse_strings(char *line)
 {
 	char **arr_strings;
 	int count_commands;
@@ -246,7 +258,7 @@ char** ft_parse_strings(char *line)
 	while (i < count_commands)
 	{
 		j = 0;
-		arr_strings[i] = (char *) malloc(sizeof (char *) * (ft_str_len_space(line) + 1));
+		arr_strings[i] = (char *) malloc(sizeof (char ) * (ft_str_len_space(line) + 1));
 		while (*line) {
 			spec_char = ft_spec_char_step(spec_char, &line);
 			arr_strings[i][j] = *line;
@@ -262,7 +274,7 @@ char** ft_parse_strings(char *line)
 		arr_strings[i][j] = '\0';
 		i++;
 	}
-	arr_strings[i] = NULL;
+	arr_strings[i] = 0;
 	return (arr_strings);
 }
 
@@ -297,7 +309,7 @@ int	ft_count_strs(char *line)
 	return count;
 }
 
-int ft_find_char(char *str, int i)
+int ft_find_char(char *str, int i, t_cmd *a_cmd)
 {
 	char spec_char;
 
@@ -307,8 +319,11 @@ int ft_find_char(char *str, int i)
 	while (str[i])
 	{
 		spec_char = ft_spec_char(spec_char, str[i]);
-		if(str[i] == ';' && !spec_char)
+		if((str[i] == ';' || str[i] == '|') && !spec_char) {
+			if (str[i] == '|')
+				a_cmd->p_next = 1;
 			return (i);
+		}
 		i++;
 	}
 	return (ft_strlen(str));
@@ -380,8 +395,11 @@ void ft_change_var(char **line,  t_memory *mem)
 	char	*tmp;
 	char	*str_find;
 	char 	*tmp_line;
+	char	spec_char;
 
-
+	spec_char = 0;
+//
+	tmp = 0; //возможно избыточно
 	tmp_line = *line;
 	j = 0;
 	tmp = (char *) malloc((ft_strlen(*line) + ft_len_doll(*line, mem) + 1) * sizeof (char));
@@ -389,14 +407,22 @@ void ft_change_var(char **line,  t_memory *mem)
 		return ;//TODO тут какая то ошибка должна выводится
 	while (**line)
 	{
-		if (**line != '$')
+		spec_char = ft_spec_char(spec_char, **line);
+		if (**line != '$' || (**line == '$' && spec_char == 39))
 		{
 			tmp[j] = **line;
 			(*line)++;
 			j++;
 		}
+		else if(**line == 39)
+			(*line)++;
 		else
 		{
+			if (*((*line) + 1) == '?')
+			{
+				printf("minishell: %d: command not found\n", g_error);
+				g_error = 127;
+			}
 			str_find = ft_find_doll(*line, mem);
 			if (!str_find)
 			{
@@ -426,92 +452,67 @@ void ft_change_var(char **line,  t_memory *mem)
 	*line = tmp;
 }
 
-//void ft_read_var(char **line, t_memory *mem)
-//{
-//	char 	*tmp_line;
-//
-//	tmp_line = *line;
-//	while (**line)
-//	{
-//		if (**line == '$')
-//				ft_change_var(&tmp_line, mem);
-//		if (**line)
-//			(*line)++;
-//	}
-//	*line = tmp_line;
-//}
-
-char	***ft_split_string(char *line, t_memory *mem)
+t_cmd *ft_split_string(char *line, t_memory *mem)
 {
-	char ***arr_strs;
 	int count_strs;
 	int	i;
 	int start;
 	int end;
 	char *tmp;
+	t_cmd *a_cmd;
 
 	count_strs = ft_count_strs(line);
 	if (count_strs == 0)
 		return NULL;
-	arr_strs = (char ***) malloc(sizeof(char ***) * (count_strs + 1));
+	a_cmd = (t_cmd *) malloc(sizeof(t_cmd) * (count_strs + 1));
 	i = 0;
 	start = 0;
 	while (i < count_strs)
 	{
-		end = ft_find_char(line, start);
+		clean_a_cmd(&a_cmd[i]);
+		end = ft_find_char(line, start, &a_cmd[i]);
+		if (i > 0)
+			a_cmd[i].p_priv = a_cmd[i - 1].p_next;
 		tmp = ft_substr(line, start, end - start);
-		ft_change_var(&tmp, mem);//преобразовываем $
-		arr_strs[i] = ft_parse_strings(tmp);
-		free(tmp);
+		ft_change_var(&tmp, mem);	//преобразовываем $
+		a_cmd[i].cmd = ft_parse_strings(tmp);	//add ref
+		pipe(a_cmd[i].fd);
+		a_cmd[i].original = dup(1);
+		free(tmp);  //todo вернуть, крашится
 		start = end + 1;
 		i++;
 	}
-	arr_strs[i] = NULL;
-	return (arr_strs);
+	a_cmd[i].cmd = 0; //add ref
+	return (a_cmd); //add ref
 }
-
-/*
-char	*ft_check_doll(char spec_char, char **str, t_memory *mem)
-{
-	t_list	*find;
-	char 	*str_find;
-
-
-	if (spec_char)	//TODO доделать "'
-		spec_char = spec_char;
-	if (**str == '$')
-	{
-		find = ft_lstfind_struct(mem->env, *str + 1);
-		if (!find)
-			find = ft_lstfind_struct(mem->var, *str + 1);
-		if (find)
-			str_find = (char *)((t_var *)find->content)->value;		//TODO тут каст char * можно?
-		if (str_find)
-			return (str_find);
-	}
-	return (0);
-}
-*/
 
 
 ////TODO Доделать
+
+//// одинарные двойные кавычки, разницы нет, надо сделать
+//// a=1
+//	echo "$a"
+//	echo '$a'
+////
+
 ////	$var
 ////  "\"
 //// |
 //// << >> <
 void	ft_parse(char *line, char *home, t_memory *mem)
 {
-	char	***arr_commands;
+	t_cmd  *a_cmd;
 	int	i;
 
 	i = 0;
-	arr_commands = ft_split_string(line, mem);
-	while (arr_commands && arr_commands[i])
+	a_cmd = ft_split_string(line, mem);
+//	ft_write_history(line, home); //todo ref вернуть
+	while (a_cmd && a_cmd[i].cmd)
 	{
 		//тут добавить функцию которая добавляет переменные, или нет
-		ft_start_commands(arr_commands[i], mem);
+//		ft_start_commands(a_cmd[i].cmd, mem, a_cmd, i);
+		ft_commands(a_cmd, i, mem);
 		i++;
 	}
-	free(arr_commands);
-	ft_write_history(line, home);
+	ft_write_history(line, home); //todo ref вернуть
 }

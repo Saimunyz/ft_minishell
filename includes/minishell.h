@@ -27,11 +27,28 @@
 # define GET_DATA_ERR 1
 # define COMMAND_ERR 2
 
+typedef struct	s_cmd
+{
+	char	**cmd;
+	int 	p_next;
+	int 	p_priv;
+	int		fd[2];
+	int		original;
+}				t_cmd;
+
 typedef struct	s_var
 {
 	char	*name;
 	char 	*value;
 }				t_var;
+
+typedef struct	s_pipe
+{
+	int		fd0;
+	int		fd1;
+	int		fd[2];
+	int 	order;
+}				t_pipe;
 
 typedef struct s_hist
 {
@@ -61,7 +78,7 @@ void	ft_del_line(int *len, char **line);
 void	ft_echo(char **str);
 void	ft_cd(char *path, t_memory *mem);
 void	ft_exit(void);
-void	ft_commands(char **splt);
+void	ft_commands(t_cmd *a_cmd, int i, t_memory *mem);
 void	ft_init_read(t_hist *hist, char **line, char **lettr, char *home);
 void	ft_write_history(char *command, char *home);
 t_list	*ft_read_history(char *home);
