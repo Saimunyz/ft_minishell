@@ -149,22 +149,26 @@ char	ft_spec_char(char spec_char, char line)
 	return (spec_char);
 }
 
-void	ft_start_commands(char	**strs_cmd, t_memory *mem, t_cmd  *a_cmd, int i) //add ref
+void	ft_start_commands(char	**strs_cmd, t_memory *mem) //add ref
 {
 	int		splt_len;
 
 	splt_len = ft_strlen(strs_cmd[0]);
 	if (ft_check_for_equal_sign(&strs_cmd, mem))
 		return ; //TODO тут наверное ошибка?
-	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
+	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0) {
+		printf("это наше pwd \n");
 		ft_pwd();
+	}
 	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)
 //		ft_echo(strs_cmd, mem);
 		ft_echo(strs_cmd);
 	else if (!ft_strncmp(strs_cmd[0], "cd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_cd(strs_cmd[1], mem);		//Todo доделать "-bash: cd: too many arguments"
-	else if (!ft_strncmp(strs_cmd[0], "exit", ft_strlen(strs_cmd[0])) && splt_len != 0)
+	else if (!ft_strncmp(strs_cmd[0], "exit", ft_strlen(strs_cmd[0])) && splt_len != 0) {
+		printf("это наш эксит \n");
 		ft_exit();
+	}
 	else if (!ft_strncmp(strs_cmd[0], "env", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_env(mem);	//Todo он вроде как то с параметрами работает, надо расспросить как
 	else if (!ft_strncmp(strs_cmd[0], "export", ft_strlen(strs_cmd[0])) && splt_len != 0)
@@ -173,9 +177,13 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem, t_cmd  *a_cmd, int i) //a
 	// 	ft_unset(*env);
 //	else if (strs_cmd[0][0] == '$')		//Это теперь не здесь иначе не работает "$a  $b"
 //		ft_print_var(strs_cmd[0], mem);
-	else if (*strs_cmd[0] != '\3')
-		ft_commands(a_cmd, i);
-	free_text(strs_cmd, ft_maslen(strs_cmd));
+	else if (*strs_cmd[0] != '\3') {
+		char *newenviron[0]; //todo изменить
+		newenviron[0] = NULL;
+		execve(strs_cmd[0], strs_cmd, newenviron);
+	}
+//		ft_commands(a_cmd, i);
+//	free_text(strs_cmd, ft_maslen(strs_cmd));  //todo ref разобратся с косяком и врнуть
 }
 
 
@@ -465,6 +473,7 @@ t_cmd *ft_split_string(char *line, t_memory *mem)
 		ft_change_var(&tmp, mem);	//преобразовываем $
 		a_cmd[i].cmd = ft_parse_strings(tmp);	//add ref
 		pipe(a_cmd[i].fd);
+		a_cmd[i].original = dup(1);
 		free(tmp);  //todo вернуть, крашится
 		start = end + 1;
 		i++;
@@ -493,11 +502,13 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 
 	i = 0;
 	a_cmd = ft_split_string(line, mem);
+//	ft_write_history(line, home); //todo ref вернуть
 	while (a_cmd && a_cmd[i].cmd)
 	{
 		//тут добавить функцию которая добавляет переменные, или нет
-		ft_start_commands(a_cmd[i].cmd, mem, a_cmd, i);
+//		ft_start_commands(a_cmd[i].cmd, mem, a_cmd, i);
+		ft_commands(a_cmd, i, mem);
 		i++;
 	}
-	ft_write_history(line, home);
+	ft_write_history(line, home); //todo ref вернуть
 }

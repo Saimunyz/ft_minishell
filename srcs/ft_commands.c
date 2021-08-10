@@ -27,6 +27,26 @@ void ft_clear_arr(char **arr) {
 	free(tmp_arr);
 }
 
+char *ft_find_aur_command(char *command) {
+	int		splt_len;
+
+	splt_len = ft_strlen(command);
+
+	if (!ft_strncmp(command, "pwd", ft_strlen(command)) && splt_len != 0)
+		return "pwd";
+	else if (!ft_strncmp(command, "echo", ft_strlen(command)) && splt_len != 0)
+		return "echo";
+	else if (!ft_strncmp(command, "cd", ft_strlen(command)) && splt_len != 0)
+		return "cd";
+	else if (!ft_strncmp(command, "exit", ft_strlen(command)) && splt_len != 0)
+		ft_exit();
+	else if (!ft_strncmp(command, "env", ft_strlen(command)) && splt_len != 0)
+		return "env";
+	else if (!ft_strncmp(command, "export", ft_strlen(command)) && splt_len != 0)
+		return "export";
+	return (0);
+}
+
 char *ft_find_command(char *command, char **path) {
 	int st;
 	struct stat buf;
@@ -34,6 +54,8 @@ char *ft_find_command(char *command, char **path) {
 	char *cmd;
 	char **tmp_path;
 
+	if (ft_find_aur_command(command))
+		return ft_find_aur_command(command);
 	tmp_path = path;
 	while (*path) {
 		tmp_cmd = ft_strjoin(*path, "/");
@@ -68,21 +90,30 @@ void ft_command_not_found(char *cmd) {
  * TODO буду рефакторить когда доделаем парсер
  */
 //void ft_commands(char **splt, t_pipe *fd) {
-void ft_commands(t_cmd *a_cmd, int i) {
+void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 	pid_t pid;
 	char *cmd;
-	char *newenviron[0];
+	char *aur_cmd;
 	int		status;
 
 	//TODO всегда можно NULL или нет?
-	newenviron[0] = NULL;
+//	newenviron[0] = NULL;
 	//TODO паф могут удалить, не должно крашится. проверить когда допишем
-	cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(getenv("PATH"), ':'));
-	if (cmd) {
+	aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
+	if (!aur_cmd)
+		cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(getenv("PATH"), ':'));
+	if (cmd || aur_cmd) {
 		g_error = 0;
-		free(a_cmd[i].cmd[0]); //TODO вынести из if проверить что нет утечки.
-		a_cmd[i].cmd[0] = cmd;
-		pid = fork();
+		if (aur_cmd)
+			a_cmd[i].cmd[0] = aur_cmd;
+		else {
+			free(a_cmd[i].cmd[0]); //TODO вынести из if проверить что нет утечки.
+			a_cmd[i].cmd[0] = cmd;
+		}
+		if (!aur_cmd)
+			pid = fork();
+		else
+			pid = 0;
 		if (pid == 0) {
 			if (a_cmd[i].p_next && a_cmd[i].p_priv)
 			{
@@ -97,7 +128,8 @@ void ft_commands(t_cmd *a_cmd, int i) {
 				char ch = '0' + a_cmd[i].fd[1]; //dell
 				write(2, &ch, 1); //dell
 				ft_putstr_fd("\nFrom hell2!\n\n", 2); //dell
-				execve(cmd, a_cmd[i].cmd, newenviron);
+//				execve(cmd, a_cmd[i].cmd, newenviron);
+				ft_start_commands(a_cmd[i].cmd, mem);
 			}
 			else
 				if (a_cmd[i].p_next) {
@@ -107,7 +139,8 @@ void ft_commands(t_cmd *a_cmd, int i) {
 				char ch = '0' + a_cmd[i].fd[1]; //dell
 				write(2, &ch, 1); //dell
 				ft_putstr_fd("\nFrom hell1!\n\n", 2); //dell
-				execve(cmd, a_cmd[i].cmd, newenviron);
+//				execve(cmd, a_cmd[i].cmd, newenviron);
+				ft_start_commands(a_cmd[i].cmd, mem);
 
 			} else if (a_cmd[i].p_priv) {
 				dup2(a_cmd[i - 1].fd[0], 0);
@@ -116,12 +149,14 @@ void ft_commands(t_cmd *a_cmd, int i) {
 				char ch = '0' + a_cmd[i].fd[0]; //dell
 				write(2, &ch, 1); //dell
 				ft_putstr_fd("\nFrom hell3!\n", 1); //dell
-				execve(cmd, a_cmd[i].cmd, newenviron);
+//				execve(cmd, a_cmd[i].cmd, newenviron);
+				ft_start_commands(a_cmd[i].cmd, mem);
 			} else {
 				char ch = '0' + a_cmd[i].fd[1]; //dell
 				write(2, &ch, 1); //dell
 				ft_putstr_fd("\nFrom hell4!\n\n", 2); //dell
-				execve(cmd, a_cmd[i].cmd, newenviron);
+//				execve(cmd, a_cmd[i].cmd, newenviron);
+				ft_start_commands(a_cmd[i].cmd, mem);
 			}
 		}
 
@@ -136,13 +171,14 @@ void ft_commands(t_cmd *a_cmd, int i) {
 			close(a_cmd[i - 1].fd[0]);
 			close(a_cmd[i].fd[0]);
 			close(a_cmd[i].fd[1]);
+//			dup2(a_cmd[0].original, 1); //todo ref доделать 0 это костыль
 		}
 		else {
 			close(a_cmd[i].fd[0]);
 			close(a_cmd[i].fd[1]);
 		}
-
-		waitpid(pid, &status, 0);
+		if (!aur_cmd)
+			waitpid(pid, &status, 0);
 	} else
 		ft_command_not_found(a_cmd[i].cmd[0]);
 }

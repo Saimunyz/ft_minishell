@@ -96,7 +96,7 @@ void	ft_minishell(t_memory *mem)
 		write(STDOUT_FILENO, "minishell$ ", 11);
 		ft_read(&line, home);
 		ft_parse(line, home, mem);
-		ft_check_errno();
+		ft_check_errno(); //ref вернуть, крашится
 		free(line);
 	}
 }
