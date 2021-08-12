@@ -84,6 +84,58 @@ void ft_command_not_found(char *cmd) {
 	free(tmp_str);
 }
 
+void ft_commands1(t_cmd *a_cmd, int i, t_memory *mem) {
+	char *cmd;
+//	pid_t original;
+	pid_t pid;
+	int		status;
+
+
+	//	fd = open((char*)(files->content), O_WRONLY | O_CREAT, 0755);
+//	original = dup(1);
+//	dup2(fd,1);
+//	ft_putstr_fd(str, 1);
+//	dup2(original, 1);
+//	ft_putstr_fd(str, 1);
+	g_error = 0;
+
+	pid = fork();
+	if (pid == 0) {
+//	original = dup(1);
+//		dup2(a_cmd[i].fd[1], 1);
+//	close(a_cmd[i].fd[0]);
+		ft_putstr_fd("\nFrom hell1!\n\n", 2); //dell
+		printf("\nFrom hell1!\n\n"); //для теста
+		fflush(stdout);  //для теста
+		ft_start_commands(a_cmd[i].cmd, mem);
+
+	}
+	close(a_cmd[i].fd[1]);
+	waitpid(pid, &status, 0);
+
+	cmd = ft_find_command(a_cmd[i + 1].cmd[0], ft_split(getenv("PATH"), ':'));
+	a_cmd[i + 1].cmd[0] = cmd;
+	pid = fork();
+	if (pid == 0) {
+		dup2(a_cmd[i].fd[0], 0);
+//		dup2(original, 1);
+//		close(a_cmd[i].fd[1]);
+//		close(a_cmd[i].fd[1]);
+		ft_putstr_fd("\nFrom hell2!\n", 2); //dell
+		char *newenviron[0]; //todo изменить
+		newenviron[0] = NULL;
+		execve(a_cmd[i + 1].cmd[0], a_cmd[i + 1].cmd, newenviron);
+//		ft_start_commands(a_cmd[i + 1].cmd, mem);
+	}
+	close(a_cmd[i].fd[0]);
+	close(a_cmd[i].fd[1]);
+	waitpid(pid, &status, 0);
+//	dup2(original, 1);
+//
+	exit(0);
+
+}
+
 /*
  * TODO В env нужно менять shlvl - это уровень вложенности, насколько глубоко залез терминал,
  * мы в минишел, так что изначально он 1, когда запустим что-то еще нужно увеличить на 1
@@ -95,6 +147,8 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 	char *cmd;
 	char *aur_cmd;
 	int		status;
+
+
 
 	//TODO всегда можно NULL или нет?
 //	newenviron[0] = NULL;
@@ -110,10 +164,10 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 			free(a_cmd[i].cmd[0]); //TODO вынести из if проверить что нет утечки.
 			a_cmd[i].cmd[0] = cmd;
 		}
-		if (!aur_cmd)
+//		if (!aur_cmd)
 			pid = fork();
-		else
-			pid = 0;
+//		else
+//			pid = 0;
 		if (pid == 0) {
 			if (a_cmd[i].p_next && a_cmd[i].p_priv)
 			{
@@ -130,6 +184,7 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 				ft_putstr_fd("\nFrom hell2!\n\n", 2); //dell
 //				execve(cmd, a_cmd[i].cmd, newenviron);
 				ft_start_commands(a_cmd[i].cmd, mem);
+				exit(0);
 			}
 			else
 				if (a_cmd[i].p_next) {
@@ -141,6 +196,7 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 				ft_putstr_fd("\nFrom hell1!\n\n", 2); //dell
 //				execve(cmd, a_cmd[i].cmd, newenviron);
 				ft_start_commands(a_cmd[i].cmd, mem);
+				exit(0);
 
 			} else if (a_cmd[i].p_priv) {
 				dup2(a_cmd[i - 1].fd[0], 0);
@@ -151,12 +207,16 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 				ft_putstr_fd("\nFrom hell3!\n", 1); //dell
 //				execve(cmd, a_cmd[i].cmd, newenviron);
 				ft_start_commands(a_cmd[i].cmd, mem);
+				exit(0);
 			} else {
+				close(a_cmd[i].fd[0]);
+				close(a_cmd[i].fd[1]);
 				char ch = '0' + a_cmd[i].fd[1]; //dell
 				write(2, &ch, 1); //dell
 				ft_putstr_fd("\nFrom hell4!\n\n", 2); //dell
 //				execve(cmd, a_cmd[i].cmd, newenviron);
 				ft_start_commands(a_cmd[i].cmd, mem);
+				exit(0);
 			}
 		}
 
@@ -177,7 +237,7 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 			close(a_cmd[i].fd[0]);
 			close(a_cmd[i].fd[1]);
 		}
-		if (!aur_cmd)
+//		if (!aur_cmd)
 			waitpid(pid, &status, 0);
 	} else
 		ft_command_not_found(a_cmd[i].cmd[0]);

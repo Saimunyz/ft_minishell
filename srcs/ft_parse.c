@@ -477,7 +477,7 @@ t_cmd *ft_split_string(char *line, t_memory *mem)
 		ft_change_var(&tmp, mem);	//преобразовываем $
 		a_cmd[i].cmd = ft_parse_strings(tmp);	//add ref
 		pipe(a_cmd[i].fd);
-		a_cmd[i].original = dup(1);
+//		a_cmd[i].original = dup(1);
 		free(tmp);  //todo вернуть, крашится
 		start = end + 1;
 		i++;
