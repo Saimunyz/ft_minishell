@@ -28,7 +28,7 @@ void ft_clear_arr(char **arr) {
 }
 
 char *ft_find_aur_command(char *command) {
-	int		splt_len;
+	int splt_len;
 
 	splt_len = ft_strlen(command);
 
@@ -88,7 +88,7 @@ void ft_commands1(t_cmd *a_cmd, int i, t_memory *mem) {
 	char *cmd;
 //	pid_t original;
 	pid_t pid;
-	int		status;
+	int status;
 
 
 	//	fd = open((char*)(files->content), O_WRONLY | O_CREAT, 0755);
@@ -146,13 +146,8 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 	pid_t pid;
 	char *cmd;
 	char *aur_cmd;
-	int		status;
+	int status;
 
-
-
-	//TODO всегда можно NULL или нет?
-//	newenviron[0] = NULL;
-	//TODO паф могут удалить, не должно крашится. проверить когда допишем
 	aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
 	if (!aur_cmd)
 		cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(getenv("PATH"), ':'));
@@ -164,37 +159,21 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 			free(a_cmd[i].cmd[0]); //TODO вынести из if проверить что нет утечки.
 			a_cmd[i].cmd[0] = cmd;
 		}
-//		if (!aur_cmd)
-			pid = fork();
-//		else
-//			pid = 0;
+		pid = fork();
 		if (pid == 0) {
-			if (a_cmd[i].p_next && a_cmd[i].p_priv)
-			{
+			if (a_cmd[i].p_next && a_cmd[i].p_priv) {
 				dup2(a_cmd[i - 1].fd[0], 0);
 				close(a_cmd[i - 1].fd[0]);
 				close(a_cmd[i - 1].fd[1]);
-
 				dup2(a_cmd[i].fd[1], 1);
 				close(a_cmd[i].fd[0]);
 				close(a_cmd[i].fd[1]);
-
-				char ch = '0' + a_cmd[i].fd[1]; //dell
-				write(2, &ch, 1); //dell
-				ft_putstr_fd("\nFrom hell2!\n\n", 2); //dell
-//				execve(cmd, a_cmd[i].cmd, newenviron);
 				ft_start_commands(a_cmd[i].cmd, mem);
 				exit(0);
-			}
-			else
-				if (a_cmd[i].p_next) {
+			} else if (a_cmd[i].p_next) {
 				dup2(a_cmd[i].fd[1], 1);
 				close(a_cmd[i].fd[0]);
 				close(a_cmd[i].fd[1]);
-				char ch = '0' + a_cmd[i].fd[1]; //dell
-				write(2, &ch, 1); //dell
-				ft_putstr_fd("\nFrom hell1!\n\n", 2); //dell
-//				execve(cmd, a_cmd[i].cmd, newenviron);
 				ft_start_commands(a_cmd[i].cmd, mem);
 				exit(0);
 
@@ -202,43 +181,30 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 				dup2(a_cmd[i - 1].fd[0], 0);
 				close(a_cmd[i - 1].fd[0]);
 				close(a_cmd[i - 1].fd[1]);
-				char ch = '0' + a_cmd[i].fd[0]; //dell
-				write(2, &ch, 1); //dell
-				ft_putstr_fd("\nFrom hell3!\n", 1); //dell
-//				execve(cmd, a_cmd[i].cmd, newenviron);
 				ft_start_commands(a_cmd[i].cmd, mem);
 				exit(0);
 			} else {
 				close(a_cmd[i].fd[0]);
 				close(a_cmd[i].fd[1]);
-				char ch = '0' + a_cmd[i].fd[1]; //dell
-				write(2, &ch, 1); //dell
-				ft_putstr_fd("\nFrom hell4!\n\n", 2); //dell
-//				execve(cmd, a_cmd[i].cmd, newenviron);
 				ft_start_commands(a_cmd[i].cmd, mem);
 				exit(0);
 			}
 		}
 
-		if (a_cmd[i].p_next && a_cmd[i].p_priv){
+		if (a_cmd[i].p_next && a_cmd[i].p_priv) {
 			close(a_cmd[i - 1].fd[0]);
 			close(a_cmd[i].fd[1]);
-		}
-		else if (a_cmd[i].p_next){
+		} else if (a_cmd[i].p_next) {
 			close(a_cmd[i].fd[1]);
-		}
-		else if (a_cmd[i].p_priv) {
+		} else if (a_cmd[i].p_priv) {
 			close(a_cmd[i - 1].fd[0]);
 			close(a_cmd[i].fd[0]);
 			close(a_cmd[i].fd[1]);
-//			dup2(a_cmd[0].original, 1); //todo ref доделать 0 это костыль
-		}
-		else {
+		} else {
 			close(a_cmd[i].fd[0]);
 			close(a_cmd[i].fd[1]);
 		}
-//		if (!aur_cmd)
-			waitpid(pid, &status, 0);
+		waitpid(pid, &status, 0);
 	} else
 		ft_command_not_found(a_cmd[i].cmd[0]);
 }
