@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_commands.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/26 17:04:52 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/02 00:53:53 by swagstaf         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
 void ft_clear_arr(char **arr) {
@@ -82,58 +70,6 @@ void ft_command_not_found(char *cmd) {
 	tmp_str = ft_strjoin(cmd, ": command not found\n");
 	ft_putstr_fd(tmp_str, 1);
 	free(tmp_str);
-}
-
-void ft_commands1(t_cmd *a_cmd, int i, t_memory *mem) {
-	char *cmd;
-//	pid_t original;
-	pid_t pid;
-	int status;
-
-
-	//	fd = open((char*)(files->content), O_WRONLY | O_CREAT, 0755);
-//	original = dup(1);
-//	dup2(fd,1);
-//	ft_putstr_fd(str, 1);
-//	dup2(original, 1);
-//	ft_putstr_fd(str, 1);
-	g_error = 0;
-
-	pid = fork();
-	if (pid == 0) {
-//	original = dup(1);
-//		dup2(a_cmd[i].fd[1], 1);
-//	close(a_cmd[i].fd[0]);
-		ft_putstr_fd("\nFrom hell1!\n\n", 2); //dell
-		printf("\nFrom hell1!\n\n"); //для теста
-		fflush(stdout);  //для теста
-		ft_start_commands(a_cmd[i].cmd, mem);
-
-	}
-	close(a_cmd[i].fd[1]);
-	waitpid(pid, &status, 0);
-
-	cmd = ft_find_command(a_cmd[i + 1].cmd[0], ft_split(getenv("PATH"), ':'));
-	a_cmd[i + 1].cmd[0] = cmd;
-	pid = fork();
-	if (pid == 0) {
-		dup2(a_cmd[i].fd[0], 0);
-//		dup2(original, 1);
-//		close(a_cmd[i].fd[1]);
-//		close(a_cmd[i].fd[1]);
-		ft_putstr_fd("\nFrom hell2!\n", 2); //dell
-		char *newenviron[0]; //todo изменить
-		newenviron[0] = NULL;
-		execve(a_cmd[i + 1].cmd[0], a_cmd[i + 1].cmd, newenviron);
-//		ft_start_commands(a_cmd[i + 1].cmd, mem);
-	}
-	close(a_cmd[i].fd[0]);
-	close(a_cmd[i].fd[1]);
-	waitpid(pid, &status, 0);
-//	dup2(original, 1);
-//
-	exit(0);
-
 }
 
 /*

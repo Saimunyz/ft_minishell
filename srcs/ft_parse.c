@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_parse.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/16 14:08:18 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/06/11 13:46:43 by swagstaf         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 char	ft_spec_char_step(char spec_char, char **line)
 {
@@ -110,8 +98,6 @@ void	ft_check_var(char *strs_cmd, t_memory *mem)
 	free_text(splt, ft_maslen(splt));
 }
 
-
-
 void	ft_add_var(char	**splt, t_memory *mem, int is_plus)
 {
 	t_var	*tmp_var;
@@ -158,9 +144,9 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem) //add ref
 	int		splt_len;
 
 	splt_len = ft_strlen(strs_cmd[0]);
-	if (ft_check_for_equal_sign(&strs_cmd, mem))
-		return ; //TODO тут наверное ошибка?
-	else if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
+//	if (ft_check_for_equal_sign(&strs_cmd, mem))
+//		return ; //TODO тут наверное ошибка?
+	if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
 	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_echo(strs_cmd);
@@ -502,6 +488,9 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 	{
 		//тут добавить функцию которая добавляет переменные, или нет
 //		ft_start_commands(a_cmd[i].cmd, mem, a_cmd, i);
+		if (ft_check_for_equal_sign(&a_cmd[i].cmd, mem))
+			break ;
+//		return ; //TODO тут наверное ошибка?
 		ft_commands(a_cmd, i, mem);
 		i++;
 	}
