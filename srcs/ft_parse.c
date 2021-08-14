@@ -1,17 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_parse.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/14 20:30:31 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/14 21:50:20 by swagstaf         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
-
 char	ft_spec_char_step(char spec_char, char **line)
 {
 	if(spec_char == 0)
@@ -173,8 +160,8 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem) //add ref
 		ft_export(mem, strs_cmd);
 	else if (!ft_strncmp(strs_cmd[0], "unset", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_unset(mem, strs_cmd);
-	else if (strs_cmd[0][0] == '$' && strs_cmd[0][1] == '?')
-		ft_print_varr_err();
+//	else if (strs_cmd[0][0] == '$')		//Это теперь не здесь иначе не работает "$a  $b"
+//		ft_print_var(strs_cmd[0], mem);
 	else if (*strs_cmd[0] != '\3') {
 		char *newenviron[0]; //todo изменить
 		newenviron[0] = NULL;
@@ -285,7 +272,8 @@ int	ft_count_strs(char *line)
 	while (*line)
 	{
 		spec_char = ft_spec_char(spec_char, *line);
-		if ((*line == ';' || *line == '|') && *(line + 1) && !spec_char)
+//		if ((*line == ';' || *line == '|') && *(line + 1) && !spec_char)
+		if (*line == '|' && *(line + 1) && !spec_char)
 		{
 			line++;
 			count++;
@@ -311,7 +299,9 @@ int ft_find_char(char *str, int i, t_cmd *a_cmd)
 	while (str[i])
 	{
 		spec_char = ft_spec_char(spec_char, str[i]);
-		if((str[i] == ';' || str[i] == '|') && !spec_char) {
+//		if((str[i] == ';' || str[i] == '|') && !spec_char)
+		if(str[i] == '|' && !spec_char)
+		{
 			if (str[i] == '|')
 				a_cmd->p_next = 1;
 			return (i);
@@ -428,6 +418,7 @@ void ft_change_var(char **line,  t_memory *mem)
 			{
 				printf("minishell: %d: command not found\n", g_error);
 				g_error = 127;
+				break; //корректировка $? $? 14.08.2021
 			}
 			str_find = ft_find_doll(*line, mem);
 			if (!str_find)
@@ -515,15 +506,13 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 
 	i = 0;
 	a_cmd = ft_split_string(line, mem);
+	ft_write_history(line, home); //перенес вверх, что бы все писало (Сергей)
 	while (a_cmd && a_cmd[i].cmd)
 	{
-		//тут добавить функцию которая добавляет переменные, или нет
-//		ft_start_commands(a_cmd[i].cmd, mem, a_cmd, i);
 		if (ft_check_for_equal_sign(&a_cmd[i].cmd, mem))
 			break ;
-//		return ; //TODO тут наверное ошибка?
 		ft_commands(a_cmd, i, mem);
 		i++;
 	}
-	ft_write_history(line, home); //todo ref вернуть
+
 }
