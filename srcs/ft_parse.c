@@ -144,7 +144,7 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem) //add ref
 	int		splt_len;
 
 	splt_len = ft_strlen(strs_cmd[0]);
-//	if (ft_check_for_equal_sign(&strs_cmd, mem))
+//	if (ft_check_for_equal_sign(&strs_cmd, mem)) //перенес
 //		return ; //TODO тут наверное ошибка?
 	if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
@@ -272,7 +272,8 @@ int	ft_count_strs(char *line)
 	while (*line)
 	{
 		spec_char = ft_spec_char(spec_char, *line);
-		if ((*line == ';' || *line == '|') && *(line + 1) && !spec_char)
+//		if ((*line == ';' || *line == '|') && *(line + 1) && !spec_char)
+		if (*line == '|' && *(line + 1) && !spec_char)
 		{
 			line++;
 			count++;
@@ -298,7 +299,9 @@ int ft_find_char(char *str, int i, t_cmd *a_cmd)
 	while (str[i])
 	{
 		spec_char = ft_spec_char(spec_char, str[i]);
-		if((str[i] == ';' || str[i] == '|') && !spec_char) {
+//		if((str[i] == ';' || str[i] == '|') && !spec_char)
+		if(str[i] == '|' && !spec_char)
+		{
 			if (str[i] == '|')
 				a_cmd->p_next = 1;
 			return (i);
@@ -456,7 +459,7 @@ t_cmd *ft_split_string(char *line, t_memory *mem)
 		ft_change_var(&tmp, mem);	//преобразовываем $
 		a_cmd[i].cmd = ft_parse_strings(tmp);	//add ref
 		pipe(a_cmd[i].fd);
-		free(tmp);  //todo вернуть, крашится
+		free(tmp);
 		start = end + 1;
 		i++;
 	}
@@ -484,15 +487,13 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 
 	i = 0;
 	a_cmd = ft_split_string(line, mem);
+	ft_write_history(line, home); //перенес вверх, что бы все писало (Сергей)
 	while (a_cmd && a_cmd[i].cmd)
 	{
-		//тут добавить функцию которая добавляет переменные, или нет
-//		ft_start_commands(a_cmd[i].cmd, mem, a_cmd, i);
 		if (ft_check_for_equal_sign(&a_cmd[i].cmd, mem))
 			break ;
-//		return ; //TODO тут наверное ошибка?
 		ft_commands(a_cmd, i, mem);
 		i++;
 	}
-	ft_write_history(line, home); //todo ref вернуть
+
 }
