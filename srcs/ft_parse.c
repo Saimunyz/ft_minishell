@@ -404,6 +404,7 @@ void ft_change_var(char **line,  t_memory *mem)
 			{
 				printf("minishell: %d: command not found\n", g_error);
 				g_error = 127;
+				break; //корректировка $? $? 14.08.2021
 			}
 			str_find = ft_find_doll(*line, mem);
 			if (!str_find)
