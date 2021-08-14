@@ -1,4 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_parse.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/08/14 20:30:31 by swagstaf          #+#    #+#             */
+/*   Updated: 2021/08/14 21:50:20 by swagstaf         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
 char	ft_spec_char_step(char spec_char, char **line)
 {
 	if(spec_char == 0)
@@ -144,7 +157,7 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem) //add ref
 	int		splt_len;
 
 	splt_len = ft_strlen(strs_cmd[0]);
-//	if (ft_check_for_equal_sign(&strs_cmd, mem)) //перенес
+//	if (ft_check_for_equal_sign(&strs_cmd, mem))
 //		return ; //TODO тут наверное ошибка?
 	if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
@@ -160,8 +173,8 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem) //add ref
 		ft_export(mem, strs_cmd);
 	else if (!ft_strncmp(strs_cmd[0], "unset", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_unset(mem, strs_cmd);
-//	else if (strs_cmd[0][0] == '$')		//Это теперь не здесь иначе не работает "$a  $b"
-//		ft_print_var(strs_cmd[0], mem);
+	else if (strs_cmd[0][0] == '$' && strs_cmd[0][1] == '?')
+		ft_print_varr_err();
 	else if (*strs_cmd[0] != '\3') {
 		char *newenviron[0]; //todo изменить
 		newenviron[0] = NULL;
@@ -272,8 +285,7 @@ int	ft_count_strs(char *line)
 	while (*line)
 	{
 		spec_char = ft_spec_char(spec_char, *line);
-//		if ((*line == ';' || *line == '|') && *(line + 1) && !spec_char)
-		if (*line == '|' && *(line + 1) && !spec_char)
+		if ((*line == ';' || *line == '|') && *(line + 1) && !spec_char)
 		{
 			line++;
 			count++;
@@ -299,9 +311,7 @@ int ft_find_char(char *str, int i, t_cmd *a_cmd)
 	while (str[i])
 	{
 		spec_char = ft_spec_char(spec_char, str[i]);
-//		if((str[i] == ';' || str[i] == '|') && !spec_char)
-		if(str[i] == '|' && !spec_char)
-		{
+		if((str[i] == ';' || str[i] == '|') && !spec_char) {
 			if (str[i] == '|')
 				a_cmd->p_next = 1;
 			return (i);
@@ -373,18 +383,22 @@ int ft_len_doll(char *line, t_memory *mem)
 
 void ft_change_var(char **line,  t_memory *mem)
 {
-	int 	j;
+	int		j;
+	int		i;
 	char	*tmp;
 	char	*str_find;
 	char 	*tmp_line;
 	char	spec_char;
+	char	*num;
+	int		size;
 
 	spec_char = 0;
 //
 	tmp = 0; //возможно избыточно
 	tmp_line = *line;
 	j = 0;
-	tmp = (char *) malloc((ft_strlen(*line) + ft_len_doll(*line, mem) + 1) * sizeof (char));
+	size = (ft_strlen(*line) + ft_len_doll(*line, mem) + 1)
+;	tmp = (char *) malloc(size * sizeof (char));
 	if(!tmp)
 		return ;//TODO тут какая то ошибка должна выводится
 	while (**line)
@@ -398,13 +412,22 @@ void ft_change_var(char **line,  t_memory *mem)
 		}
 		else if(**line == 39)
 			(*line)++;
+		else if (!ft_strncmp(*line, "$?", ft_strlen(*line)))
+		{
+			i = 0;
+			num = ft_itoa(g_error);
+			tmp = ft_realloc(tmp, size + ft_strlen(num));
+			while (num[i])
+				tmp[j++] = num[i++];
+			free(num);
+			(*line) += 2;
+		}
 		else
 		{
 			if (*((*line) + 1) == '?')
 			{
 				printf("minishell: %d: command not found\n", g_error);
 				g_error = 127;
-				break; //корректировка $? $? 14.08.2021
 			}
 			str_find = ft_find_doll(*line, mem);
 			if (!str_find)
@@ -443,6 +466,7 @@ t_cmd *ft_split_string(char *line, t_memory *mem)
 	int end;
 	char *tmp;
 	t_cmd *a_cmd;
+	t_list	*files2write;
 
 	count_strs = ft_count_strs(line);
 	if (count_strs == 0)
@@ -457,10 +481,13 @@ t_cmd *ft_split_string(char *line, t_memory *mem)
 		if (i > 0)
 			a_cmd[i].p_priv = a_cmd[i - 1].p_next;
 		tmp = ft_substr(line, start, end - start);
+		files2write = ft_parse_redirect(&tmp);
 		ft_change_var(&tmp, mem);	//преобразовываем $
 		a_cmd[i].cmd = ft_parse_strings(tmp);	//add ref
+		if (files2write)
+			ft_redirect(files2write, a_cmd[i], mem);
 		pipe(a_cmd[i].fd);
-		free(tmp);
+		free(tmp);  //todo вернуть, крашится
 		start = end + 1;
 		i++;
 	}
@@ -488,13 +515,15 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 
 	i = 0;
 	a_cmd = ft_split_string(line, mem);
-	ft_write_history(line, home); //перенес вверх, что бы все писало (Сергей)
 	while (a_cmd && a_cmd[i].cmd)
 	{
+		//тут добавить функцию которая добавляет переменные, или нет
+//		ft_start_commands(a_cmd[i].cmd, mem, a_cmd, i);
 		if (ft_check_for_equal_sign(&a_cmd[i].cmd, mem))
 			break ;
+//		return ; //TODO тут наверное ошибка?
 		ft_commands(a_cmd, i, mem);
 		i++;
 	}
-
+	ft_write_history(line, home); //todo ref вернуть
 }

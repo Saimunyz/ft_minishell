@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/06/11 14:55:24 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/14 21:49:52 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,14 @@ typedef struct s_memory
 	t_list	*oldpwd;
 	t_list	*env;
 	t_list	*var;
+	t_list	*home;
 }			t_memory;
+
+typedef	struct s_file
+{
+	char	*filename;
+	int		mode;
+}				t_file;
 
 int		g_error;
 
@@ -87,7 +94,6 @@ void	ft_put_history_down(int *len, char **line, t_hist *hist);
 void	ft_put_history_up(int *len, char **line, t_hist *hist);
 int		ft_check_sigint(char **line, char *character);
 void	ft_check_eof(char **line, char *character, t_hist *hist);
-void	ft_print_var(char *command, t_memory *mem);
 void	ft_init_mem(t_memory *env, char **envp);
 void	ft_env(t_memory *mem);
 void	ft_add_var(char	**splt, t_memory *mem, int is_plus);
@@ -97,5 +103,9 @@ void	ft_free_content(void *content);
 void	ft_start_commands(char	**strs_cmd, t_memory *mem);
 char	**ft_wise_split(char *strs_cmd);
 void	ft_unset(t_memory *mem, char **var);
+t_list	*ft_parse_redirect(char** str);
+void	ft_redirect(t_list *files, t_cmd cmd, t_memory *mem);
+t_list	*ft_bubble_sort(t_list *lst);
+void	ft_print_varr_err(void);
 
 #endif

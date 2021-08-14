@@ -23,6 +23,8 @@ CFILE =		minishell.c \
 			ft_env.c \
 			ft_export.c \
 			ft_unset.c \
+			ft_redirect.c \
+			ft_bubble_sort.c \
 
 LIB_F =		$(LIBFT)/*.c
 

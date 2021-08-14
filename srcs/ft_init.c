@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 23:19:03 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/05/07 17:41:51 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/14 21:55:24 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	ft_null_mem(t_memory *mem)
 		mem->var = NULL;
 		mem->shlvl = NULL;
 		mem->pwd = NULL;
+		mem->home = NULL;
 }
 
 void	ft_set_pwd(t_memory *mem)
@@ -76,6 +77,8 @@ void	ft_init_mem(t_memory *mem, char **envp)
 			mem->pwd = tmp;
 		else if (ft_strnstr(envp[i], "OLDPWD=", 7))
 			mem->oldpwd = tmp;
+		else if (ft_strnstr(envp[i], "HOME=", 5))
+			mem->home = tmp;
 		i++;
 	}
 	if (!mem->oldpwd)
