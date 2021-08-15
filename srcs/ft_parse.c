@@ -387,8 +387,8 @@ void ft_change_var(char **line,  t_memory *mem)
 	tmp = 0; //возможно избыточно
 	tmp_line = *line;
 	j = 0;
-	size = (ft_strlen(*line) + ft_len_doll(*line, mem) + 1)
-;	tmp = (char *) malloc(size * sizeof (char));
+	size = (ft_strlen(*line) + ft_len_doll(*line, mem) + 1);
+	tmp = (char *) malloc(size * sizeof (char));
 	if(!tmp)
 		return ;//TODO тут какая то ошибка должна выводится
 	while (**line)

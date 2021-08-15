@@ -32,6 +32,8 @@ char *ft_find_aur_command(char *command) {
 		return "env";
 	else if (!ft_strncmp(command, "export", ft_strlen(command)) && splt_len != 0)
 		return "export";
+	else if (!ft_strncmp(command, "unset", ft_strlen(command)) && splt_len != 0)
+		return "unset";
 	return (0);
 }
 

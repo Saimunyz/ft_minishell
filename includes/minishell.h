@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/14 21:49:52 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/15 16:01:43 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ typedef	struct s_file
 {
 	char	*filename;
 	int		mode;
+	int		type;
 }				t_file;
 
 int		g_error;
