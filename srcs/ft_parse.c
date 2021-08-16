@@ -457,7 +457,7 @@ t_cmd *ft_split_string(char *line, t_memory *mem)
 	int end;
 	char *tmp;
 	t_cmd *a_cmd;
-	t_list	*files2write;
+	//t_list	*files2write;
 
 	count_strs = ft_count_strs(line);
 	if (count_strs == 0)
@@ -472,11 +472,12 @@ t_cmd *ft_split_string(char *line, t_memory *mem)
 		if (i > 0)
 			a_cmd[i].p_priv = a_cmd[i - 1].p_next;
 		tmp = ft_substr(line, start, end - start);
-		files2write = ft_parse_redirect(&tmp);
+		//files2write = ft_parse_redirect(&tmp);
 		ft_change_var(&tmp, mem);	//преобразовываем $
-		a_cmd[i].cmd = ft_parse_strings(tmp);	//add ref
-		if (files2write)
-			ft_redirect(files2write, a_cmd[i], mem);
+		//a_cmd[i].cmd = ft_parse_strings(tmp);	//add ref
+		a_cmd[i].cmd = ft_parse_redirect(&tmp, mem);
+		//if (files2write)
+		//	ft_redirect(files2write, a_cmd[i], mem);
 		pipe(a_cmd[i].fd);
 		free(tmp);  //todo вернуть, крашится
 		start = end + 1;

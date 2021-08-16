@@ -130,7 +130,7 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 				close(a_cmd[i - 1].fd[1]);
 				ft_start_commands(a_cmd[i].cmd, mem);
 				exit(0);
-			} else {
+			} else { // Выше сделать как внизу
 				close(a_cmd[i].fd[0]);
 				close(a_cmd[i].fd[1]);
 				ft_start_commands(a_cmd[i].cmd, mem);
