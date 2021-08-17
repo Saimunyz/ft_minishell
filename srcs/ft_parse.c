@@ -409,7 +409,7 @@ void ft_change_var(char **line,  t_memory *mem)
 
 //		if (**line != '$' || (**line == '$' && spec_char == 39))
 //		if ((**line != '$' &&  **line != spec_char) || (**line == '$' && spec_char == 39)) //16.08.2021
-		if ((**line != '$' &&  **line != spec_char) || (**line == '$' && spec_char == 39)) //16.08.2021
+		if ((**line != '$' &&  (**line != 34 || **line != 39)) || (**line == '$' && spec_char == 39)) //16.08.2021
 		{
 			tmp[j] = **line;
 			(*line)++;
