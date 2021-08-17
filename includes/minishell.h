@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/14 21:49:52 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/17 16:44:50 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,13 @@
 # define GET_DATA_ERR 1
 # define COMMAND_ERR 2
 
+typedef	struct s_file
+{
+	char	*filename;
+	int		mode;
+	int		type;
+}				t_file;
+
 typedef struct	s_cmd
 {
 	char	**cmd;
@@ -34,6 +41,7 @@ typedef struct	s_cmd
 	int 	p_priv;
 	int		fd[2];
 	int		original;
+	t_list	*files;
 }				t_cmd;
 
 typedef struct	s_var
@@ -66,12 +74,6 @@ typedef struct s_memory
 	t_list	*home;
 }			t_memory;
 
-typedef	struct s_file
-{
-	char	*filename;
-	int		mode;
-}				t_file;
-
 int		g_error;
 
 void	ft_check_errno(void);
@@ -103,9 +105,10 @@ void	ft_free_content(void *content);
 void	ft_start_commands(char	**strs_cmd, t_memory *mem);
 char	**ft_wise_split(char *strs_cmd);
 void	ft_unset(t_memory *mem, char **var);
-t_list	*ft_parse_redirect(char** str);
-void	ft_redirect(t_list *files, t_cmd cmd, t_memory *mem);
+void	ft_parse_redirect(char** str, t_memory *mem, t_cmd *a_cmd);
+void	ft_redirect(t_cmd *cmd, t_memory *mem);
 t_list	*ft_bubble_sort(t_list *lst);
 void	ft_print_varr_err(void);
+char	**ft_parse_strings(char *line);
 
 #endif
