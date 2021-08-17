@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/09 20:22:02 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/17 18:12:29 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/17 21:23:30 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,12 @@ static void	ft_start_redirect(t_cmd *a_cmd, t_memory *mem)
 	//int	i;
 
 	//i = 0;
+
 	ft_commands(a_cmd, 0, mem);
 	ft_lstclear(&a_cmd->files, ft_free_file);
 	a_cmd->files = NULL;
-	//ft_redirect(a_cmd, mem);
 	// while (a_cmd->cmd[i])
-	// 	free(a_cmd->cmd[i++]);
+	// 	free(a_cmd->cmd[i++]); ??? не получается почистить //TODO
 	a_cmd->cmd[0] = ft_strdup("echo");
 	a_cmd->cmd[1] = ft_strdup("-n");
 	a_cmd->cmd[2] = NULL;
@@ -82,6 +82,7 @@ void	ft_parse_redirect(char** str, t_memory *mem, t_cmd *a_cmd)
 		if (str[0][i] == '<')
 			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 0, '<'));
 		// else if (str[0][i] == '<' && str[0][i + 1] == '<')
+		// 	ft_document_here(ft_parse_redir(str[0] + i, 0, '<'));
 		// 	ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 0, '<'));
 		i++;
 	}
@@ -121,6 +122,11 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem)
 	{
 		file = ((t_file*)tmp->content);
 		fd = open(file->filename, file->mode, 0755);
+		if (fd == -1)
+		{
+			printf("%s: No such file or directory\n", file->filename);
+			return;
+		}
 		if (file->type == '>')
 			dup2(fd,1);
 		else
