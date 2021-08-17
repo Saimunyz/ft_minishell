@@ -241,7 +241,7 @@ char **ft_parse_strings(char *line)
 		j = 0;
 		arr_strings[i] = (char *) malloc(sizeof (char ) * (ft_str_len_space(line) + 1));
 		while (*line) {
-			spec_char = ft_spec_char_step(spec_char, &line);
+//			spec_char = ft_spec_char_step(spec_char, &line);
 			arr_strings[i][j] = *line;
 			if ((*line == ' ' || !line) && !spec_char)
 			{
@@ -320,7 +320,8 @@ int ft_find_space(char *str)
 		return (0);
 	while (str[i])
 	{
-		if(str[i] == ' ' || str[i] == '$' || str[i] == '"')
+//		if(str[i] == ' ' || str[i] == '$' || str[i] == '"')
+		if(str[i] == ' ' || str[i] == '$' || str[i] == '"' || str[i] == 39) //16.08.21
 			return (i);
 		i++;
 	}
@@ -336,6 +337,8 @@ char *ft_find_doll(char *line, t_memory *mem)
 
 	end = ft_find_space(line);
 	tmp = ft_substr(line, 0, end);
+	if (*line == 34 || *line == 39) //костыли
+		return (0);
 	find = ft_lstfind_struct(mem->env, tmp + 1);
 	if (!find)
 		find = ft_lstfind_struct(mem->var, tmp + 1);
@@ -393,15 +396,29 @@ void ft_change_var(char **line,  t_memory *mem)
 		return ;//TODO тут какая то ошибка должна выводится
 	while (**line)
 	{
-		spec_char = ft_spec_char(spec_char, **line);
-		if (**line != '$' || (**line == '$' && spec_char == 39))
+
+//		spec_char = ft_spec_char(spec_char, **line);
+		spec_char = ft_spec_char_step(spec_char, line);//16.08.2021
+		if (!(**line))//16.08.2021
+		{
+			tmp[j] = '\0';//16.08.2021
+			free(tmp_line);//16.08.2021
+			*line = tmp;//16.08.2021
+			return;//16.08.2021
+		}
+
+//		if (**line != '$' || (**line == '$' && spec_char == 39))
+//		if ((**line != '$' &&  **line != spec_char) || (**line == '$' && spec_char == 39)) //16.08.2021
+		if ((**line != '$' &&  **line != spec_char) || (**line == '$' && spec_char == 39)) //16.08.2021
 		{
 			tmp[j] = **line;
 			(*line)++;
 			j++;
 		}
-		else if(**line == 39)
-			(*line)++;
+		else if(**line == 39 || **line == 34) {
+			while (**line == 39 || **line == 34)//16.08.2021
+				(*line)++;
+		}
 		else if (!ft_strncmp(*line, "$?", ft_strlen(*line)))
 		{
 			i = 0;
@@ -424,13 +441,15 @@ void ft_change_var(char **line,  t_memory *mem)
 			if (!str_find)
 			{
 				(*line)++;
-				while (**line && **line != ' ' && **line != '$' )
+//				while (**line && **line != ' ' && **line != '$' )
+				while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' )  //16.08.21
 					(*line)++;
 			}
 			else
 			{
 				(*line)++;
-				while (*str_find || (**line && **line != ' ' && **line != '$'))
+//				while (*str_find || (**line && **line != ' ' && **line != '$'))
+				while (*str_find || (**line && **line != ' ' && **line != '$' && **line != 39 && **line != 34)) //16.08.21
 				{
 					if (*str_find)
 					{
@@ -438,13 +457,23 @@ void ft_change_var(char **line,  t_memory *mem)
 						j++;
 						str_find++;
 					}
-					if (**line && **line != ' ' && **line != '$')
+//					if (**line && **line != ' ' && **line != '$')
+					while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' )  //16.08.21
 						(*line)++;
 				}
 			}
 		}
 	}
+
 	tmp[j] = '\0';
+
+//todo посмотреть, как работает """" '''' на маках и дописать
+//	if (ft_strlen(tmp_line) > 0 && ft_strlen(tmp) == 0 )
+//	{
+//		tmp[0] = 39;
+//		tmp[1] = 39;
+//		tmp[2] = '\0';
+//	}
 	free(tmp_line);
 	*line = tmp;
 }

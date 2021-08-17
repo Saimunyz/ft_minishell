@@ -39,7 +39,7 @@ void	ft_cd(char *path, t_memory *mem)
 
 	g_error = 0;
 	if (!path)
-		return;
+		path = ((t_var *)mem->home->content)->value;
 	ans = chdir(path);
 	if (ans < 0 || path == NULL)
 	{
