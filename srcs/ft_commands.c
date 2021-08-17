@@ -110,7 +110,11 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 		}
 		pid = fork();
 		if (pid == 0) {
-			if (a_cmd[i].p_next && a_cmd[i].p_priv) {
+			if (a_cmd[i].files) {
+				ft_redirect(a_cmd, mem);
+				exit(0);
+			}
+			else if (a_cmd[i].p_next && a_cmd[i].p_priv) {
 				dup2(a_cmd[i - 1].fd[0], 0);
 				close(a_cmd[i - 1].fd[0]);
 				close(a_cmd[i - 1].fd[1]);
@@ -132,10 +136,7 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 				close(a_cmd[i - 1].fd[1]);
 				ft_start_commands(a_cmd[i].cmd, mem);
 				exit(0);
-			} else if (a_cmd[i].files) {
-				ft_redirect(a_cmd, mem);
-				exit(0);
-			} else { // Выше сделать как внизу
+			} else {
 				close(a_cmd[i].fd[0]);
 				close(a_cmd[i].fd[1]);
 				ft_start_commands(a_cmd[i].cmd, mem);
@@ -143,7 +144,11 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 			}
 		}
 
-		if (a_cmd[i].p_next && a_cmd[i].p_priv) {
+		if (a_cmd[i].files != 0)
+		{
+
+		}
+		else if (a_cmd[i].p_next && a_cmd[i].p_priv) {
 			close(a_cmd[i - 1].fd[0]);
 			close(a_cmd[i].fd[1]);
 		} else if (a_cmd[i].p_next) {
@@ -152,9 +157,6 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 			close(a_cmd[i - 1].fd[0]);
 			close(a_cmd[i].fd[0]);
 			close(a_cmd[i].fd[1]);
-		} else if (a_cmd[i].files)
-		{
-
 		}
 		else {
 			close(a_cmd[i].fd[0]); // TODO не факто что нужно
