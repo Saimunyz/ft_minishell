@@ -41,7 +41,7 @@ echo "'$a'"  //06.06.2021
 - ''''
 - """"
 - ''"''
-- echo "asdf""asdf""asdf" должно asdfasdfasdf
+- echo "asdf""asdf""asdf" должно asdfasdfasdf +
 - ?$ выводит ерунду
 - echo ?$
 - echo a > 1 | echo b > 2 крашится

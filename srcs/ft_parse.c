@@ -400,6 +400,8 @@ void ft_change_var(char **line,  t_memory *mem)
 
 //		spec_char = ft_spec_char(spec_char, **line);
 		spec_char = ft_spec_char_step(spec_char, line);//16.08.2021
+		if (!spec_char && (**line == 34 || **line == 39))  //18.08.2021
+			continue;
 		if (!(**line))//16.08.2021
 		{
 			tmp[j] = '\0';//16.08.2021
