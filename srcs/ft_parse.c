@@ -410,19 +410,9 @@ void ft_change_var(char **line,  t_memory *mem)
 			return;//16.08.2021
 		}
 
-//		if (**line != '$' || (**line == '$' && spec_char == 39))
-//		if ((**line != '$' &&  **line != spec_char) || (**line == '$' && spec_char == 39)) //16.08.2021
-		if ((**line != '$' &&  (**line != 34 || **line != 39)) || (**line == '$' && spec_char == 39)) //16.08.2021
-		{
-			tmp[j] = **line;
-			(*line)++;
-			j++;
-		}
-		else if(**line == 39 || **line == 34) {
-			while (**line == 39 || **line == 34)//16.08.2021
-				(*line)++;
-		}
-		else if (!ft_strncmp(*line, "$?", ft_strlen(*line)))
+
+
+		if (!ft_strncmp(*line, "$?", ft_strlen(*line)))
 		{
 			i = 0;
 			num = ft_itoa(g_error);
@@ -432,14 +422,14 @@ void ft_change_var(char **line,  t_memory *mem)
 			free(num);
 			(*line) += 2;
 		}
-		else
+		else if (**line == '$' && *((*line) + 1) != ' ' && *((*line) + 1))
 		{
-			if (*((*line) + 1) == '?')
-			{
-				printf("minishell: %d: command not found\n", g_error);
-				g_error = 127;
-				break; //корректировка $? $? 14.08.2021
-			}
+//			if (*((*line) + 1) == '?') //а это вообще надо?
+//			{
+//				printf("minishell: %d: command not found\n", g_error);
+//				g_error = 127;
+//				break; //корректировка $? $? 14.08.2021
+//			}
 			str_find = ft_find_doll(*line, mem);
 			if (!str_find)
 			{
@@ -466,6 +456,20 @@ void ft_change_var(char **line,  t_memory *mem)
 				}
 			}
 		}
+//		if (**line != '$' || (**line == '$' && spec_char == 39))
+//		if ((**line != '$' &&  **line != spec_char) || (**line == '$' && spec_char == 39)) //16.08.2021
+//		else if ((**line != '$' &&  (**line != 34 || **line != 39)) || (**line == '$' && spec_char == 39)) //16.08.2021
+		else if ((**line != 34 || **line != 39) || (**line == '$' && spec_char == 39)) //18.08.2021
+		{
+			tmp[j] = **line;
+			(*line)++;
+			j++;
+		}
+		else if(**line == 39 || **line == 34) {
+			while (**line == 39 || **line == 34)//16.08.2021
+				(*line)++;
+		}
+
 	}
 
 	tmp[j] = '\0';
