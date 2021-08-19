@@ -52,11 +52,11 @@ echo "'$a'"  //06.06.2021
 - echo 'ls | ls' +
 - echo "ls | ls" +
 - ls | grep a | grep b +
-- $abc - сега
-- $a - сега
+- $abc +
+- $a +
 - echo "$a $b"
 - $?$? проверить на маке
-- $a =1 крашится
+- $a =1 +
 
 - ./minishell: command not found относительные и абсолютные команды
 
