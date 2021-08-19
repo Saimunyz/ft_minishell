@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/09 20:22:02 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/19 20:43:34 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/19 20:50:18 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,9 @@ static void	ft_start_redirect(t_cmd *a_cmd, t_memory *mem)
 	// ft_redirect(a_cmd, mem);
 	ft_lstclear(&a_cmd->files, ft_free_file);
 	a_cmd->files = NULL;
+	unlink("temporary");
+	if (errno != 0)
+		errno = 0;
 	// while (a_cmd->cmd[i])
 	// 	free(a_cmd->cmd[i++]); ??? не получается почистить //TODO
 	a_cmd->cmd[0] = ft_strdup("echo");
