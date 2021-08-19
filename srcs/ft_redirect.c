@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/09 20:22:02 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/19 22:05:10 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/19 22:13:05 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ char	*ft_read_input(char *stop)
 	return (line);
 }
 
-void	ft_here_document(t_file *f, t_memory *mem)
+void	ft_here_document(t_file *f)
 {
 	int		fd;
 	char	*line;
@@ -194,7 +194,7 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem)
 	{
 		f = ((t_file*)tmp->content);
 		if (!ft_strncmp(f->type, "<<", ft_strlen(f->type)))
-			ft_here_document(f, mem);
+			ft_here_document(f);
 		else
 		{
 			fd = ft_other_redirects(f);
