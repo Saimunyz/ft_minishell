@@ -11,6 +11,8 @@
 - abc=123
 - повторить верх
 
+echo "$PATH"
+echo "cat lol.c | cat > lol.c"
 -'$USER'
 - ''''
 - ''''''

@@ -15,6 +15,7 @@ void ft_clear_arr(char **arr) {
 	free(tmp_arr);
 }
 
+
 char *ft_find_aur_command(char *command) {
 	int splt_len;
 
@@ -37,6 +38,17 @@ char *ft_find_aur_command(char *command) {
 	return (0);
 }
 
+char	*ft_find_local_command(char *command) {
+	int st;
+	struct stat buf;
+
+	st = stat(command, &buf); //TODO это что и откуда?
+	if (st == -1)
+		errno = 0;
+	else
+		return (command);
+	return (0);
+}
 char *ft_find_command(char *command, char **path) {
 	int st;
 	struct stat buf;
@@ -83,6 +95,7 @@ void ft_command_not_found(char *cmd) {
 void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 	pid_t pid;
 	char *cmd;
+	char *local_cmd;
 	char *aur_cmd;
 	int status;
 
@@ -99,12 +112,17 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 	aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
 
 
+
 	if (!aur_cmd)
+		local_cmd = ft_find_local_command(a_cmd[i].cmd[0]);
+	if (!aur_cmd && !local_cmd)
 		cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(getenv("PATH"), ':'));
-	if (cmd || aur_cmd || a_cmd[i].files) {
+	if (cmd || aur_cmd || a_cmd[i].files || local_cmd) {
 		g_error = 0;
 		if (aur_cmd)
 			a_cmd[i].cmd[0] = aur_cmd;
+		else if (local_cmd)
+			a_cmd[i].cmd[0] = local_cmd;
 		else {
 			free(a_cmd[i].cmd[0]); //TODO вынести из if проверить что нет утечки.
 			a_cmd[i].cmd[0] = cmd;
