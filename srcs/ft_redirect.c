@@ -6,13 +6,13 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/09 20:22:02 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/17 21:23:30 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/19 20:43:34 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_list	*ft_parse_redir(char *redir, int type, char sign)
+static t_list	*ft_parse_redir(char *redir, int type, char *sign)
 {
 	t_file	*f;
 	char	*space;
@@ -20,7 +20,7 @@ static t_list	*ft_parse_redir(char *redir, int type, char sign)
 	f = malloc(sizeof(t_file));
 	f->mode = type;
 	f->type = sign;
-	while (*redir == sign)
+	while (*redir == *sign)
 		ft_memmove(redir, redir + 1, ft_strlen(redir));
 	if (*redir == ' ')
 		ft_memmove(redir, redir + 1, ft_strlen(redir));
@@ -55,6 +55,7 @@ static void	ft_start_redirect(t_cmd *a_cmd, t_memory *mem)
 	//i = 0;
 
 	ft_commands(a_cmd, 0, mem);
+	// ft_redirect(a_cmd, mem);
 	ft_lstclear(&a_cmd->files, ft_free_file);
 	a_cmd->files = NULL;
 	// while (a_cmd->cmd[i])
@@ -76,63 +77,129 @@ void	ft_parse_redirect(char** str, t_memory *mem, t_cmd *a_cmd)
 		if (str[0][i] == ' ' && (str[0][i + 1] == '>' || str[0][i + 1] == '<'))
 			ft_memmove((*str) + i, (*str) + i + 1, ft_strlen(str[0] + i));
 		if (str[0][i] == '>' && str[0][i + 1] == '>')
-			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 1089, '>'));
+			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 1089, ">"));
+		else if (str[0][i] == '<' && str[0][i + 1] == '<')
+			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 0, "<<"));
 		else if (str[0][i] == '>')
-			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 577, '>'));
+			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 577, ">"));
 		if (str[0][i] == '<')
-			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 0, '<'));
-		// else if (str[0][i] == '<' && str[0][i + 1] == '<')
-		// 	ft_document_here(ft_parse_redir(str[0] + i, 0, '<'));
-		// 	ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 0, '<'));
+			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 0, "<"));
 		i++;
 	}
 	a_cmd->files = files;
 	a_cmd->cmd = ft_parse_strings(str[0]);
+	if (!(a_cmd->cmd[0]))
+		a_cmd->cmd[0] = ft_strdup("");
 	if (a_cmd->files)
 		ft_start_redirect(a_cmd, mem);
 }
 
-char	*ft_read_file(int fd)
+char	*ft_read_input(char *stop)
 {
-	int		ret;
+	char	*str;
 	char	*line;
-	char	*text;
 	char	*tmp;
+	char	*delim;
+	int		fd;
 
-	ret = get_next_line(fd, &text);
-	while (ret > 0)
+	str = ft_strdup("");
+	delim = ft_strjoin(stop, "\n");
+	line = ft_strdup("");
+	while (1)
 	{
-		ret = get_next_line(fd, &line);
-		tmp = ft_strjoin(text, line);
+		ft_putstr_fd("> ", 1);
+		fd = read(STDIN_FILENO, str, 10000000);
+		str[fd] = '\0';
+		if (!ft_strncmp(str, delim, ft_strlen(str)))
+			break;
+		tmp = ft_strjoin(line, str);
 		free(line);
-		free(text);
-		text = tmp;
+		line = tmp;
 	}
-	return (text);
+	free(str);
+	free(delim);
+	return (line);
+}
+
+void	ft_here_document(t_file *f)
+{
+	int		fd;
+	char	*line;
+	int		orig;
+
+	line = ft_read_input(f->filename);
+	fd = open("temporary", O_WRONLY | O_CREAT, 0755);
+	orig = dup(1);
+	dup2(fd, 1);
+	ft_putstr_fd(line, 1);
+	dup2(orig, 1);
+	close(fd);
+	free(line);
+	fd = open("temporary", O_RDONLY, 0755);
+	dup2(fd, 0);
+	close(fd);
+}
+
+int	ft_other_redirects(t_file *file)
+{
+	int	fd;
+
+	fd = open(file->filename, file->mode, 0755);
+	if (fd == -1)
+	{
+		printf("%s: No such file or directory\n", file->filename);
+		return (fd);
+	}
+	if (!ft_strncmp(file->type, ">", ft_strlen(file->type)))
+		dup2(fd,1);
+	else
+		dup2(fd,0);
+	close(fd);
+	return (fd);
+}
+
+int		ft_check_filename(t_list *lst)
+{
+	t_list	*tmp;
+	t_file	*f;
+
+	tmp = lst;
+	while (tmp)
+	{
+		f = ((t_file*)tmp->content);
+		if (ft_strchr(f->filename, '<') || ft_strchr(f->filename, '>'))
+		{
+			printf("syntax error near unexpected token `%s'\n", f->filename);
+			return (1);
+		}
+		tmp = tmp->next;
+	}
+	return (0);
 }
 
 void	ft_redirect(t_cmd *cmd, t_memory *mem)
 {
 	int		fd;
 	t_list	*tmp;
-	t_file	*file;
+	t_file	*f;
 
 	tmp = cmd->files;
+	if (ft_check_filename(tmp))
+		return;
 	while (tmp)
 	{
-		file = ((t_file*)tmp->content);
-		fd = open(file->filename, file->mode, 0755);
-		if (fd == -1)
-		{
-			printf("%s: No such file or directory\n", file->filename);
-			return;
-		}
-		if (file->type == '>')
-			dup2(fd,1);
+		f = ((t_file*)tmp->content);
+		if (!ft_strncmp(f->type, "<<", ft_strlen(f->type)))
+			ft_here_document(f);
 		else
-			dup2(fd,0);
-		close(fd);
+		{
+			fd = ft_other_redirects(f);
+			if (fd == -1)
+				return;
+		}
 		tmp = tmp->next;
 	}
 	ft_start_commands(cmd->cmd, mem);
+	if (!ft_strncmp(f->type, "<<", ft_strlen(f->type)))
+		unlink(f->filename);
 }
