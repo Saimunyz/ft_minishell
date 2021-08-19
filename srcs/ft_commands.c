@@ -90,9 +90,10 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 		|| (!ft_strncmp(a_cmd[0].cmd[0], "export", ft_strlen(a_cmd[0].cmd[0])))
 		|| (!ft_strncmp(a_cmd[0].cmd[0], "unset", ft_strlen(a_cmd[0].cmd[0]))))  //костыльный костыль, но и пофиг
 	{
-		if (i == 0)
+		if (i == 0) { //а тут надо только для 0 команды? а если это вторая, десятая? не проходит a=1 | ls
 			ft_start_commands(a_cmd[i].cmd, mem);
-		return;
+			return;
+		}
 	}
 
 	aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);

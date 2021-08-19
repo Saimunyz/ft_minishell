@@ -1,0 +1,29 @@
+- $abc
+- echo $abc
+- $a $b
+- echo $a $b
+- echo "'$abc'"
+- $a =1
+- a =1
+- a = 1
+- a=1
+- b=2
+- abc=123
+- повторить верх
+
+- "asdf""asdf""asdf"
+- echo "asdf""asdf""asdf"
+- ?$
+- echo ?$
+- $?
+- $? $?
+- echo a > 1 | echo b > 2 крашится +
+- "ls | ls" +
+- 'ls | ls' +
+- echo 'ls | ls' +
+- echo "ls | ls" +
+- ls | grep a | grep b
+- $abc - сега
+- $a - сега
+- echo "$a $b"
+- $?$? проверить на маке

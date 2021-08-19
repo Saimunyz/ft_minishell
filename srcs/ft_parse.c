@@ -47,6 +47,8 @@ int	ft_check_for_equal_sign(char ***strs_cmd, t_memory *mem)
 	char	**new_str_cmd;
 
 	i = 0;
+	if (strs_cmd[0][0] != NULL && (strs_cmd[0][0][0] == '=' || strs_cmd[0][0][0] == '+')) //19.08.2021 Сергей (иначе крашится)
+		return (1);
 	while (strs_cmd && (*strs_cmd)[i])
 	{
 		if (!(ft_strnstr(strs_cmd[0][i], "+=", ft_strlen(strs_cmd[0][i]))
@@ -231,6 +233,7 @@ char **ft_parse_strings(char *line)
 	int i;
 	int j;
 	char spec_char;
+	int len;
 
 	spec_char = 0;
 	count_commands = ft_count_commands(line);
@@ -240,10 +243,11 @@ char **ft_parse_strings(char *line)
 	while (i < count_commands)
 	{
 		j = 0;
-		arr_strings[i] = (char *) malloc(sizeof (char ) * (ft_str_len_space(line) + 1));
+		len = ft_str_len_space(line) + 1;
+		arr_strings[i] = (char *) malloc(sizeof (char ) * len);
 		while (*line) {
 			spec_char = ft_spec_char_step(spec_char, &line);
-			if (!spec_char && (*line == 34 || *line == 39))  //18.08.2021
+			if ((!spec_char && (*line == 34 || *line == 39)) || spec_char == *line)  //18.08.2021
 				continue;
 			arr_strings[i][j] = *line;
 			if ((*line == ' ' || !line) && !spec_char)
@@ -259,6 +263,10 @@ char **ft_parse_strings(char *line)
 		i++;
 	}
 	arr_strings[i] = 0;
+	if (count_commands > 0 && arr_strings[0][0] == 0) {
+		free(arr_strings[0]);
+		arr_strings[0] = ft_strdup("''"); //todo защитить от утечек
+	}
 	return (arr_strings);
 }
 
@@ -377,115 +385,6 @@ int ft_len_doll(char *line, t_memory *mem)
 	return (len);
 }
 
-void ft_change_var1(char **line,  t_memory *mem)
-{
-	int		j;
-	int		i;
-	char	*tmp;
-	char	*str_find;
-	char 	*tmp_line;
-	char	spec_char;
-	char	*num;
-	int		size;
-
-	spec_char = 0;
-//
-	tmp = 0; //возможно избыточно
-	tmp_line = *line;
-	j = 0;
-	size = (ft_strlen(*line) + ft_len_doll(*line, mem) + 1);
-	tmp = (char *) malloc(size * sizeof (char));
-	if(!tmp)
-		return ;//TODO тут какая то ошибка должна выводится
-	while (**line)
-	{
-
-		spec_char = ft_spec_char(spec_char, **line);
-//		spec_char = ft_spec_char_step(spec_char, line);//16.08.2021
-		if (!spec_char && (**line == 34 || **line == 39))  //18.08.2021
-			continue;
-		if (!(**line))//16.08.2021
-		{
-			tmp[j] = '\0';//16.08.2021
-			free(tmp_line);//16.08.2021
-			*line = tmp;//16.08.2021
-			return;//16.08.2021
-		}
-
-		if (**line == '$' && *((*line) + 1) == '?' && spec_char != 39)
-		{
-			i = 0;
-			num = ft_itoa(g_error);
-			tmp = ft_realloc(tmp, size + ft_strlen(num));
-			while (num[i])
-				tmp[j++] = num[i++];
-			free(num);
-			(*line) += 2;
-		}
-		else if (**line == '$' && *((*line) + 1) != ' ' && *((*line) + 1) && spec_char != 39)
-		{
-//			if (*((*line) + 1) == '?') //а это вообще надо?
-//			{
-//				printf("minishell: %d: command not found\n", g_error);
-//				g_error = 127;
-//				break; //корректировка $? $? 14.08.2021
-//			}
-			str_find = ft_find_doll(*line, mem);
-			if (!str_find)
-			{
-				(*line)++;
-//				while (**line && **line != ' ' && **line != '$' )
-				while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' )  //16.08.21
-					(*line)++;
-			}
-			else
-			{
-				(*line)++;
-//				while (*str_find || (**line && **line != ' ' && **line != '$'))
-				while (*str_find || (**line && **line != ' ' && **line != '$' && **line != 39 && **line != 34)) //16.08.21
-				{
-					if (*str_find)
-					{
-						tmp[j] = *str_find;
-						j++;
-						str_find++;
-					}
-//					if (**line && **line != ' ' && **line != '$')
-					while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' )  //16.08.21
-						(*line)++;
-				}
-			}
-		}
-//		if (**line != '$' || (**line == '$' && spec_char == 39))
-//		if ((**line != '$' &&  **line != spec_char) || (**line == '$' && spec_char == 39)) //16.08.2021
-//		else if ((**line != '$' &&  (**line != 34 || **line != 39)) || (**line == '$' && spec_char == 39)) //16.08.2021
-		else if (**line != spec_char || (**line == '$' && spec_char == 39)) //18.08.2021
-		{
-			tmp[j] = **line;
-			(*line)++;
-			j++;
-		}
-		else if(**line == 39 || **line == 34) {
-			while (**line == 39 || **line == 34)//16.08.2021
-				(*line)++;
-		}
-
-	}
-
-	tmp[j] = '\0';
-
-//todo посмотреть, как работает """" '''' на маках и дописать
-//	if (ft_strlen(tmp_line) > 0 && ft_strlen(tmp) == 0 )
-//	{
-//		tmp[0] = 39;
-//		tmp[1] = 39;
-//		tmp[2] = '\0';
-//	}
-	free(tmp_line);
-	*line = tmp;
-}
-
-
 void ft_change_var(char **line,  t_memory *mem)
 {
 	int		j;
@@ -498,7 +397,6 @@ void ft_change_var(char **line,  t_memory *mem)
 	int		size;
 
 	spec_char = 0;
-//
 	tmp = 0; //возможно избыточно
 	tmp_line = *line;
 	j = 0;
@@ -510,7 +408,6 @@ void ft_change_var(char **line,  t_memory *mem)
 	{
 
 		spec_char = ft_spec_char(spec_char, **line);
-//		spec_char = ft_spec_char_step(spec_char, line);//16.08.2021
 		if (!spec_char && (**line == 34 || **line == 39))  //18.08.2021
 			continue;
 		if (!(**line))//16.08.2021
@@ -584,14 +481,6 @@ void ft_change_var(char **line,  t_memory *mem)
 	}
 
 	tmp[j] = '\0';
-
-//todo посмотреть, как работает """" '''' на маках и дописать
-//	if (ft_strlen(tmp_line) > 0 && ft_strlen(tmp) == 0 )
-//	{
-//		tmp[0] = 39;
-//		tmp[1] = 39;
-//		tmp[2] = '\0';
-//	}
 	free(tmp_line);
 	*line = tmp;
 }
@@ -631,19 +520,17 @@ t_cmd *ft_split_string(char *line, t_memory *mem)
 	return (a_cmd); //add ref
 }
 
+void rm_pipe (t_cmd **a_cmd, int i)
+{
+	if ((*a_cmd)[i].p_next) {
+		(*a_cmd)[i].p_next = 0;
+		if ((*a_cmd)[i + 1].p_priv)
+		{
+			(*a_cmd)[i + 1].p_priv = 0;
+		}
+	}
+}
 
-////TODO Доделать
-
-//// одинарные двойные кавычки, разницы нет, надо сделать
-//// a=1
-//	echo "$a"
-//	echo '$a'
-////
-
-////	$var
-////  "\"
-//// |
-//// << >> <
 void	ft_parse(char *line, char *home, t_memory *mem)
 {
 	t_cmd  *a_cmd;
@@ -654,8 +541,11 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 	ft_write_history(line, home); //перенес вверх, что бы все писало (Сергей)
 	while (a_cmd && a_cmd[i].cmd)
 	{
-		if (ft_check_for_equal_sign(&a_cmd[i].cmd, mem))
-			break ;
+		if (ft_check_for_equal_sign(&a_cmd[i].cmd, mem)) {
+			rm_pipe(&a_cmd, i);
+			i++;
+			continue;
+		}
 		ft_commands(a_cmd, i, mem);
 		i++;
 	}
