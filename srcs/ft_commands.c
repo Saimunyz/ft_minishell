@@ -86,9 +86,9 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 	char *aur_cmd;
 	int status;
 
-	if ((!ft_strncmp(a_cmd[0].cmd[0], "cd", ft_strlen(a_cmd[0].cmd[0])))
+	if (ft_strlen(a_cmd[0].cmd[0]) != 0 && ((!ft_strncmp(a_cmd[0].cmd[0], "cd", ft_strlen(a_cmd[0].cmd[0])))
 		|| (!ft_strncmp(a_cmd[0].cmd[0], "export", ft_strlen(a_cmd[0].cmd[0])))
-		|| (!ft_strncmp(a_cmd[0].cmd[0], "unset", ft_strlen(a_cmd[0].cmd[0]))))  //костыльный костыль, но и пофиг
+		|| (!ft_strncmp(a_cmd[0].cmd[0], "unset", ft_strlen(a_cmd[0].cmd[0])))))  //костыльный костыль, но и пофиг
 	{
 		if (i == 0)
 			ft_start_commands(a_cmd[i].cmd, mem);
@@ -100,7 +100,7 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 
 	if (!aur_cmd)
 		cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(getenv("PATH"), ':'));
-	if (cmd || aur_cmd) {
+	if (cmd || aur_cmd || a_cmd[i].files) {
 		g_error = 0;
 		if (aur_cmd)
 			a_cmd[i].cmd[0] = aur_cmd;

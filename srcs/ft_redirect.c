@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/09 20:22:02 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/19 20:50:18 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/19 22:05:10 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ static void	ft_start_redirect(t_cmd *a_cmd, t_memory *mem)
 
 	//i = 0;
 
-	ft_commands(a_cmd, 0, mem);
-	// ft_redirect(a_cmd, mem);
+	//ft_commands(a_cmd, 0, mem);
+	ft_redirect(a_cmd, mem);
 	ft_lstclear(&a_cmd->files, ft_free_file);
 	a_cmd->files = NULL;
 	unlink("temporary");
@@ -91,8 +91,8 @@ void	ft_parse_redirect(char** str, t_memory *mem, t_cmd *a_cmd)
 	}
 	a_cmd->files = files;
 	a_cmd->cmd = ft_parse_strings(str[0]);
-	if (!(a_cmd->cmd[0]))
-		a_cmd->cmd[0] = ft_strdup("");
+	// if (!(a_cmd->cmd[0]))
+	// 	a_cmd->cmd[0] = ft_strdup("");
 	if (a_cmd->files)
 		ft_start_redirect(a_cmd, mem);
 }
@@ -124,13 +124,14 @@ char	*ft_read_input(char *stop)
 	return (line);
 }
 
-void	ft_here_document(t_file *f)
+void	ft_here_document(t_file *f, t_memory *mem)
 {
 	int		fd;
 	char	*line;
 	int		orig;
 
 	line = ft_read_input(f->filename);
+	//ft_change_var(&line, mem);
 	fd = open("temporary", O_WRONLY | O_CREAT, 0755);
 	orig = dup(1);
 	dup2(fd, 1);
@@ -193,7 +194,7 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem)
 	{
 		f = ((t_file*)tmp->content);
 		if (!ft_strncmp(f->type, "<<", ft_strlen(f->type)))
-			ft_here_document(f);
+			ft_here_document(f, mem);
 		else
 		{
 			fd = ft_other_redirects(f);
@@ -203,6 +204,4 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem)
 		tmp = tmp->next;
 	}
 	ft_start_commands(cmd->cmd, mem);
-	if (!ft_strncmp(f->type, "<<", ft_strlen(f->type)))
-		unlink(f->filename);
 }
