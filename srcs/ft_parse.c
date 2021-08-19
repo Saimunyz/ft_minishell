@@ -242,7 +242,9 @@ char **ft_parse_strings(char *line)
 		j = 0;
 		arr_strings[i] = (char *) malloc(sizeof (char ) * (ft_str_len_space(line) + 1));
 		while (*line) {
-//			spec_char = ft_spec_char_step(spec_char, &line);
+			spec_char = ft_spec_char_step(spec_char, &line);
+			if (!spec_char && (*line == 34 || *line == 39))  //18.08.2021
+				continue;
 			arr_strings[i][j] = *line;
 			if ((*line == ' ' || !line) && !spec_char)
 			{
@@ -375,7 +377,7 @@ int ft_len_doll(char *line, t_memory *mem)
 	return (len);
 }
 
-void ft_change_var(char **line,  t_memory *mem)
+void ft_change_var1(char **line,  t_memory *mem)
 {
 	int		j;
 	int		i;
@@ -398,8 +400,10 @@ void ft_change_var(char **line,  t_memory *mem)
 	while (**line)
 	{
 
-//		spec_char = ft_spec_char(spec_char, **line);
-		spec_char = ft_spec_char_step(spec_char, line);//16.08.2021
+		spec_char = ft_spec_char(spec_char, **line);
+//		spec_char = ft_spec_char_step(spec_char, line);//16.08.2021
+		if (!spec_char && (**line == 34 || **line == 39))  //18.08.2021
+			continue;
 		if (!(**line))//16.08.2021
 		{
 			tmp[j] = '\0';//16.08.2021
@@ -408,19 +412,7 @@ void ft_change_var(char **line,  t_memory *mem)
 			return;//16.08.2021
 		}
 
-//		if (**line != '$' || (**line == '$' && spec_char == 39))
-//		if ((**line != '$' &&  **line != spec_char) || (**line == '$' && spec_char == 39)) //16.08.2021
-		if ((**line != '$' &&  (**line != 34 || **line != 39)) || (**line == '$' && spec_char == 39)) //16.08.2021
-		{
-			tmp[j] = **line;
-			(*line)++;
-			j++;
-		}
-		else if(**line == 39 || **line == 34) {
-			while (**line == 39 || **line == 34)//16.08.2021
-				(*line)++;
-		}
-		else if (!ft_strncmp(*line, "$?", ft_strlen(*line)))
+		if (**line == '$' && *((*line) + 1) == '?' && spec_char != 39)
 		{
 			i = 0;
 			num = ft_itoa(g_error);
@@ -430,14 +422,14 @@ void ft_change_var(char **line,  t_memory *mem)
 			free(num);
 			(*line) += 2;
 		}
-		else
+		else if (**line == '$' && *((*line) + 1) != ' ' && *((*line) + 1) && spec_char != 39)
 		{
-			if (*((*line) + 1) == '?')
-			{
-				printf("minishell: %d: command not found\n", g_error);
-				g_error = 127;
-				break; //корректировка $? $? 14.08.2021
-			}
+//			if (*((*line) + 1) == '?') //а это вообще надо?
+//			{
+//				printf("minishell: %d: command not found\n", g_error);
+//				g_error = 127;
+//				break; //корректировка $? $? 14.08.2021
+//			}
 			str_find = ft_find_doll(*line, mem);
 			if (!str_find)
 			{
@@ -464,6 +456,20 @@ void ft_change_var(char **line,  t_memory *mem)
 				}
 			}
 		}
+//		if (**line != '$' || (**line == '$' && spec_char == 39))
+//		if ((**line != '$' &&  **line != spec_char) || (**line == '$' && spec_char == 39)) //16.08.2021
+//		else if ((**line != '$' &&  (**line != 34 || **line != 39)) || (**line == '$' && spec_char == 39)) //16.08.2021
+		else if (**line != spec_char || (**line == '$' && spec_char == 39)) //18.08.2021
+		{
+			tmp[j] = **line;
+			(*line)++;
+			j++;
+		}
+		else if(**line == 39 || **line == 34) {
+			while (**line == 39 || **line == 34)//16.08.2021
+				(*line)++;
+		}
+
 	}
 
 	tmp[j] = '\0';
@@ -478,6 +484,118 @@ void ft_change_var(char **line,  t_memory *mem)
 	free(tmp_line);
 	*line = tmp;
 }
+
+
+void ft_change_var(char **line,  t_memory *mem)
+{
+	int		j;
+	int		i;
+	char	*tmp;
+	char	*str_find;
+	char 	*tmp_line;
+	char	spec_char;
+	char	*num;
+	int		size;
+
+	spec_char = 0;
+//
+	tmp = 0; //возможно избыточно
+	tmp_line = *line;
+	j = 0;
+	size = (ft_strlen(*line) + ft_len_doll(*line, mem) + 1);
+	tmp = (char *) malloc(size * sizeof (char));
+	if(!tmp)
+		return ;//TODO тут какая то ошибка должна выводится
+	while (**line)
+	{
+
+		spec_char = ft_spec_char(spec_char, **line);
+//		spec_char = ft_spec_char_step(spec_char, line);//16.08.2021
+		if (!spec_char && (**line == 34 || **line == 39))  //18.08.2021
+			continue;
+		if (!(**line))//16.08.2021
+		{
+			tmp[j] = '\0';//16.08.2021
+			free(tmp_line);//16.08.2021
+			*line = tmp;//16.08.2021
+			return;//16.08.2021
+		}
+
+		if (**line == '$' && *((*line) + 1) == '?' && spec_char != 39)
+		{
+			i = 0;
+			num = ft_itoa(g_error);
+			tmp = ft_realloc(tmp, size + ft_strlen(num));
+			while (num[i])
+				tmp[j++] = num[i++];
+			free(num);
+			(*line) += 2;
+		}
+		else if (**line == '$' && *((*line) + 1) != ' ' && *((*line) + 1) && spec_char != 39)
+		{
+//			if (*((*line) + 1) == '?') //а это вообще надо?
+//			{
+//				printf("minishell: %d: command not found\n", g_error);
+//				g_error = 127;
+//				break; //корректировка $? $? 14.08.2021
+//			}
+			str_find = ft_find_doll(*line, mem);
+			if (!str_find)
+			{
+				(*line)++;
+//				while (**line && **line != ' ' && **line != '$' )
+				while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' )  //16.08.21
+					(*line)++;
+			}
+			else
+			{
+				(*line)++;
+//				while (*str_find || (**line && **line != ' ' && **line != '$'))
+				while (*str_find || (**line && **line != ' ' && **line != '$' && **line != 39 && **line != 34)) //16.08.21
+				{
+					if (*str_find)
+					{
+						tmp[j] = *str_find;
+						j++;
+						str_find++;
+					}
+//					if (**line && **line != ' ' && **line != '$')
+					while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' )  //16.08.21
+						(*line)++;
+				}
+			}
+		}
+//		else if (**line != '$' || (**line == '$' && spec_char == 39))
+		else
+//		if ((**line != '$' &&  **line != spec_char) || (**line == '$' && spec_char == 39)) //16.08.2021
+//		else if ((**line != '$' &&  (**line != 34 || **line != 39)) || (**line == '$' && spec_char == 39)) //16.08.2021
+//		else if (**line != spec_char || (**line == '$' && spec_char == 39)) //18.08.2021
+		{
+			tmp[j] = **line;
+			(*line)++;
+			j++;
+		}
+//		else if(**line == 39 || **line == 34) {
+//			while (**line == 39 || **line == 34)//16.08.2021
+//				(*line)++;
+//		}
+//		else
+//			(*line)++; //сюда не должно попадать,  это защита от зависания когда все плохо
+	}
+
+	tmp[j] = '\0';
+
+//todo посмотреть, как работает """" '''' на маках и дописать
+//	if (ft_strlen(tmp_line) > 0 && ft_strlen(tmp) == 0 )
+//	{
+//		tmp[0] = 39;
+//		tmp[1] = 39;
+//		tmp[2] = '\0';
+//	}
+	free(tmp_line);
+	*line = tmp;
+}
+
 
 t_cmd *ft_split_string(char *line, t_memory *mem)
 {
