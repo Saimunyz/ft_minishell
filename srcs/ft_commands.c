@@ -187,6 +187,7 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 			close(a_cmd[i].fd[1]);
 		}
 		waitpid(pid, &status, 0);
+		g_error = WIFEXITED(status);
 	} else
 		ft_command_not_found(a_cmd[i].cmd[0]);
 }

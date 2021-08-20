@@ -28,6 +28,8 @@ char	*ft_spec_char_loop(char **str)
 	i = 0;
 	tmp_str = *str;
 	spec_char = 0;
+	if (!(*str))
+		return (*str);
 	tmp = (char *) malloc(sizeof(char) * (ft_strlen(*str) + 1));
 	while (**str)
 	{

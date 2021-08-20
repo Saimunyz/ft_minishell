@@ -6,40 +6,60 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 02:30:05 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/15 20:08:50 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/20 23:40:45 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_set_pwd(t_memory *mem, t_list *tmp)
+static char	*ft_check_pwds(t_memory *mem, t_list *tmp_oldpwd, t_list *tmp_pwd)
 {
 	char	*value;
-	if (tmp)
+
+	value = NULL;
+	if (tmp_oldpwd)
 	{
-		mem->oldpwd = tmp;
+		mem->oldpwd = tmp_oldpwd;
 		ft_free_content(mem->oldpwd->content);
 	}
-	value = ((t_var *)mem->pwd->content)->value;
-	if (tmp)
+	if (tmp_pwd)
+	{
+		mem->pwd = tmp_pwd;
+		value = ((t_var *)mem->pwd->content)->value;
+	}
+	if (!value)
+		value = "";
+	return (value);
+}
+
+static void	ft_set_pwd(t_memory *mem, t_list *tmp_oldpwd, t_list *tmp_pwd)
+{
+	char	*value;
+
+	value = ft_check_pwds(mem, tmp_oldpwd, tmp_pwd);
+	if (tmp_oldpwd)
 	{
 		((t_var *)mem->oldpwd->content)->name = ft_strdup("OLDPWD");
 		((t_var *)mem->oldpwd->content)->value = ft_strdup(value);
 	}
-	ft_free_content(mem->pwd->content);
-	((t_var *)mem->pwd->content)->name = ft_strdup("PWD");
-	((t_var *)mem->pwd->content)->value = getcwd(NULL, 0);
+	if (tmp_pwd)
+	{
+		ft_free_content(mem->pwd->content);
+		((t_var *)mem->pwd->content)->name = ft_strdup("PWD");
+		((t_var *)mem->pwd->content)->value = getcwd(NULL, 0);
+	}
 	ft_check_errno();
 }
 
 void	ft_cd(char *path, t_memory *mem)
 {
 	int		ans;
-	t_list	*tmp;
+	t_list	*tmp_oldpwd;
+	t_list	*tmp_pwd;
 
 	g_error = 0;
 	if (!path)
-		path = ((t_var *)mem->home->content)->value;
+		return;
 	ans = chdir(path);
 	if (ans < 0 || path == NULL)
 	{
@@ -48,6 +68,7 @@ void	ft_cd(char *path, t_memory *mem)
 		write(1, ": No such file or directory\n", 28);
 		errno = 0;
 	}
-	tmp = ft_lstfind_struct(mem->env, "OLDPWD");
-	ft_set_pwd(mem, tmp);
+	tmp_oldpwd = ft_lstfind_struct(mem->env, "OLDPWD");
+	tmp_pwd = ft_lstfind_struct(mem->env, "PWD");
+	ft_set_pwd(mem, tmp_oldpwd, tmp_pwd);
 }
