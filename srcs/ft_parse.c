@@ -548,6 +548,8 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 			i++;
 			continue;
 		}
+		if (a_cmd->cmd[0][0] == '\3')
+			return;
 		ft_commands(a_cmd, i, mem);
 		i++;
 	}
