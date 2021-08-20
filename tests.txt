@@ -36,3 +36,13 @@
 - echo "ls | ls"
 - ls | grep a | grep b
 - $?$?
+
+- minishell
+- exit
+- ./minishell
+- exit
+
+./ls
+- cd /bin
+- ls
+- ./ls
