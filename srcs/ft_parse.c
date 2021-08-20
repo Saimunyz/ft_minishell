@@ -179,12 +179,17 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem) //add ref
 int	ft_str_len_space(char *line)
 {
 	int	count;
+	char spec_char;
 
 	count = 0;
-	while (*line && *line != ' ')
+	spec_char = 0;
+	spec_char = ft_spec_char(spec_char, *line);
+	while (*line && (*line != ' ' || spec_char))
 	{
+
 		line++;
 		count++;
+		spec_char = ft_spec_char(spec_char, *line);
 	}
 	return (count);
 }
@@ -247,7 +252,7 @@ char **ft_parse_strings(char *line)
 		j = 0;
 		len = ft_str_len_space(line) + 1;
 		arr_strings[i] = (char *) malloc(sizeof (char ) * len);
-		while (*line) {
+		while (*line && j < len) {
 			spec_char = ft_spec_char_step(spec_char, &line);
 			if ((!spec_char && (*line == 34 || *line == 39)) || spec_char == *line)  //18.08.2021
 				continue;
