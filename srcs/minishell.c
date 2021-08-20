@@ -105,6 +105,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_memory	mem;
 
+	mem.envp = envp; //Сергей 20.08.21
 	errno = 0;
 	(void)argc;
 	(void)argv;

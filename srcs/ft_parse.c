@@ -165,9 +165,9 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem) //add ref
 //	else if (strs_cmd[0][0] == '$')		//Это теперь не здесь иначе не работает "$a  $b"
 //		ft_print_var(strs_cmd[0], mem);
 	else if (*strs_cmd[0] != '\3') {
-		char *newenviron[0]; //todo изменить
-		newenviron[0] = NULL;
-		execve(strs_cmd[0], strs_cmd, newenviron);
+//		char *newenviron[0]; //todo изменить
+//		newenviron[0] = NULL;
+		execve(strs_cmd[0], strs_cmd, mem->envp);
 	}
 //		ft_commands(a_cmd, i);
 //	free_text(strs_cmd, ft_maslen(strs_cmd));  //todo ref разобратся с косяком и врнуть

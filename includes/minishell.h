@@ -72,6 +72,7 @@ typedef struct s_memory
 	t_list	*env;
 	t_list	*var;
 	t_list	*home;
+	char	**envp;
 }			t_memory;
 
 int		g_error;
