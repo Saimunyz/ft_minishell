@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 17:45:27 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/15 21:42:57 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/20 23:28:40 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	ft_export_set(t_memory *mem, char *name, t_list *find_var)
 	t_list	*find_env;
 	char	*value;
 	t_var	*tmp;
+	char	*new_var;
 
 	if (find_var)
 	{
@@ -48,8 +49,9 @@ void	ft_export_set(t_memory *mem, char *name, t_list *find_var)
 			ft_lstadd_back(&mem->env, ft_lstnew(find_var->content));
 		else
 		{
+			new_var = ft_strdup(value);
 			free(((t_var *)find_env->content)->value);
-			((t_var *)find_env->content)->value = ft_strdup(value);
+			((t_var *)find_env->content)->value = new_var;
 		}
 	}
 	else if (!ft_lstfind_struct(mem->env, name))
