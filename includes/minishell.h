@@ -111,5 +111,6 @@ t_list	*ft_bubble_sort(t_list *lst);
 void	ft_print_varr_err(void);
 char	**ft_parse_strings(char *line);
 void	ft_change_var(char **line,  t_memory *mem);
+char	ft_spec_char(char spec_char, char line);
 
 #endif

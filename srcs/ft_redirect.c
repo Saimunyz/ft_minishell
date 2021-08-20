@@ -72,20 +72,23 @@ void	ft_parse_redirect(char** str, t_memory *mem, t_cmd *a_cmd)
 {
 	t_list	*files;
 	int		i;
+	char spec_char;
 
+	spec_char = 0;
 	i = 0;
 	files = NULL;
 	while (str[0][i])
 	{
-		if (str[0][i] == ' ' && (str[0][i + 1] == '>' || str[0][i + 1] == '<'))
+		spec_char = ft_spec_char(spec_char, str[0][i]);
+		if (str[0][i] == ' ' && (str[0][i + 1] == '>' || str[0][i + 1] == '<') && !spec_char)
 			ft_memmove((*str) + i, (*str) + i + 1, ft_strlen(str[0] + i));
-		if (str[0][i] == '>' && str[0][i + 1] == '>')
+		if (str[0][i] == '>' && str[0][i + 1] == '>' && !spec_char)
 			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 1089, ">"));
-		else if (str[0][i] == '<' && str[0][i + 1] == '<')
+		else if (str[0][i] == '<' && str[0][i + 1] == '<' && !spec_char)
 			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 0, "<<"));
-		else if (str[0][i] == '>')
+		else if (str[0][i] == '>' && !spec_char)
 			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 577, ">"));
-		if (str[0][i] == '<')
+		if (str[0][i] == '<' && !spec_char)
 			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 0, "<"));
 		i++;
 	}

@@ -57,8 +57,8 @@ echo "'$a'"  //06.06.2021
 - echo "$a $b"
 - $?$? проверить на маке
 - $a =1 +
-- echo "cat lol.c | cat > lol.c" -
-- echo 'a > 1'  -
+- echo "cat lol.c | cat > lol.c" +
+- echo 'a > 1' +
 - export a=1 потом  export a=2  a становится не правильной
 - echo "$PATH" крашится
 - если зайти в ./minishell из минишел, то дальше любая команад крашится
@@ -67,6 +67,8 @@ echo "'$a'"  //06.06.2021
 
 - minishell$ '$USER' +
   sevod: command not found
+
+- echo "$PATH" -
 
 - искать утечки
 - $? пеерпроверять с разными функциями
