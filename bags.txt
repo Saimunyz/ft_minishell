@@ -66,12 +66,16 @@ echo "'$a'"  //06.06.2021
 - $a= 1 -
 - $? выводит 1
 - до запуска minishell - unset PATH затем ./minishell и ls +
+- проврку на файлы, что они исполнимые
 
 - exit  должен работать со значениями"$
 
 - '$USER' +
 
-- echo "$PATH" -
+- echo "$PATH" +
+
+- Set the $PATH to a multiple directory value (directory1:directory2) and check that directories are checked in order
+from left to right
 
 - ./ls - отрабатывает
 - /ls отрабатывает, а не должно
