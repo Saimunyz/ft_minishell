@@ -104,6 +104,8 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 //		|| (!ft_strncmp(a_cmd[0].cmd[0], "./minishell", ft_strlen(a_cmd[0].cmd[0])))))
 //		return ;
 
+	local_cmd = NULL;
+	aur_cmd = NULL;
 	if (ft_strlen(a_cmd[0].cmd[0]) != 0 && ((!ft_strncmp(a_cmd[0].cmd[0], "cd", ft_strlen(a_cmd[0].cmd[0])))
 		|| (!ft_strncmp(a_cmd[0].cmd[0], "export", ft_strlen(a_cmd[0].cmd[0])))
 		|| (!ft_strncmp(a_cmd[0].cmd[0], "unset", ft_strlen(a_cmd[0].cmd[0])))))  //костыльный костыль, но и пофиг
@@ -113,13 +115,18 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 			return;
 		}
 	}
-
-	aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
-
-
-
-	if (!aur_cmd)
+	if (a_cmd[i].cmd[0][0] == '.' || a_cmd[i].cmd[0][0] == '/') {
 		local_cmd = ft_find_local_command(a_cmd[i].cmd[0]);
+		if  (!local_cmd) {
+			ft_command_not_found(a_cmd[i].cmd[0]);
+			return;
+		}
+	}
+
+	if (!local_cmd)
+		aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
+//	if (!aur_cmd)
+//		local_cmd = ft_find_local_command(a_cmd[i].cmd[0]);
 	if (!aur_cmd && !local_cmd) {
 //		if (!getenv("PATH"))
 		if (!ft_getenv("PATH", mem)) //21.08.21
@@ -193,7 +200,8 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 			close(a_cmd[i].fd[1]);
 		}
 		waitpid(pid, &status, 0);
-		//g_error = WIFEXITED(status);
+		if (g_error != 130 && g_error != 131)
+			g_error = WEXITSTATUS(status);
 	} else
 		ft_command_not_found(a_cmd[i].cmd[0]);
 }

@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/09 20:22:02 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/20 18:39:33 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/21 17:28:19 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,12 +167,14 @@ int		ft_check_filename(t_list *lst)
 {
 	t_list	*tmp;
 	t_file	*f;
+	int		len;
 
 	tmp = lst;
 	while (tmp)
 	{
 		f = ((t_file*)tmp->content);
-		if (ft_strchr(f->filename, '<') || ft_strchr(f->filename, '>'))
+		len = ft_strlen(f->filename);
+		if (ft_strchr(f->filename, '<') || ft_strchr(f->filename, '>') || len == 0)
 		{
 			printf("syntax error near unexpected token `%s'\n", f->filename);
 			return (1);
