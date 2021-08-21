@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/21 14:10:41 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/21 15:02:38 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ typedef struct s_memory
 	t_list	*env;
 	t_list	*var;
 	t_list	*home;
-	char	**envp;
 }			t_memory;
 
 int		g_error;
@@ -117,5 +116,6 @@ char	ft_spec_char(char spec_char, char line);
 void	ft_sigint_handler(int num);
 void	ft_sigquit_handler(int num);
 char	*ft_getenv(char *name, t_memory *mem);
+char	**ft_lst2str(t_list *lst);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:09:41 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/21 14:14:17 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/21 14:48:49 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_memory	mem;
 
-	mem.envp = envp; //Сергей 20.08.21
 	errno = 0;
 	(void)argc;
 	(void)argv;

@@ -146,6 +146,7 @@ char	ft_spec_char(char spec_char, char line)
 void	ft_start_commands(char	**strs_cmd, t_memory *mem) //add ref
 {
 	int		splt_len;
+	char	**env;
 
 	splt_len = ft_strlen(strs_cmd[0]);
 //	if (ft_check_for_equal_sign(&strs_cmd, mem))
@@ -169,7 +170,9 @@ void	ft_start_commands(char	**strs_cmd, t_memory *mem) //add ref
 	else if (*strs_cmd[0] != '\3') {
 //		char *newenviron[0]; //todo изменить
 //		newenviron[0] = NULL;
-		execve(strs_cmd[0], strs_cmd, mem->envp);
+		env = ft_lst2str(mem->env);
+		execve(strs_cmd[0], strs_cmd, env);
+		free(env);
 	}
 //		ft_commands(a_cmd, i);
 //	free_text(strs_cmd, ft_maslen(strs_cmd));  //todo ref разобратся с косяком и врнуть

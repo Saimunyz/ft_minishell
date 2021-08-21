@@ -11,6 +11,7 @@ SRC_DIR =	srcs/
 CFILE =		minishell.c \
 			utils_1.c \
 			utils_2.c \
+			utils_3.c \
 			ft_parse.c \
 			ft_pwd.c \
 			ft_echo.c \
