@@ -120,8 +120,12 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 
 	if (!aur_cmd)
 		local_cmd = ft_find_local_command(a_cmd[i].cmd[0]);
-	if (!aur_cmd && !local_cmd)
-		cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(getenv("PATH"), ':'));
+	if (!aur_cmd && !local_cmd) {
+		if (!getenv("PATH"))
+			cmd = NULL;
+		else
+			cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(getenv("PATH"), ':'));
+	}
 	if (cmd || aur_cmd || a_cmd[i].files || local_cmd) {
 		g_error = 0;
 		if (aur_cmd)

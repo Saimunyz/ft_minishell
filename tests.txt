@@ -41,6 +41,7 @@
 - exit
 - ./minishell
 - exit
+- до запуска minishell - unset PATH затем ./minishell и ls +
 
 ./ls
 - cd /bin
