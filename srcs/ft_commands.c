@@ -1,13 +1,15 @@
 #include "minishell.h"
 
-void ft_clear_arr(char **arr) {
+void ft_clear_arr(char **arr)
+{
 	char *tmp;
 	char **tmp_arr;
 
 	if (!arr)
 		return;
 	tmp_arr = arr;
-	while (*arr) {
+	while (*arr)
+	{
 		tmp = *arr;
 		arr++;
 		free(tmp);
@@ -16,7 +18,8 @@ void ft_clear_arr(char **arr) {
 }
 
 
-char *ft_find_aur_command(char *command) {
+char *ft_find_aur_command(char *command)
+{
 	int splt_len;
 
 	splt_len = ft_strlen(command);
@@ -38,7 +41,8 @@ char *ft_find_aur_command(char *command) {
 	return (0);
 }
 
-char	*ft_find_local_command(char *command) {
+char *ft_find_local_command(char *command)
+{
 	int st;
 	struct stat buf;
 
@@ -49,7 +53,9 @@ char	*ft_find_local_command(char *command) {
 		return (command);
 	return (0);
 }
-char *ft_find_command(char *command, char **path) {
+
+char *ft_find_command(char *command, char **path)
+{
 	int st;
 	struct stat buf;
 	char *tmp_cmd;
@@ -59,14 +65,16 @@ char *ft_find_command(char *command, char **path) {
 	if (ft_find_aur_command(command))
 		return ft_find_aur_command(command);
 	tmp_path = path;
-	while (*path) {
+	while (*path)
+	{
 		tmp_cmd = ft_strjoin(*path, "/");
 		cmd = ft_strjoin(tmp_cmd, command);
 		free(tmp_cmd);
 		st = stat(cmd, &buf); //TODO это что и откуда?
 		if (st == -1)
 			errno = 0;
-		else {
+		else
+		{
 			ft_clear_arr(tmp_path);
 			return (cmd);
 		}
@@ -77,7 +85,8 @@ char *ft_find_command(char *command, char **path) {
 	return (0);
 }
 
-void ft_command_not_found(char *cmd) {
+void ft_command_not_found(char *cmd)
+{
 	char *tmp_str;
 
 	g_error = 127;
@@ -86,38 +95,35 @@ void ft_command_not_found(char *cmd) {
 	free(tmp_str);
 }
 
-/*
- * TODO В env нужно менять shlvl - это уровень вложенности, насколько глубоко залез терминал,
- * мы в минишел, так что изначально он 1, когда запустим что-то еще нужно увеличить на 1
- * TODO буду рефакторить когда доделаем парсер
- */
-//void ft_commands(char **splt, t_pipe *fd) {
-void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
+
+void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
+{
 	pid_t pid;
 	char *cmd;
 	char *local_cmd;
 	char *aur_cmd;
 	int status;
+	int not_found;
 
-	//костыль длы ./minishell
-//	if (ft_strlen(a_cmd[0].cmd[0]) != 0 && ((!ft_strncmp(a_cmd[0].cmd[0], "minishell", ft_strlen(a_cmd[0].cmd[0])))
-//		|| (!ft_strncmp(a_cmd[0].cmd[0], "./minishell", ft_strlen(a_cmd[0].cmd[0])))))
-//		return ;
-
+	not_found = 1;
 	local_cmd = NULL;
 	aur_cmd = NULL;
+	cmd = NULL;
 	if (ft_strlen(a_cmd[0].cmd[0]) != 0 && ((!ft_strncmp(a_cmd[0].cmd[0], "cd", ft_strlen(a_cmd[0].cmd[0])))
-		|| (!ft_strncmp(a_cmd[0].cmd[0], "export", ft_strlen(a_cmd[0].cmd[0])))
-		|| (!ft_strncmp(a_cmd[0].cmd[0], "unset", ft_strlen(a_cmd[0].cmd[0])))))  //костыльный костыль, но и пофиг
+											|| (!ft_strncmp(a_cmd[0].cmd[0], "export", ft_strlen(a_cmd[0].cmd[0])))
+											|| (!ft_strncmp(a_cmd[0].cmd[0], "unset", ft_strlen(a_cmd[0].cmd[0])))))  //костыльный костыль, но и пофиг
 	{
-		if (i == 0) { //а тут надо только для 0 команды? а если это вторая, десятая? не проходит a=1 | ls
-			ft_start_commands(a_cmd[i].cmd, mem);
+		if (i == 0)
+		{ //а тут надо только для 0 команды? а если это вторая, десятая? не проходит a=1 | ls
+			ft_start_commands(a_cmd[i].cmd, mem, 0);
 			return;
 		}
 	}
-	if (a_cmd[i].cmd[0][0] == '.' || a_cmd[i].cmd[0][0] == '/') {
+	if (a_cmd[i].cmd[0][0] == '.' || a_cmd[i].cmd[0][0] == '/')
+	{
 		local_cmd = ft_find_local_command(a_cmd[i].cmd[0]);
-		if  (!local_cmd) {
+		if (!local_cmd)
+		{
 			ft_command_not_found(a_cmd[i].cmd[0]);
 			return;
 		}
@@ -125,83 +131,91 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem) {
 
 	if (!local_cmd)
 		aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
-//	if (!aur_cmd)
-//		local_cmd = ft_find_local_command(a_cmd[i].cmd[0]);
-	if (!aur_cmd && !local_cmd) {
-//		if (!getenv("PATH"))
+	if (!aur_cmd && !local_cmd)
+	{
 		if (!ft_getenv("PATH", mem)) //21.08.21
 			cmd = NULL;
 		else
-//			cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(getenv("PATH"), ':'));
 			cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(ft_getenv("PATH", mem), ':')); //21.08.21
 	}
-	if (cmd || aur_cmd || a_cmd[i].files || local_cmd) {
-		g_error = 0;
-		if (aur_cmd)
-			a_cmd[i].cmd[0] = aur_cmd;
-		else if (local_cmd)
-			a_cmd[i].cmd[0] = local_cmd;
-		else {
-			free(a_cmd[i].cmd[0]); //TODO вынести из if проверить что нет утечки.
-			a_cmd[i].cmd[0] = cmd;
-		}
-		pid = fork();
-		if (pid == 0) {
-			if (a_cmd[i].files) {
-				ft_redirect(a_cmd, mem);
-				exit(0);
-			}
-			else if (a_cmd[i].p_next && a_cmd[i].p_priv) {
-				dup2(a_cmd[i - 1].fd[0], 0);
-				close(a_cmd[i - 1].fd[0]);
-				close(a_cmd[i - 1].fd[1]);
-				dup2(a_cmd[i].fd[1], 1);
-				close(a_cmd[i].fd[0]);
-				close(a_cmd[i].fd[1]);
-				ft_start_commands(a_cmd[i].cmd, mem);
-				exit(0);
-			} else if (a_cmd[i].p_next) {
-				dup2(a_cmd[i].fd[1], 1);
-				close(a_cmd[i].fd[0]);
-				close(a_cmd[i].fd[1]);
-				ft_start_commands(a_cmd[i].cmd, mem);
-				exit(0);
-
-			} else if (a_cmd[i].p_priv) {
-				dup2(a_cmd[i - 1].fd[0], 0);
-				close(a_cmd[i - 1].fd[0]);
-				close(a_cmd[i - 1].fd[1]);
-				ft_start_commands(a_cmd[i].cmd, mem);
-				exit(0);
-			} else {
-				close(a_cmd[i].fd[0]);
-				close(a_cmd[i].fd[1]);
-				ft_start_commands(a_cmd[i].cmd, mem);
-				exit(0);
-			}
-		}
-
-		if (a_cmd[i].files != 0)
+	if (cmd || aur_cmd || a_cmd[i].files || local_cmd)
+		not_found = 0;
+	g_error = 0;
+	if (aur_cmd)
+		a_cmd[i].cmd[0] = aur_cmd;
+	else if (local_cmd)
+		a_cmd[i].cmd[0] = local_cmd;
+	else if (cmd)
+	{
+		free(a_cmd[i].cmd[0]); //TODO вынести из if проверить что нет утечки.
+		a_cmd[i].cmd[0] = cmd;
+	}
+	pid = fork();
+	if (pid == 0)
+	{
+		if (a_cmd[i].files)
 		{
-
-		}
-		else if (a_cmd[i].p_next && a_cmd[i].p_priv) {
+			ft_redirect(a_cmd, mem);
+			exit(0);
+		} else if (a_cmd[i].p_next && a_cmd[i].p_priv)
+		{
+			dup2(a_cmd[i - 1].fd[0], 0);
 			close(a_cmd[i - 1].fd[0]);
-			close(a_cmd[i].fd[1]);
-		} else if (a_cmd[i].p_next) {
-			close(a_cmd[i].fd[1]);
-		} else if (a_cmd[i].p_priv) {
-			close(a_cmd[i - 1].fd[0]);
+			close(a_cmd[i - 1].fd[1]);
+			dup2(a_cmd[i].fd[1], 1);
 			close(a_cmd[i].fd[0]);
 			close(a_cmd[i].fd[1]);
-		}
-		else {
-			close(a_cmd[i].fd[0]); // TODO не факто что нужно
+			ft_start_commands(a_cmd[i].cmd, mem, not_found);
+			exit(0);
+		} else if (a_cmd[i].p_next)
+		{
+			dup2(a_cmd[i].fd[1], 1);
+			close(a_cmd[i].fd[0]);
 			close(a_cmd[i].fd[1]);
+			ft_start_commands(a_cmd[i].cmd, mem, not_found);
+			exit(0);
+
+		} else if (a_cmd[i].p_priv)
+		{
+			dup2(a_cmd[i - 1].fd[0], 0);
+			close(a_cmd[i - 1].fd[0]);
+			close(a_cmd[i - 1].fd[1]);
+			ft_start_commands(a_cmd[i].cmd, mem, not_found);
+			exit(0);
+		} else
+		{
+			close(a_cmd[i].fd[0]);
+			close(a_cmd[i].fd[1]);
+			ft_start_commands(a_cmd[i].cmd, mem, not_found);
+			exit(0);
 		}
-		waitpid(pid, &status, 0);
-		if (g_error != 130 && g_error != 131)
-			g_error = WEXITSTATUS(status);
+	}
+
+	if (a_cmd[i].files != 0)
+	{
+
+	} else if (a_cmd[i].p_next && a_cmd[i].p_priv)
+	{
+		close(a_cmd[i - 1].fd[0]);
+		close(a_cmd[i].fd[1]);
+	} else if (a_cmd[i].p_next)
+	{
+		close(a_cmd[i].fd[1]);
+	} else if (a_cmd[i].p_priv)
+	{
+		close(a_cmd[i - 1].fd[0]);
+		close(a_cmd[i].fd[0]);
+		close(a_cmd[i].fd[1]);
 	} else
+	{
+		close(a_cmd[i].fd[0]); // TODO не факто что нужно
+		close(a_cmd[i].fd[1]);
+	}
+	waitpid(pid, &status, 0);
+	if (g_error != 130 && g_error != 131)
+		g_error = WEXITSTATUS(status);
+//	} else
+//		ft_command_not_found(a_cmd[i].cmd[0]);
+	if (!aur_cmd && !local_cmd && !cmd)
 		ft_command_not_found(a_cmd[i].cmd[0]);
 }

@@ -206,5 +206,5 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem)
 		}
 		tmp = tmp->next;
 	}
-	ft_start_commands(cmd->cmd, mem);
+	ft_start_commands(cmd->cmd, mem, 0);
 }

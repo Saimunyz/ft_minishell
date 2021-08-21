@@ -35,6 +35,8 @@
 - echo 'ls | ls'
 - echo "ls | ls"
 - ls | grep a | grep b
+- asfd | grep a
+- asfd | ls
 - $?$?
 
 - minishell
@@ -52,5 +54,12 @@
 - echo $? - значение должно совпадать с темже, что и в обычном баше
 - /bin/grep a - ввести b
 - echo $? - должен 1
+
+- unset PATH
+- ls
+- cd /bin
+- ls
+-./ls
+
 
 - >a > b >>

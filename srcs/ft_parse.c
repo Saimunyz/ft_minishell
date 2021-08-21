@@ -143,10 +143,12 @@ char	ft_spec_char(char spec_char, char line)
 	return (spec_char);
 }
 
-void	ft_start_commands(char	**strs_cmd, t_memory *mem) //add ref
+void	ft_start_commands(char	**strs_cmd, t_memory *mem, int not_found) //add ref
 {
 	int		splt_len;
 
+	if (not_found)
+		return;
 	splt_len = ft_strlen(strs_cmd[0]);
 //	if (ft_check_for_equal_sign(&strs_cmd, mem))
 //		return ; //TODO тут наверное ошибка?
@@ -317,7 +319,6 @@ int ft_find_char(char *str, int i, t_cmd *a_cmd)
 	while (str[i])
 	{
 		spec_char = ft_spec_char(spec_char, str[i]);
-//		if((str[i] == ';' || str[i] == '|') && !spec_char)
 		if(str[i] == '|' && !spec_char)
 		{
 			if (str[i] == '|')
@@ -338,7 +339,6 @@ int ft_find_space(char *str)
 		return (0);
 	while (str[i])
 	{
-//		if(str[i] == ' ' || str[i] == '$' || str[i] == '"')
 		if(str[i] == ' ' || str[i] == '$' || str[i] == '"' || str[i] == 39) //16.08.21
 			return (i);
 		i++;
@@ -437,24 +437,16 @@ void ft_change_var(char **line,  t_memory *mem)
 		}
 		else if (**line == '$' && *((*line) + 1) != ' ' && *((*line) + 1) && spec_char != 39)
 		{
-//			if (*((*line) + 1) == '?') //а это вообще надо?
-//			{
-//				printf("minishell: %d: command not found\n", g_error);
-//				g_error = 127;
-//				break; //корректировка $? $? 14.08.2021
-//			}
 			str_find = ft_find_doll(*line, mem);
 			if (!str_find)
 			{
 				(*line)++;
-//				while (**line && **line != ' ' && **line != '$' )
 				while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' )  //16.08.21
 					(*line)++;
 			}
 			else
 			{
 				(*line)++;
-//				while (*str_find || (**line && **line != ' ' && **line != '$'))
 				while (*str_find || (**line && **line != ' ' && **line != '$' && **line != 39 && **line != 34)) //16.08.21
 				{
 					if (*str_find)
@@ -463,30 +455,18 @@ void ft_change_var(char **line,  t_memory *mem)
 						j++;
 						str_find++;
 					}
-//					if (**line && **line != ' ' && **line != '$')
 					while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' )  //16.08.21
 						(*line)++;
 				}
 			}
 		}
-//		else if (**line != '$' || (**line == '$' && spec_char == 39))
 		else
-//		if ((**line != '$' &&  **line != spec_char) || (**line == '$' && spec_char == 39)) //16.08.2021
-//		else if ((**line != '$' &&  (**line != 34 || **line != 39)) || (**line == '$' && spec_char == 39)) //16.08.2021
-//		else if (**line != spec_char || (**line == '$' && spec_char == 39)) //18.08.2021
 		{
 			tmp[j] = **line;
 			(*line)++;
 			j++;
 		}
-//		else if(**line == 39 || **line == 34) {
-//			while (**line == 39 || **line == 34)//16.08.2021
-//				(*line)++;
-//		}
-//		else
-//			(*line)++; //сюда не должно попадать,  это защита от зависания когда все плохо
 	}
-
 	tmp[j] = '\0';
 	free(tmp_line);
 	*line = tmp;
