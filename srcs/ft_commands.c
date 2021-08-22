@@ -222,7 +222,7 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 		close(a_cmd[i].fd[1]);
 	}
 	waitpid(pid, &status, 0);
-	if (g_error != 130 && g_error != 131)
+	if (g_error != 130 && g_error != 131 && g_error != 126)
 		g_error = WEXITSTATUS(status); //todo затирает 126 которая приходит из кейса ./неИсплняемыйФайл
 //	} else
 //		ft_command_not_found(a_cmd[i].cmd[0]);
