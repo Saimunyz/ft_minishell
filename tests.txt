@@ -75,7 +75,102 @@
 - echo -n
 - env
 
-- cd
+/// Прогоняю чеклист
+
+1. Simple Command & globa
+- ls
+// tabas и spase
+
+2. Arguments & history
+- ls $PWD
+- ls ls
+
+3. echo
+- echo a
+- echo -N
+- echo -n
+- echo -a-n
+- echo --n
+
+4. exit
+- exit asd
+exit
+bash: exit: asd: numeric argument required
+- echo $?
+0
+- exit 1
+exit
+- echo $?
+1
+- exit 1234
+exit
+- echo $?
+210
+-  exit 100000000000000000000000000000000
+exit
+bash: exit: 100000000000000000000000000000000: numeric argument required
+- bash
+- exit 1000000000
+exit
+- echo $?
+0
+
+5. Return value of a process
+- ls abs --> echo $? --> 2
+- $? + $?
+
+6. Signals
+- ./minishell --> ./minishell
+- ctrl-C --> новая строка и не сохраняет строку в историю
+- ctrl-D --> выходит, когда пустая строка. Ничего не делает, если строк ане пустая
+- ctrl-\ --> ничего не делает
+- cat --> ctrl-D --> echo $? --> 0
+- cat b --> ctrl-D --> echo $? --> 1
+- cat --> ctrl-C --> echo $? --> 130
+- cat --> ctrl-\ --> echo $? --> 131
+
+7. Double Quotes
+"$PWD" --> /mnt/c/Users/R2D20/source/C/Ecole_42/workspace/ft_minishell: Is a directory
+"$"
+"cat lol.c | cat > lol.c"
+
+8. Simple Quotes
+- echo '$USER'
+
+9. env
+- env
+
+10. export
+- export a=10
+- export a=10
+- export a+=10
+- export a=11
+- b=10
+- export b
+
+11. unset // выше переменные
+- unset b --> env проверять
+- unset PWD --> env
+- unset OLDPWD --> cd поделать --> export PWD OLDPWD
+- cd поделать
+
+12. cd
+- cd .
+- cd ..
+- cd /
+
+13. pwd
+- pwd
+
+14. Redirection
+- - >a > b >>
+- echo b > 1
+- cat << a > 1
+- echo a > a >> b
+- cat < a
+
+15. Pipes
+- echo a > b | cat b
+- cat < b | >a | cat < a
 
 
-- >a > b >>
