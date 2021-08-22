@@ -47,6 +47,16 @@ char *ft_find_local_command(char *command)
 	struct stat buf;
 
 	st = stat(command, &buf); //TODO это что и откуда?
+	if (!(buf.st_mode & S_IXUSR))
+	{
+		printf("%s: Permission denied\n", command); //todo перепроверить на маке
+		g_error = 126;
+	}
+	if (buf.st_mode & S_IFDIR)
+	{
+		printf("%s: Is a directory\n", command); //todo перепроверить на маке
+		g_error = 0;
+	}
 	if (st == -1)
 		errno = 0;
 	else
