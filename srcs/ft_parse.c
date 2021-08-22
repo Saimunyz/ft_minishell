@@ -551,5 +551,5 @@ void ft_parse(char *line, char *home, t_memory *mem)
 		ft_commands(a_cmd, i, mem);
 		i++;
 	}
-//	free(a_cmd);
+	free(a_cmd);
 }

@@ -94,8 +94,8 @@ from left to right +
 - проврку на файлы, что они исполнимые ( надо ли ?)
 
 -"$" крашится
-- cat < b | >a | cat < b крашится
-- echo hello > b
+- cat < b | >a | cat < b крашится +
+- echo hello > b +
 
 Лишняя строка при echo a > 1, так как заменяем строку на echo
 в функции ft_redirect();
@@ -114,6 +114,8 @@ cat << a
 
 
 Утечки
-echo a > 1 | echo b > 2 крашится
+- $PWD
+- $PATH
+- env
 
 

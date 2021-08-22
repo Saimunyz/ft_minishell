@@ -46,21 +46,23 @@ char *ft_find_local_command(char *command)
 	struct stat buf;
 
 	st = stat(command, &buf); //TODO это что и откуда?
-	if (!(buf.st_mode & S_IXUSR))
+	if (st == -1)
+	{
+		errno = 0;
+		return (0);
+	}
+	else if (!(buf.st_mode & S_IXUSR))
 	{
 		printf("%s: Permission denied\n", command); //todo перепроверить на маке
 		g_error = 126;
 	}
-	if (buf.st_mode & S_IFDIR)
+	else if (buf.st_mode & S_IFDIR)
 	{
 		printf("%s: Is a directory\n", command); //todo перепроверить на маке
 		g_error = 0;
 	}
-	if (st == -1)
-		errno = 0;
-	else
-		return (command);
-	return (0);
+
+	return (command);
 }
 
 char *ft_find_command(char *command, char **path)
@@ -129,7 +131,8 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 			return;
 		}
 	}
-	if (a_cmd[i].cmd[0][0] == '.' || a_cmd[i].cmd[0][0] == '/')
+//	if (a_cmd[i].cmd[0][0] == '.' || a_cmd[i].cmd[0][0] == '/')
+	if (a_cmd[i].cmd[0] && (a_cmd[i].cmd[0][0] == '.' || a_cmd[i].cmd[0][0] == '/'))
 	{
 		local_cmd = ft_find_local_command(a_cmd[i].cmd[0]);
 		if (!local_cmd)
