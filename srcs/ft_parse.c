@@ -530,13 +530,6 @@ void clear_arr(char **arr)
 	}
 }
 
-
-void clear_a_cmd(t_cmd *a_cmd, int i)
-{
-	clear_arr(a_cmd[i].cmd);
-	free(a_cmd[i].cmd);
-}
-
 void ft_parse(char *line, char *home, t_memory *mem)
 {
 	t_cmd *a_cmd;
@@ -556,9 +549,7 @@ void ft_parse(char *line, char *home, t_memory *mem)
 		if (a_cmd->cmd[0][0] == '\3')
 			return;
 		ft_commands(a_cmd, i, mem);
-//		clear_a_cmd(a_cmd, i);
 		i++;
 	}
-//	clear_a_cmd(a_cmd);
-	free(a_cmd);
+//	free(a_cmd);
 }

@@ -30,6 +30,9 @@
 - $?
 - $? $?
 - echo a > 1 | echo b > 2
+- "$"
+- cat < b | >a | cat < b
+- echo hello > b
 - "ls | ls"
 - 'ls | ls'
 - echo 'ls | ls'
@@ -67,7 +70,12 @@
 -./path проверить $? 0
 -./неисполняемыйФайл  $? 126
 
+- pwd
+- echo
+- echo -n
+- env
 
+- cd
 
 
 - >a > b >>

@@ -117,5 +117,5 @@ void	ft_sigint_handler(int num);
 void	ft_sigquit_handler(int num);
 char	*ft_getenv(char *name, t_memory *mem);
 char	**ft_lst2str(t_list *lst);
-
+void	ft_clear_arr(char **arr);
 #endif

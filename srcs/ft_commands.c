@@ -24,15 +24,15 @@ char *ft_find_aur_command(char *command)
 	splt_len = ft_strlen(command);
 
 	if (!ft_strncmp(command, "pwd", ft_strlen(command)) && splt_len != 0)
-		return "pwd";
+		return ft_strdup("pwd");
 	else if (!ft_strncmp(command, "echo", ft_strlen(command)) && splt_len != 0)
-		return "echo";
+		return ft_strdup("echo");
 	else if (!ft_strncmp(command, "cd", ft_strlen(command)) && splt_len != 0)
 		return "cd";
 	else if (!ft_strncmp(command, "exit", ft_strlen(command)) && splt_len != 0)
 		ft_exit();
 	else if (!ft_strncmp(command, "env", ft_strlen(command)) && splt_len != 0)
-		return "env";
+		return ft_strdup("env");
 	else if (!ft_strncmp(command, "export", ft_strlen(command)) && splt_len != 0)
 		return "export";
 	else if (!ft_strncmp(command, "unset", ft_strlen(command)) && splt_len != 0)
@@ -152,7 +152,13 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 		not_found = 0;
 //	g_error = 0; //todo прверять на ошибки, надо переписывать иначе затирает 126 которая приходит из кейса ./неИсплняемыйФайл
 	if (aur_cmd)
-		a_cmd[i].cmd[0] = aur_cmd;
+	{
+		if (!a_cmd[i].files)
+		{
+			free(a_cmd[i].cmd[0]);
+			a_cmd[i].cmd[0] = aur_cmd;
+		}
+	}
 	else if (local_cmd)
 		a_cmd[i].cmd[0] = local_cmd;
 	else if (cmd)
@@ -223,9 +229,10 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	}
 	waitpid(pid, &status, 0);
 	if (g_error != 130 && g_error != 131 && g_error != 126)
-		g_error = WEXITSTATUS(status); //todo затирает 126 которая приходит из кейса ./неИсплняемыйФайл
-//	} else
-//		ft_command_not_found(a_cmd[i].cmd[0]);
+		g_error = WEXITSTATUS(status);
 	if (!aur_cmd && !local_cmd && !cmd)
 		ft_command_not_found(a_cmd[i].cmd[0]);
+
+	if (!a_cmd[i].files)
+		ft_clear_arr(a_cmd[i].cmd);
 }
