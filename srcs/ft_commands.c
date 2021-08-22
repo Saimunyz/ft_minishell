@@ -17,7 +17,6 @@ void ft_clear_arr(char **arr)
 	free(tmp_arr);
 }
 
-
 char *ft_find_aur_command(char *command)
 {
 	int splt_len;

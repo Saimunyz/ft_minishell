@@ -1,0 +1,49 @@
+#!/bin/bash
+echo "TESTS!"
+rm 1 2
+$abc
+$a $b
+echo $abc
+echo $a $b
+echo "'$abc'"
+a=1
+b=2
+abc=123
+$abc
+echo $abc
+echo $a $b
+"$PATH"
+"$USER"
+$PATH
+$USER
+echo "'$abc'"
+echo "$PATH"
+echo "$USER"
+echo $PATH
+echo $USER
+
+echo "cat lol.c | cat > lol.c"
+''''
+''''''
+""""
+""""""
+
+"asdf""asdf""asdf"
+echo "asdf""asdf""asdf"
+?$
+echo ?$
+$?
+$? $?
+echo a > 1 | echo b > 2
+"ls | ls"
+'ls | ls'
+echo 'ls | ls'
+echo "ls | ls"
+ls | grep a | grep b
+asfd | grep a
+asfd | ls
+$?$?
+
+./srcs
+./tests.txt
+>a > b >>
