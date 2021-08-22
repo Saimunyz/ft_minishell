@@ -58,7 +58,7 @@ char *ft_find_local_command(char *command)
 		g_error = 0;
 	}
 	if (st == -1)
-		g_error = 0;
+		errno = 0;
 	else
 		return (command);
 	return (0);
