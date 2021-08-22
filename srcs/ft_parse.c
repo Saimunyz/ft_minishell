@@ -355,7 +355,7 @@ char *ft_find_doll(char *line, t_memory *mem)
 
 	end = ft_find_space(line);
 	tmp = ft_substr(line, 0, end);
-	if (*line == 34 || *line == 39) //костыли
+	if (*line == 34 || *line == 39 || end == 1) //костыли
 		return (0);
 	find = ft_lstfind_struct(mem->env, tmp + 1);
 	if (!find)
