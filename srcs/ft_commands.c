@@ -151,7 +151,7 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	}
 	if (cmd || aur_cmd || a_cmd[i].files || local_cmd)
 		not_found = 0;
-//	g_error = 0; //todo прверять на ошибки
+//	g_error = 0; //todo прверять на ошибки, надо переписывать иначе затирает 126 которая приходит из кейса ./неИсплняемыйФайл
 	if (aur_cmd)
 		a_cmd[i].cmd[0] = aur_cmd;
 	else if (local_cmd)

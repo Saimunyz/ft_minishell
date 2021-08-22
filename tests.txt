@@ -57,9 +57,17 @@
 
 - unset PATH
 - ls
+- Set the $PATH to a multiple directory value (directory1:directory2) and check that directories are checked in order
+  from left to right
+
 - cd /bin
 - ls
 -./ls
+
+-./path проверить $? 0
+-./неисполняемыйФайл  $? 126
+
+
 
 
 - >a > b >>
