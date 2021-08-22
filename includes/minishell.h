@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/21 15:02:38 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/22 18:50:44 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ typedef struct s_memory
 	t_list	*oldpwd;
 	t_list	*env;
 	t_list	*var;
-	t_list	*home;
 }			t_memory;
 
 int		g_error;
