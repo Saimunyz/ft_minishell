@@ -6,18 +6,7 @@ void	ft_echo_write(char *str, int space)
 	if (space)
 		write(1, " ", 1);
 	if (str)
-//	{		//Сергей $ теперь не тут
-//		if (str[0] == '$')
-//		{
-//			find = ft_lstfind_struct(mem->env, str + 1);
-//			if (!find)
-//				find = ft_lstfind_struct(mem->var, str + 1);
-//			if (find)
-//				ft_putstr_fd(((t_var *)find->content)->value, 1);
-//		}
-//		else
 			ft_putstr_fd(str, 1);
-//	}
 }
 
 void	ft_echo(char **str)

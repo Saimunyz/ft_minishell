@@ -47,8 +47,18 @@ char *ft_find_local_command(char *command)
 	struct stat buf;
 
 	st = stat(command, &buf); //TODO это что и откуда?
+	if (!(buf.st_mode & S_IXUSR))
+	{
+		printf("%s: Permission denied\n", command); //todo перепроверить на маке
+		g_error = 126;
+	}
+	if (buf.st_mode & S_IFDIR)
+	{
+		printf("%s: Is a directory\n", command); //todo перепроверить на маке
+		g_error = 0;
+	}
 	if (st == -1)
-		errno = 0;
+		g_error = 0;
 	else
 		return (command);
 	return (0);
@@ -91,7 +101,7 @@ void ft_command_not_found(char *cmd)
 
 	g_error = 127;
 	tmp_str = ft_strjoin(cmd, ": command not found\n");
-	ft_putstr_fd(tmp_str, 1);
+	ft_putstr_fd(tmp_str, 2); //todo а в какой канал ошибку выводить? во второй?
 	free(tmp_str);
 }
 
@@ -111,7 +121,8 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	cmd = NULL;
 	if (ft_strlen(a_cmd[0].cmd[0]) != 0 && ((!ft_strncmp(a_cmd[0].cmd[0], "cd", ft_strlen(a_cmd[0].cmd[0])))
 											|| (!ft_strncmp(a_cmd[0].cmd[0], "export", ft_strlen(a_cmd[0].cmd[0])))
-											|| (!ft_strncmp(a_cmd[0].cmd[0], "unset", ft_strlen(a_cmd[0].cmd[0])))))  //костыльный костыль, но и пофиг
+											|| (!ft_strncmp(a_cmd[0].cmd[0], "unset", ft_strlen(
+			a_cmd[0].cmd[0])))))  //костыльный костыль, но и пофиг
 	{
 		if (i == 0)
 		{ //а тут надо только для 0 команды? а если это вторая, десятая? не проходит a=1 | ls
@@ -140,7 +151,7 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	}
 	if (cmd || aur_cmd || a_cmd[i].files || local_cmd)
 		not_found = 0;
-	g_error = 0;
+//	g_error = 0; //todo прверять на ошибки
 	if (aur_cmd)
 		a_cmd[i].cmd[0] = aur_cmd;
 	else if (local_cmd)
@@ -213,7 +224,7 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	}
 	waitpid(pid, &status, 0);
 	if (g_error != 130 && g_error != 131)
-		g_error = WEXITSTATUS(status);
+		g_error = WEXITSTATUS(status); //todo затирает 126 которая приходит из кейса ./неИсплняемыйФайл
 //	} else
 //		ft_command_not_found(a_cmd[i].cmd[0]);
 	if (!aur_cmd && !local_cmd && !cmd)
