@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 17:45:27 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/20 23:28:40 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/23 16:34:20 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ void	ft_export(t_memory *mem, char **strs_cmd)
 	else
 		while (strs_cmd && strs_cmd[i])
 		{
+			if (strs_cmd[i][0] == '=' || strs_cmd[i][0] == '+')
+				return;
 			name = strs_cmd[i];
 			splt = ft_wise_split(strs_cmd[i]);
 			if (splt)

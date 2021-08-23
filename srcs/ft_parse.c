@@ -46,35 +46,39 @@ char *ft_spec_char_loop(char **str)
 int ft_check_for_equal_sign(char ***strs_cmd, t_memory *mem)
 {
 	int i;
-	char **new_str_cmd;
+	//char **new_str_cmd;
+	int	ret;
 
 	i = 0;
-	if (strs_cmd[0][0] != NULL &&
-		(strs_cmd[0][0][0] == '=' || strs_cmd[0][0][0] == '+')) //19.08.2021 Сергей (иначе крашится)
-		return (1);
+	// if (strs_cmd[0][0] != NULL &&
+	// 	(strs_cmd[0][0][0] == '=' || strs_cmd[0][0][0] == '+')) //19.08.2021 Сергей (иначе крашится)
+	// 	return (1);
+	// while (strs_cmd && (*strs_cmd)[i])
+	// {
+	// 	if ((!ft_strnstr(strs_cmd[0][i], "+=", ft_strlen(strs_cmd[0][i]))
+	// 		  || !ft_strnstr(strs_cmd[0][i], "=", ft_strlen(strs_cmd[0][i]))))
+	// 	{
+	// 		if (i)
+	// 		{
+	// 			new_str_cmd = ft_strarrcopy(*(strs_cmd) + i);
+	// 			free_text(*strs_cmd, ft_maslen(*strs_cmd));
+	// 			*strs_cmd = new_str_cmd;
+	// 		}
+	// 		return (0);
+	// 	}
+	// 	i++;
+	// }
 	while (strs_cmd && (*strs_cmd)[i])
 	{
-		if (!(ft_strnstr(strs_cmd[0][i], "+=", ft_strlen(strs_cmd[0][i]))
-			  || ft_strnstr(strs_cmd[0][i], "=", ft_strlen(strs_cmd[0][i]))))
-		{
-			if (i)
-			{
-				new_str_cmd = ft_strarrcopy(*(strs_cmd) + i);
-				free_text(*strs_cmd, ft_maslen(*strs_cmd));
-				*strs_cmd = new_str_cmd;
-			}
+		if (strs_cmd[0][i][0] == '=' || strs_cmd[0][i][0] == '+')
 			return (0);
-		}
-		i++;
+		ret = ft_check_var(strs_cmd[0][i++], mem);
 	}
-	i = 0;
-	while (strs_cmd && (*strs_cmd)[i])
-		ft_check_var(strs_cmd[0][i++], mem);
-	free_text(*strs_cmd, ft_maslen(*strs_cmd));
-	return (1);
+	//free_text(*strs_cmd, ft_maslen(*strs_cmd));
+	return (ret);
 }
 
-void ft_check_var(char *strs_cmd, t_memory *mem)
+int ft_check_var(char *strs_cmd, t_memory *mem)
 {
 	char **splt;
 	char *tmp_splt;
@@ -97,9 +101,14 @@ void ft_check_var(char *strs_cmd, t_memory *mem)
 		splt = ft_split(strs_cmd, '=');
 		isPlus = 0;
 	}
-	splt[1] = ft_spec_char_loop(&splt[1]);
-	ft_add_var(splt, mem, isPlus);
-	free_text(splt, ft_maslen(splt));
+	if (splt)
+	{
+		splt[1] = ft_spec_char_loop(&splt[1]);
+		ft_add_var(splt, mem, isPlus);
+		free_text(splt, ft_maslen(splt));
+		return (1);
+	}
+	return (0);
 }
 
 void ft_add_var(char **splt, t_memory *mem, int is_plus)
