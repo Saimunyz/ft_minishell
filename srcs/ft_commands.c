@@ -122,11 +122,11 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	local_cmd = NULL;
 	aur_cmd = NULL;
 	cmd = NULL;
-	if (ft_strlen(a_cmd[0].cmd[0]) != 0 && (!ft_strncmp(a_cmd[0].cmd[0], "exit", ft_strlen(a_cmd[0].cmd[0]))
+	if (i == 0 && (ft_strlen(a_cmd[0].cmd[0]) != 0 && (!ft_strncmp(a_cmd[0].cmd[0], "exit", ft_strlen(a_cmd[0].cmd[0]))
 		|| (!ft_strncmp(a_cmd[0].cmd[0], "cd", ft_strlen(a_cmd[0].cmd[0])))
 											|| (!ft_strncmp(a_cmd[0].cmd[0], "export", ft_strlen(a_cmd[0].cmd[0])))
 											|| (!ft_strncmp(a_cmd[0].cmd[0], "unset", ft_strlen(
-			a_cmd[0].cmd[0])))))  //костыльный костыль, но и пофиг
+			a_cmd[0].cmd[0])))))) //костыльный костыль, но и пофиг
 	{
 		if (i == 0)
 		{ //а тут надо только для 0 команды? а если это вторая, десятая? не проходит a=1 | ls
@@ -142,6 +142,8 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 		if (!local_cmd)
 		{
 			ft_command_not_found(a_cmd[i].cmd[0]);
+			if (!a_cmd[i].files)
+				ft_clear_arr(a_cmd[i].cmd);
 			ft_clear_arr(env);
 			return;
 		}
