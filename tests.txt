@@ -38,6 +38,7 @@
 - echo 'ls | ls'
 - echo "ls | ls"
 - ls | grep a | grep b
+- echo safd | cat -e
 - asfd | grep a
 - asfd | ls
 - $?$?

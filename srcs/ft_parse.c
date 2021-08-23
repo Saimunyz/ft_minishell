@@ -359,7 +359,7 @@ char *ft_find_doll(char *line, t_memory *mem)
 	tmp = ft_substr(line, 0, end);
 	if (*line == 34 || *line == 39) //костыли
 		return (0);
-	if (end == 1 && *line == 34) //костыли
+	if (end == 1 && *line == '$' && *(line + 1) == '"') //костыли для "$"
 		return (ft_strdup("$"));
 	find = ft_lstfind_struct(mem->env, tmp + 1);
 	if (!find)
