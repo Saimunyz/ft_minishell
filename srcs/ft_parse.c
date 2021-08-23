@@ -141,7 +141,7 @@ char ft_spec_char(char spec_char, char line)
 	return (spec_char);
 }
 
-void ft_start_commands(char **strs_cmd, t_memory *mem, int not_found) //add ref
+void ft_start_commands(char **strs_cmd, t_memory *mem, int not_found, char **env) //add ref
 {
 	int splt_len;
 
@@ -170,7 +170,9 @@ void ft_start_commands(char **strs_cmd, t_memory *mem, int not_found) //add ref
 	{
 //		char *newenviron[0]; //todo изменить
 //		newenviron[0] = NULL;
-		execve(strs_cmd[0], strs_cmd, ft_lst2str(mem->env));
+//		execve(strs_cmd[0], strs_cmd, ft_lst2str(mem->env)); //22.08.21 free
+		execve(strs_cmd[0], strs_cmd, env);
+//		execve(strs_cmd[0], strs_cmd, newenviron);
 	}
 //		ft_commands(a_cmd, i);
 //	free_text(strs_cmd, ft_maslen(strs_cmd));  //todo ref разобратся с косяком и врнуть

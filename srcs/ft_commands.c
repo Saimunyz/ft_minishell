@@ -115,7 +115,9 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	char *aur_cmd;
 	int status;
 	int not_found;
+	char **env;
 
+	env = ft_lst2str(mem->env);
 	not_found = 1;
 	local_cmd = NULL;
 	aur_cmd = NULL;
@@ -127,7 +129,8 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	{
 		if (i == 0)
 		{ //а тут надо только для 0 команды? а если это вторая, десятая? не проходит a=1 | ls
-			ft_start_commands(a_cmd[i].cmd, mem, 0);
+			ft_start_commands(a_cmd[i].cmd, mem, 0, env);
+			ft_clear_arr(env);
 			return;
 		}
 	}
@@ -138,6 +141,7 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 		if (!local_cmd)
 		{
 			ft_command_not_found(a_cmd[i].cmd[0]);
+			ft_clear_arr(env);
 			return;
 		}
 	}
@@ -184,14 +188,14 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 			dup2(a_cmd[i].fd[1], 1);
 			close(a_cmd[i].fd[0]);
 			close(a_cmd[i].fd[1]);
-			ft_start_commands(a_cmd[i].cmd, mem, not_found);
+			ft_start_commands(a_cmd[i].cmd, mem, not_found, env);
 			exit(0);
 		} else if (a_cmd[i].p_next)
 		{
 			dup2(a_cmd[i].fd[1], 1);
 			close(a_cmd[i].fd[0]);
 			close(a_cmd[i].fd[1]);
-			ft_start_commands(a_cmd[i].cmd, mem, not_found);
+			ft_start_commands(a_cmd[i].cmd, mem, not_found, env);
 			exit(0);
 
 		} else if (a_cmd[i].p_priv)
@@ -199,13 +203,13 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 			dup2(a_cmd[i - 1].fd[0], 0);
 			close(a_cmd[i - 1].fd[0]);
 			close(a_cmd[i - 1].fd[1]);
-			ft_start_commands(a_cmd[i].cmd, mem, not_found);
+			ft_start_commands(a_cmd[i].cmd, mem, not_found, env);
 			exit(0);
 		} else
 		{
 			close(a_cmd[i].fd[0]);
 			close(a_cmd[i].fd[1]);
-			ft_start_commands(a_cmd[i].cmd, mem, not_found);
+			ft_start_commands(a_cmd[i].cmd, mem, not_found, env);
 			exit(0);
 		}
 	}
@@ -238,4 +242,5 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 
 	if (!a_cmd[i].files)
 		ft_clear_arr(a_cmd[i].cmd);
+	ft_clear_arr(env);
 }

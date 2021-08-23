@@ -189,6 +189,7 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem)
 	int		fd;
 	t_list	*tmp;
 	t_file	*f;
+	char 	**env;
 
 	tmp = cmd->files;
 	if (ft_check_filename(tmp))
@@ -206,5 +207,7 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem)
 		}
 		tmp = tmp->next;
 	}
-	ft_start_commands(cmd->cmd, mem, 0);
+	env = ft_lst2str(mem->env); //22.08.21 free
+	ft_start_commands(cmd->cmd, mem, 0, env);
+	ft_clear_arr(env);; //22.08.21 free
 }

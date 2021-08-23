@@ -114,8 +114,8 @@ cat << a
 
 
 Утечки
-- $PWD
+- $PWD +
 - $PATH
-- env
+- env +
 
 
