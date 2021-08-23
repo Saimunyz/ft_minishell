@@ -148,7 +148,6 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 			return;
 		}
 	}
-
 	if (!local_cmd)
 		aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
 	if (!aur_cmd && !local_cmd)

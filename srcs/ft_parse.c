@@ -550,7 +550,8 @@ void ft_parse(char *line, char *home, t_memory *mem)
 			i++;
 			continue;
 		}
-		if (a_cmd->cmd[0][0] == '\3')
+//		if (a_cmd->cmd[0][0] == '\3') //23.08.21 free
+		if (a_cmd[i].cmd[0][0] == '\3')
 			return;
 		if (!a_cmd[i].red)
 			ft_commands(a_cmd, i, mem);
