@@ -131,6 +131,7 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 		if (i == 0)
 		{ //а тут надо только для 0 команды? а если это вторая, десятая? не проходит a=1 | ls
 			ft_start_commands(a_cmd[i].cmd, mem, 0, env);
+			ft_clear_arr(a_cmd[i].cmd);
 			ft_clear_arr(env);
 			return;
 		}
