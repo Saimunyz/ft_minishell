@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 17:05:18 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/23 12:59:39 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/23 14:04:49 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,11 @@ static int	ft_check_exit_num(char *str)
 {
 	int	i;
 
+	if ((str[0] == '-' || str[0] == '+') && str[1] == '\0')
+		return (1);
 	i = 0;
+	if (str[0] == '-' || str[0] == '+')
+		i = 1;
 	while(str[i])
 	{
 		if (!ft_isdigit(str[i]))
@@ -40,14 +44,16 @@ void	ft_exit(char **cmd)
 		printf("minishell$: exit: %s: numeric argument required\n", cmd[1]);
 		exit(255);
 	}
-	num = ft_atoi(cmd[1]);
-	if (num > 255)
-		num = num % 256;
 	if (cmd[2])
 	{
 		printf("exit\nminishell$: exit: too many arguments\n");
 		exit(1);
 	}
+	num = ft_atoi(cmd[1]);
+	if (num > 255)
+		num = num % 256;
+	else if (num < 0)
+		num = 256 + (num + 256 * (num % 256));
 	printf("exit\n");
 	exit(num);
 }
