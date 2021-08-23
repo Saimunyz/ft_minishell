@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/22 18:50:44 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/23 11:14:03 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	ft_del_line(int *len, char **line);
 //void	ft_echo(char **str, t_memory *mem);
 void	ft_echo(char **str);
 void	ft_cd(char *path, t_memory *mem);
-void	ft_exit(void);
+void	ft_exit(char **cmd);
 void	ft_commands(t_cmd *a_cmd, int i, t_memory *mem);
 void	ft_init_read(t_hist *hist, char **line, char **lettr, char *home);
 void	ft_write_history(char *command, char *home);

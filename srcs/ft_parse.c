@@ -157,7 +157,7 @@ void ft_start_commands(char **strs_cmd, t_memory *mem, int not_found, char **env
 	else if (!ft_strncmp(strs_cmd[0], "cd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_cd(strs_cmd[1], mem);        //Todo доделать "-bash: cd: too many arguments"
 	else if (!ft_strncmp(strs_cmd[0], "exit", ft_strlen(strs_cmd[0])) && splt_len != 0)
-		ft_exit();
+		ft_exit(strs_cmd);
 	else if (!ft_strncmp(strs_cmd[0], "env", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_env(mem);    //Todo он вроде как то с параметрами работает, надо расспросить как
 	else if (!ft_strncmp(strs_cmd[0], "export", ft_strlen(strs_cmd[0])) && splt_len != 0)
