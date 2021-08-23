@@ -97,7 +97,9 @@ from left to right +
 - "$" крашится +
 - cat < b | >a | cat < b крашится +
 - echo hello > b +
-- echo safd | cat -e
+- echo safd | cat -e +
+
+- >a > b >> - не правильно выводит сообщение
 
 Лишняя строка при echo a > 1, так как заменяем строку на echo
 в функции ft_redirect();
