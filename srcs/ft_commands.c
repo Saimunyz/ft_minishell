@@ -29,8 +29,8 @@ char *ft_find_aur_command(char *command)
 		return ft_strdup("echo");
 	else if (!ft_strncmp(command, "cd", ft_strlen(command)) && splt_len != 0)
 		return "cd";
-	else if (!ft_strncmp(command, "exit", ft_strlen(command)) && splt_len != 0)
-		ft_exit();
+	//else if (!ft_strncmp(command, "exit", ft_strlen(command)) && splt_len != 0)
+	//	return ft_strdup("exit");
 	else if (!ft_strncmp(command, "env", ft_strlen(command)) && splt_len != 0)
 		return ft_strdup("env");
 	else if (!ft_strncmp(command, "export", ft_strlen(command)) && splt_len != 0)
@@ -122,7 +122,8 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	local_cmd = NULL;
 	aur_cmd = NULL;
 	cmd = NULL;
-	if (ft_strlen(a_cmd[0].cmd[0]) != 0 && ((!ft_strncmp(a_cmd[0].cmd[0], "cd", ft_strlen(a_cmd[0].cmd[0])))
+	if (ft_strlen(a_cmd[0].cmd[0]) != 0 && (!ft_strncmp(a_cmd[0].cmd[0], "exit", ft_strlen(a_cmd[0].cmd[0]))
+		|| (!ft_strncmp(a_cmd[0].cmd[0], "cd", ft_strlen(a_cmd[0].cmd[0])))
 											|| (!ft_strncmp(a_cmd[0].cmd[0], "export", ft_strlen(a_cmd[0].cmd[0])))
 											|| (!ft_strncmp(a_cmd[0].cmd[0], "unset", ft_strlen(
 			a_cmd[0].cmd[0])))))  //костыльный костыль, но и пофиг
