@@ -578,7 +578,7 @@ void ft_parse(char *line, char *home, t_memory *mem)
 	int j;
 
 	i = 0;
-	j = 0;
+
 	a_cmd = ft_split_string(line, mem);
 	ft_write_history(line, home); //перенес вверх, что бы все писало (Сергей)
 	while (a_cmd && a_cmd[i].cmd)
@@ -586,6 +586,10 @@ void ft_parse(char *line, char *home, t_memory *mem)
 		if (ft_variables(a_cmd[i].cmd, mem))
 		{
 			rm_pipe(&a_cmd, i);
+			j = 0;
+			while (a_cmd->cmd[j]) //Сергей 24.08.21
+				free(a_cmd->cmd[j++]);
+			free(a_cmd[i].cmd);
 			i++;
 			continue;
 		}
@@ -596,12 +600,11 @@ void ft_parse(char *line, char *home, t_memory *mem)
 			ft_commands(a_cmd, i, mem);
 		if (a_cmd[i].echo) //Сергей 24.08.21
 		{
+			j = 0;
 			while (a_cmd->cmd[j]) //Сергей 24.08.21
 				free(a_cmd->cmd[j++]);
 			free(a_cmd[i].cmd);
 		}
-//		if (a_cmd[i].echo) //Сергей 24.08.21
-//			free(a_cmd[i].cmd);
 		i++;
 	}
 	free(a_cmd);
