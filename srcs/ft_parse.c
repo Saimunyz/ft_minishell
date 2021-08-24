@@ -96,7 +96,8 @@ int	ft_variables(char **strs_cmd, t_memory *mem)
 		return (0);
 	while (strs_cmd && strs_cmd[i])
 	{
-		if (ft_strnstr(strs_cmd[i], "=", ft_strlen(strs_cmd[i])))
+//		if (ft_strnstr(strs_cmd[i], "=", ft_strlen(strs_cmd[i])))
+		if (strs_cmd[i +1] && ft_strnstr(strs_cmd[i], "=", ft_strlen(strs_cmd[i]))) //Сергей 24.08.2021 Костыль
 		{
 			ft_check_var(strs_cmd[i], mem);
 			is_var = 1;
