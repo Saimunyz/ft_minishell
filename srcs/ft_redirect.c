@@ -50,9 +50,9 @@ void	ft_free_file(void *file)
 
 static void	ft_start_redirect(t_cmd *a_cmd, t_memory *mem)
 {
-	//int	i;
+//	int	i;
 
-	//i = 0;
+//	i = 0;
 
 	ft_commands(a_cmd, 0, mem);
 	//ft_redirect(a_cmd, mem);
@@ -61,8 +61,12 @@ static void	ft_start_redirect(t_cmd *a_cmd, t_memory *mem)
 	unlink("temporary");
 	if (errno != 0)
 		errno = 0;
-	// while (a_cmd->cmd[i])
-	// 	free(a_cmd->cmd[i++]); ??? не получается почистить //TODO
+//	while (a_cmd->cmd[i]) //Сергей 24.08.21
+//		free(a_cmd->cmd[i++]);
+	ft_clear_arr(a_cmd->cmd);
+	a_cmd->echo = 1;
+	a_cmd->cmd = (char **) malloc (sizeof (char **) * 3);
+	a_cmd->echo = 1; //Сергей 24.08.21
 	a_cmd->cmd[0] = ft_strdup("echo");
 	a_cmd->cmd[1] = ft_strdup("-n");
 	a_cmd->cmd[2] = NULL;

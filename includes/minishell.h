@@ -44,6 +44,7 @@ typedef struct	s_cmd
 	int		original;
 	t_list	*files;
 	int 	red;	//Сергей 23.08.21
+	int 	echo;	//Сергей 23.08.21
 }				t_cmd;
 
 typedef struct	s_var
