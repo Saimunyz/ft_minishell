@@ -601,8 +601,8 @@ void ft_parse(char *line, char *home, t_memory *mem)
 		if (a_cmd[i].echo) //Сергей 24.08.21
 		{
 			j = 0;
-			while (a_cmd->cmd[j]) //Сергей 24.08.21
-				free(a_cmd->cmd[j++]);
+			while (a_cmd[i].cmd[j]) //Сергей 24.08.21
+				free(a_cmd[i].cmd[j++]);
 			free(a_cmd[i].cmd);
 		}
 		i++;
