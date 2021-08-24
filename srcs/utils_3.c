@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/21 14:28:17 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/21 14:47:41 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/24 17:47:43 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,13 @@ char	**ft_lst2str(t_list *lst)
 	}
 	env[i] = NULL;
 	return (env);
+}
+
+int	ft_check_symbols(char chr)
+{
+	if (chr == '\n' || chr == '\4' || chr == '\t' || chr == '\034')
+		return (1);
+	else if (!ft_isprint(chr))
+		return (1);
+	return (0);
 }

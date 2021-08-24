@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:09:41 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/21 14:48:49 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/24 17:45:51 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,7 @@ int ft_write_char(char *character, char **line, t_hist *hist)
 		return (len);
 	else if (!ft_strncmp(character, "\e[C", ret))
 		return (len);
-	else if (*character == '\n' || *character == '\4' || *character == '\t' ||
-			 *character == '\034') // сделать функция запрещенных символов
+	else if (ft_check_symbols(*character))
 		return (len);
 	else
 	{
