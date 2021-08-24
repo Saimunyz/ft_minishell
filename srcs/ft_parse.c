@@ -43,35 +43,68 @@ char *ft_spec_char_loop(char **str)
 	return tmp;
 }
 
-int ft_check_for_equal_sign(char ***strs_cmd, t_memory *mem)
+int	ft_chek_for_equal_sign(char **strs_cmd)
 {
-	int i;
-	char **new_str_cmd;
+	int	i;
 
 	i = 0;
-	if (strs_cmd[0][0] != NULL &&
-		(strs_cmd[0][0][0] == '=' || strs_cmd[0][0][0] == '+')) //19.08.2021 Сергей (иначе крашится)
-		return (1);
-	while (strs_cmd && (*strs_cmd)[i])
+	while (strs_cmd && strs_cmd[i])
 	{
-		if (!(ft_strnstr(strs_cmd[0][i], "+=", ft_strlen(strs_cmd[0][i]))
-			  || ft_strnstr(strs_cmd[0][i], "=", ft_strlen(strs_cmd[0][i]))))
+		if (strs_cmd[i][0] == '=' || strs_cmd[i][0] == '+')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	ft_variables(char **strs_cmd, t_memory *mem)
+{
+	// int i;
+	// char **new_str_cmd;
+
+	// i = 0;
+	// if (strs_cmd[0][0] != NULL &&
+	// 	(strs_cmd[0][0][0] == '=' || strs_cmd[0][0][0] == '+')) //19.08.2021 Сергей (иначе крашится)
+	// 	return (1);
+	// while (strs_cmd && (*strs_cmd)[i])
+	// {
+	// 	if (!(ft_strnstr(strs_cmd[0][i], "+=", ft_strlen(strs_cmd[0][i]))
+	// 		  || ft_strnstr(strs_cmd[0][i], "=", ft_strlen(strs_cmd[0][i]))))
+	// 	{
+	// 		if (i)
+	// 		{
+	// 			new_str_cmd = ft_strarrcopy(*(strs_cmd) + i);
+	// 			free_text(*strs_cmd, ft_maslen(*strs_cmd));
+	// 			*strs_cmd = new_str_cmd;
+	// 		}
+	// 		return (0);
+	// 	}
+	// 	i++;
+	// }
+	// i = 0;
+	// while (strs_cmd && (*strs_cmd)[i])
+	// 	ft_check_var(strs_cmd[0][i++], mem);
+	// free_text(*strs_cmd, ft_maslen(*strs_cmd));
+	// return (1);
+
+	int	i;
+	int	is_var;
+
+	i = 0;
+	is_var = 0;
+	if (ft_chek_for_equal_sign(strs_cmd))
+		return (0);
+	while (strs_cmd && strs_cmd[i])
+	{
+		if (ft_strnstr(strs_cmd[i], "=", ft_strlen(strs_cmd[i])))
 		{
-			if (i)
-			{
-				new_str_cmd = ft_strarrcopy(*(strs_cmd) + i);
-				free_text(*strs_cmd, ft_maslen(*strs_cmd));
-				*strs_cmd = new_str_cmd;
-			}
-			return (0);
+			ft_check_var(strs_cmd[i], mem);
+			is_var = 1;
 		}
 		i++;
 	}
-	i = 0;
-	while (strs_cmd && (*strs_cmd)[i])
-		ft_check_var(strs_cmd[0][i++], mem);
-	free_text(*strs_cmd, ft_maslen(*strs_cmd));
-	return (1);
+	return (is_var);
+
 }
 
 void ft_check_var(char *strs_cmd, t_memory *mem)
@@ -97,9 +130,12 @@ void ft_check_var(char *strs_cmd, t_memory *mem)
 		splt = ft_split(strs_cmd, '=');
 		isPlus = 0;
 	}
-	splt[1] = ft_spec_char_loop(&splt[1]);
-	ft_add_var(splt, mem, isPlus);
-	free_text(splt, ft_maslen(splt));
+	if (splt)
+	{
+		splt[1] = ft_spec_char_loop(&splt[1]);
+		ft_add_var(splt, mem, isPlus);
+		free_text(splt, ft_maslen(splt));
+	}
 }
 
 void ft_add_var(char **splt, t_memory *mem, int is_plus)
@@ -544,14 +580,14 @@ void ft_parse(char *line, char *home, t_memory *mem)
 	ft_write_history(line, home); //перенес вверх, что бы все писало (Сергей)
 	while (a_cmd && a_cmd[i].cmd)
 	{
-		if (ft_check_for_equal_sign(&a_cmd[i].cmd, mem))
+		if (ft_variables(a_cmd[i].cmd, mem))
 		{
 			rm_pipe(&a_cmd, i);
 			i++;
 			continue;
 		}
 //		if (a_cmd->cmd[0][0] == '\3') //23.08.21 free
-		if (a_cmd[i].cmd[0][0] == '\3')
+		if (a_cmd[i].cmd[0]&& a_cmd[i].cmd[0][0] == '\3')
 			return;
 		if (!a_cmd[i].red)
 			ft_commands(a_cmd, i, mem);

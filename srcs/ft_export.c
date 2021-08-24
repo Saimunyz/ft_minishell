@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 17:45:27 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/20 23:28:40 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/24 13:38:39 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,11 @@ void	ft_export(t_memory *mem, char **strs_cmd)
 	char	*name;
 
 	i = 1;
+	if (ft_chek_for_equal_sign(strs_cmd))
+	{
+		printf("export: not a valid identifier");
+		return ;
+	}
 	if (!strs_cmd[1])
 		ft_print_export(mem);
 	else

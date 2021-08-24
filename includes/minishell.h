@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/23 11:14:03 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/24 13:21:32 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,4 +118,5 @@ void	ft_sigquit_handler(int num);
 char	*ft_getenv(char *name, t_memory *mem);
 char	**ft_lst2str(t_list *lst);
 void	ft_clear_arr(char **arr);
+int		ft_chek_for_equal_sign(char **strs_cmd);
 #endif
