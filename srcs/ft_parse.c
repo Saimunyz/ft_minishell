@@ -439,6 +439,7 @@ void ft_change_var(char **line, t_memory *mem)
 	char *num;
 	int size;
 	char	*tmp_find;
+	char	*tmp_tmp;
 
 	spec_char = 0;
 	tmp = 0; //возможно избыточно
@@ -466,7 +467,10 @@ void ft_change_var(char **line, t_memory *mem)
 		{
 			i = 0;
 			num = ft_itoa(g_error);
-			tmp = ft_realloc(tmp, size + ft_strlen(num));
+//			tmp = ft_realloc(tmp, size + ft_strlen(num)); //Сергей 25.08.21 течет (или ошибку выдает) внутри
+			tmp_tmp = (char *) malloc((size + ft_strlen(num) )* sizeof(char));//Сергей 25.08.21
+			free (tmp); //Сергей 25.08.21
+			tmp = tmp_tmp; //Сергей 25.08.21
 			while (num[i])
 				tmp[j++] = num[i++];
 			free(num);
