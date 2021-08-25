@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 17:45:27 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/24 13:38:39 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/25 14:37:24 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,17 @@ char	**ft_wise_split(char *strs_cmd)
 	return (splt);
 }
 
+int	ft_chek_name(char *name, int *i)
+{
+	if (!ft_isalpha(name[0]))
+	{
+		printf("minishell$: export: '%s': not a valid identifier\n", name);
+		(*i)++;
+		return (1);
+	}
+	return (0);
+}
+
 void	ft_export(t_memory *mem, char **strs_cmd)
 {
 	char	**splt;
@@ -89,17 +100,14 @@ void	ft_export(t_memory *mem, char **strs_cmd)
 	char	*name;
 
 	i = 1;
-	if (ft_chek_for_equal_sign(strs_cmd))
-	{
-		printf("export: not a valid identifier");
-		return ;
-	}
 	if (!strs_cmd[1])
 		ft_print_export(mem);
 	else
 		while (strs_cmd && strs_cmd[i])
 		{
 			name = strs_cmd[i];
+			if (ft_chek_name(name, &i))
+				continue;
 			splt = ft_wise_split(strs_cmd[i]);
 			if (splt)
 			{

@@ -43,20 +43,6 @@ char *ft_spec_char_loop(char **str)
 	return tmp;
 }
 
-int	ft_chek_for_equal_sign(char **strs_cmd)
-{
-	int	i;
-
-	i = 0;
-	while (strs_cmd && strs_cmd[i])
-	{
-		if (strs_cmd[i][0] == '=' || strs_cmd[i][0] == '+')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 int	ft_variables(char **strs_cmd, t_memory *mem)
 {
 	// int i;
@@ -88,22 +74,23 @@ int	ft_variables(char **strs_cmd, t_memory *mem)
 	// return (1);
 
 	int	i;
-	int	is_var;
 
 	i = 0;
-	is_var = 0;
-	if (ft_chek_for_equal_sign(strs_cmd))
-		return (0);
+	// if (ft_chek_for_equal_sign(strs_cmd))
+	// 	return (0);
 	while (strs_cmd && strs_cmd[i])
 	{
-		if (ft_strnstr(strs_cmd[i], "=", ft_strlen(strs_cmd[i])))
-		{
-			ft_check_var(strs_cmd[i], mem);
-			is_var = 1;
-		}
+		if (!ft_strnstr(strs_cmd[i], "=", ft_strlen(strs_cmd[i])) || strs_cmd[i][0] == '=')
+			return (0);
 		i++;
 	}
-	return (is_var);
+	i = 0;
+	while (strs_cmd && strs_cmd[i])
+	{
+		ft_check_var(strs_cmd[i], mem);
+		i++;
+	}
+	return (1);
 
 }
 
