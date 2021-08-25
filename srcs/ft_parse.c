@@ -490,7 +490,7 @@ void ft_change_var(char **line, t_memory *mem)
 				tmp_find = str_find; //Сергей 25.08.21
 				(*line)++;
 				while (*str_find ||
-					   (**line && **line != ' ' && **line != '$' && **line != 39 && **line != 34)) //16.08.21
+					   (**line && **line != ' ' && **line != '$' && **line != 39 && **line != 34 && **line != '=')) //25.08.21
 				{
 					if (*str_find)
 					{
@@ -498,7 +498,7 @@ void ft_change_var(char **line, t_memory *mem)
 						j++;
 						str_find++;
 					}
-					while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$')  //16.08.21
+					while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' && **line != '=')  //25.08.21
 						(*line)++;
 				}
 				free (tmp_find); //Сергей 25.08.21
