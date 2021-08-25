@@ -189,7 +189,7 @@ void ft_start_commands(char **strs_cmd, t_memory *mem, int not_found, char **env
 		ft_unset(mem, strs_cmd);
 //	else if (strs_cmd[0][0] == '$')		//Это теперь не здесь иначе не работает "$a  $b"
 //		ft_print_var(strs_cmd[0], mem);
-	else if (*strs_cmd[0] != '\3')
+	else if (*strs_cmd[0] != '\3')  //сергей 25.08.21
 	{
 //		char *newenviron[0]; //todo изменить
 //		newenviron[0] = NULL;

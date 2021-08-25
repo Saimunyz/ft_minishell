@@ -216,6 +216,7 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem)
 		tmp = tmp->next;
 	}
 	env = ft_lst2str(mem->env); //22.08.21 free
-	ft_start_commands(cmd->cmd, mem, 0, env);
+	if (cmd->cmd[0]) //Сергей 25.08.21
+		ft_start_commands(cmd->cmd, mem, 0, env);
 	ft_clear_arr(env);; //22.08.21 free
 }

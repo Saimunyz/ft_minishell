@@ -158,6 +158,8 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	{
 		if (!ft_getenv("PATH", mem)) //21.08.21
 			cmd = NULL;
+		else if (!a_cmd[i].cmd[0])  //Сергей 25.08.21
+			cmd = NULL;  //Сергей 25.08.21
 		else
 			cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(ft_getenv("PATH", mem), ':')); //21.08.21
 	}
@@ -179,7 +181,8 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 		free(a_cmd[i].cmd[0]); //TODO вынести из if проверить что нет утечки.
 		a_cmd[i].cmd[0] = cmd;
 	}
-	pid = fork();
+	pid = fork(); //todo вернуть
+//pid = 0; // dell
 	if (pid == 0)
 	{
 		if (a_cmd[i].files)
