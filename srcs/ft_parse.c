@@ -80,7 +80,8 @@ int	ft_variables(char **strs_cmd, t_memory *mem)
 	// 	return (0);
 	while (strs_cmd && strs_cmd[i])
 	{
-		if (!ft_strnstr(strs_cmd[i], "=", ft_strlen(strs_cmd[i])) || strs_cmd[i][0] == '=')
+		if (!ft_strnstr(strs_cmd[i], "=", ft_strlen(strs_cmd[i])) || strs_cmd[i][0] == '='
+			|| !ft_isalpha(strs_cmd[i][0]))
 			return (0);
 		i++;
 	}
