@@ -365,7 +365,7 @@ int ft_find_space(char *str)
 		return (0);
 	while (str[i])
 	{
-		if (str[i] == ' ' || str[i] == '$' || str[i] == '"' || str[i] == 39) //16.08.21
+		if (str[i] == ' ' || str[i] == '$' || str[i] == '"' || str[i] == 39 || str[i] == '=') //25.08.21
 			return (i);
 		i++;
 	}
@@ -387,7 +387,7 @@ char *ft_find_doll(char *line, t_memory *mem)
 	{//костыли для "$"
 		free (tmp); //Сергей 25.08.21
 		return (ft_strdup("$"));
-	}
+	} // c=12
 	find = ft_lstfind_struct(mem->env, tmp + 1);
 	if (!find)
 		find = ft_lstfind_struct(mem->var, tmp + 1);
