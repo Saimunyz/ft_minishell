@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/09 20:22:02 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/21 17:28:19 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/25 21:15:29 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,13 +114,13 @@ char	*ft_read_input(char *stop)
 	char	*delim;
 	int		fd;
 
-	str = ft_strdup("");
+	str = (char *)malloc(sizeof(char) * 10000);
 	delim = ft_strjoin(stop, "\n");
 	line = ft_strdup("");
 	while (1)
 	{
 		ft_putstr_fd("> ", 1);
-		fd = read(STDIN_FILENO, str, 10000000);
+		fd = read(STDIN_FILENO, str, 10000);
 		str[fd] = '\0';
 		if (!ft_strncmp(str, delim, ft_strlen(str)))
 			break;
