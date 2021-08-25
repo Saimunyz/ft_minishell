@@ -64,7 +64,7 @@ static void	ft_start_redirect(t_cmd *a_cmd, t_memory *mem)
 //	while (a_cmd->cmd[i]) //Сергей 24.08.21
 //		free(a_cmd->cmd[i++]);
 	ft_clear_arr(a_cmd->cmd);
-	a_cmd->echo = 1;
+//	a_cmd->echo = 1; //dell
 	a_cmd->cmd = (char **) malloc (sizeof (char **) * 3);
 	a_cmd->echo = 1; //Сергей 24.08.21
 	a_cmd->cmd[0] = ft_strdup("echo");

@@ -73,8 +73,8 @@ char *ft_find_command(char *command, char **path)
 	char *cmd;
 	char **tmp_path;
 
-	if (ft_find_aur_command(command))
-		return ft_find_aur_command(command);
+//	if (ft_find_aur_command(command)) //Сергей 24.08.21
+//		return ft_find_aur_command(command);
 	tmp_path = path;
 	while (*path)
 	{
@@ -153,7 +153,8 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 		aur_cmd = a_cmd[i].cmd[0]; //Сергей 24.08.21
 	if (!local_cmd && !a_cmd[i].echo && !a_cmd[i].red)  //Сергей 24.08.21
 		aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
-	if (!aur_cmd && !local_cmd && !a_cmd[i].red)
+//	if (!aur_cmd && !local_cmd && !a_cmd[i].red) //Сергей 24.08.21
+	if (!aur_cmd && !local_cmd)
 	{
 		if (!ft_getenv("PATH", mem)) //21.08.21
 			cmd = NULL;
