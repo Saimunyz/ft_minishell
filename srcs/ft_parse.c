@@ -397,8 +397,11 @@ char *ft_find_doll(char *line, t_memory *mem)
 	tmp = ft_substr(line, 0, end);
 	if (*line == 34 || *line == 39) //костыли
 		return (0);
-	if (end == 1 && *line == '$' && *(line + 1) == '"') //костыли для "$"
+	if (end == 1 && *line == '$' && *(line + 1) == '"')
+	{//костыли для "$"
+		free (tmp); //Сергей 25.08.21
 		return (ft_strdup("$"));
+	}
 	find = ft_lstfind_struct(mem->env, tmp + 1);
 	if (!find)
 		find = ft_lstfind_struct(mem->var, tmp + 1);
@@ -406,7 +409,7 @@ char *ft_find_doll(char *line, t_memory *mem)
 	{
 		str_find = (char *) ((t_var *) find->content)->value; //TODO тут каст char * можно?
 		free(tmp);
-		return (str_find);
+		return (ft_strdup(str_find)); //Сергей 25.08.21 костыль для фри
 	}
 	free(tmp);
 	return (0);
@@ -416,6 +419,7 @@ int ft_len_doll(char *line, t_memory *mem)
 {
 	int len;
 	int doll;
+	char *tmp;
 
 	len = 0;
 	doll = 1;
@@ -424,7 +428,10 @@ int ft_len_doll(char *line, t_memory *mem)
 		if (*line == '$')
 		{
 			doll = 1;
-			len = len + ft_strlen(ft_find_doll(line, mem));
+			tmp = ft_find_doll(line, mem); //Сергей 25.08.21
+			len = len + ft_strlen(tmp); //Сергей 25.08.21
+			if (tmp)
+				free (tmp); //Сергей 25.08.21
 		}
 		if (doll && *line == ' ')
 			doll = 0;
@@ -445,6 +452,7 @@ void ft_change_var(char **line, t_memory *mem)
 	char spec_char;
 	char *num;
 	int size;
+	char	*tmp_find;
 
 	spec_char = 0;
 	tmp = 0; //возможно избыточно
@@ -487,6 +495,7 @@ void ft_change_var(char **line, t_memory *mem)
 					(*line)++;
 			} else
 			{
+				tmp_find = str_find; //Сергей 25.08.21
 				(*line)++;
 				while (*str_find ||
 					   (**line && **line != ' ' && **line != '$' && **line != 39 && **line != 34)) //16.08.21
@@ -500,6 +509,7 @@ void ft_change_var(char **line, t_memory *mem)
 					while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$')  //16.08.21
 						(*line)++;
 				}
+				free (tmp_find); //Сергей 25.08.21
 			}
 		} else
 		{
