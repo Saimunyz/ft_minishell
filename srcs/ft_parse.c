@@ -482,7 +482,8 @@ void ft_change_var(char **line, t_memory *mem)
 			if (!str_find)
 			{
 				(*line)++;
-				while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$')  //16.08.21
+//				while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$')  //16.08.21
+				while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' && **line != '=' )  //16.08.21
 					(*line)++;
 			} else
 			{
