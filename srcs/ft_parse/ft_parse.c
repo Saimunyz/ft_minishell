@@ -10,7 +10,8 @@ char ft_spec_char_step(char spec_char, char **line)
 			(*line)++;
 			return spec_char;
 		}
-	} else if (spec_char == **line)
+	}
+	else if (spec_char == **line)
 	{
 		(*line)++;
 		return (0);
@@ -43,41 +44,11 @@ char *ft_spec_char_loop(char **str)
 	return tmp;
 }
 
-int	ft_variables(char **strs_cmd, t_memory *mem)
+int ft_variables(char **strs_cmd, t_memory *mem)
 {
-	// int i;
-	// char **new_str_cmd;
-
-	// i = 0;
-	// if (strs_cmd[0][0] != NULL &&
-	// 	(strs_cmd[0][0][0] == '=' || strs_cmd[0][0][0] == '+')) //19.08.2021 Сергей (иначе крашится)
-	// 	return (1);
-	// while (strs_cmd && (*strs_cmd)[i])
-	// {
-	// 	if (!(ft_strnstr(strs_cmd[0][i], "+=", ft_strlen(strs_cmd[0][i]))
-	// 		  || ft_strnstr(strs_cmd[0][i], "=", ft_strlen(strs_cmd[0][i]))))
-	// 	{
-	// 		if (i)
-	// 		{
-	// 			new_str_cmd = ft_strarrcopy(*(strs_cmd) + i);
-	// 			free_text(*strs_cmd, ft_maslen(*strs_cmd));
-	// 			*strs_cmd = new_str_cmd;
-	// 		}
-	// 		return (0);
-	// 	}
-	// 	i++;
-	// }
-	// i = 0;
-	// while (strs_cmd && (*strs_cmd)[i])
-	// 	ft_check_var(strs_cmd[0][i++], mem);
-	// free_text(*strs_cmd, ft_maslen(*strs_cmd));
-	// return (1);
-
-	int	i;
+	int i;
 
 	i = 0;
-	// if (ft_chek_for_equal_sign(strs_cmd))
-	// 	return (0);
 	while (strs_cmd && strs_cmd[i])
 	{
 		if (!ft_strnstr(strs_cmd[i], "=", ft_strlen(strs_cmd[i])) || strs_cmd[i][0] == '='
@@ -101,8 +72,8 @@ void ft_check_var(char *strs_cmd, t_memory *mem)
 	char *tmp_splt;
 	int isPlus;
 
-	splt = NULL; // Исправить, так как будет сега!!!!!
-	isPlus = 0; // Вышли за кол-во строк :-)
+	splt = NULL;
+	isPlus = 0;
 	if (ft_strnstr(strs_cmd, "+=", ft_strlen(strs_cmd)))
 	{
 		splt = ft_split(strs_cmd, '+');
@@ -113,7 +84,8 @@ void ft_check_var(char *strs_cmd, t_memory *mem)
 			free(tmp_splt);
 		}
 		isPlus = 1;
-	} else if (ft_strnstr(strs_cmd, "=", ft_strlen(strs_cmd)))
+	}
+	else if (ft_strnstr(strs_cmd, "=", ft_strlen(strs_cmd)))
 	{
 		splt = ft_split(strs_cmd, '=');
 		isPlus = 0;
@@ -145,7 +117,8 @@ void ft_add_var(char **splt, t_memory *mem, int is_plus)
 		else
 			((t_var *) tmp_lst->content)->value = ft_strdup("");
 		free(value);
-	} else if (ft_maslen(splt) == 2)
+	}
+	else if (ft_maslen(splt) == 2)
 	{
 		tmp_var = (t_var *) malloc(sizeof(t_var));
 		tmp_var->name = ft_strdup(splt[0]);
@@ -160,7 +133,8 @@ char ft_spec_char(char spec_char, char line)
 	{
 		if (line == 34 || line == 39)
 			return line;
-	} else if (spec_char == line)
+	}
+	else if (spec_char == line)
 		return (0);
 	return (spec_char);
 }
@@ -172,8 +146,6 @@ void ft_start_commands(char **strs_cmd, t_memory *mem, int not_found, char **env
 	if (not_found)
 		return;
 	splt_len = ft_strlen(strs_cmd[0]);
-//	if (ft_check_for_equal_sign(&strs_cmd, mem))
-//		return ; //TODO тут наверное ошибка?
 	if (!ft_strncmp(strs_cmd[0], "pwd", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_pwd();
 	else if (!ft_strncmp(strs_cmd[0], "echo", ft_strlen(strs_cmd[0])) && splt_len != 0)
@@ -188,18 +160,8 @@ void ft_start_commands(char **strs_cmd, t_memory *mem, int not_found, char **env
 		ft_export(mem, strs_cmd);
 	else if (!ft_strncmp(strs_cmd[0], "unset", ft_strlen(strs_cmd[0])) && splt_len != 0)
 		ft_unset(mem, strs_cmd);
-//	else if (strs_cmd[0][0] == '$')		//Это теперь не здесь иначе не работает "$a  $b"
-//		ft_print_var(strs_cmd[0], mem);
 	else if (*strs_cmd[0] != '\3')  //сергей 25.08.21
-	{
-//		char *newenviron[0]; //todo изменить
-//		newenviron[0] = NULL;
-//		execve(strs_cmd[0], strs_cmd, ft_lst2str(mem->env)); //22.08.21 free
 		execve(strs_cmd[0], strs_cmd, env);
-//		execve(strs_cmd[0], strs_cmd, newenviron);
-	}
-//		ft_commands(a_cmd, i);
-//	free_text(strs_cmd, ft_maslen(strs_cmd));  //todo ref разобратся с косяком и врнуть
 }
 
 
@@ -246,7 +208,8 @@ int ft_count_commands(char *line)
 			ft_go_end_space(&line);
 			if (*line)
 				count++;
-		} else if (*line)
+		}
+		else if (*line)
 			line++;
 	}
 	return count;
@@ -319,7 +282,6 @@ int ft_count_strs(char *line)
 	while (*line)
 	{
 		spec_char = ft_spec_char(spec_char, *line);
-//		if ((*line == ';' || *line == '|') && *(line + 1) && !spec_char)
 		if (*line == '|' && *(line + 1) && !spec_char)
 		{
 			line++;
@@ -386,7 +348,7 @@ char *ft_find_doll(char *line, t_memory *mem)
 		return (0);
 	if (end == 1 && *line == '$' && *(line + 1) == '"')
 	{//костыли для "$"
-		free (tmp); //Сергей 25.08.21
+		free(tmp); //Сергей 25.08.21
 		return (ft_strdup("$"));
 	} // c=12
 	find = ft_lstfind_struct(mem->env, tmp + 1);
@@ -418,7 +380,7 @@ int ft_len_doll(char *line, t_memory *mem)
 			tmp = ft_find_doll(line, mem); //Сергей 25.08.21
 			len = len + ft_strlen(tmp); //Сергей 25.08.21
 			if (tmp)
-				free (tmp); //Сергей 25.08.21
+				free(tmp); //Сергей 25.08.21
 		}
 		if (doll && *line == ' ')
 			doll = 0;
@@ -439,8 +401,7 @@ void ft_change_var(char **line, t_memory *mem)
 	char spec_char;
 	char *num;
 	int size;
-	char	*tmp_find;
-//	char	*tmp_tmp;
+	char *tmp_find;
 
 	spec_char = 0;
 	tmp = 0; //возможно избыточно
@@ -468,30 +429,28 @@ void ft_change_var(char **line, t_memory *mem)
 		{
 			i = 0;
 			num = ft_itoa(g_error);
-//			size = size + ft_strlen(num);
-//			tmp = ft_realloc(tmp, size); //Сергей 25.08.21 течет (или ошибку выдает) внутри
-//			tmp_tmp = (char *) malloc((size + ft_strlen(num) )* sizeof(char));//Сергей 25.08.21
-//			free (tmp); //Сергей 25.08.21
-//			tmp = tmp_tmp; //Сергей 25.08.21
 			while (num[i])
 				tmp[j++] = num[i++];
 			free(num);
 			(*line) += 2;
-		} else if (**line == '$' && *((*line) + 1) != ' ' && *((*line) + 1) && spec_char != 39)
+		}
+		else if (**line == '$' && *((*line) + 1) != ' ' && *((*line) + 1) && spec_char != 39)
 		{
 			str_find = ft_find_doll(*line, mem);
 			if (!str_find)
 			{
 				(*line)++;
-//				while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$')  //16.08.21
-				while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' && **line != '=' )  //16.08.21
+				while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' &&
+					   **line != '=')  //16.08.21
 					(*line)++;
-			} else
+			}
+			else
 			{
 				tmp_find = str_find; //Сергей 25.08.21
 				(*line)++;
 				while (*str_find ||
-					   (**line && **line != ' ' && **line != '$' && **line != 39 && **line != 34 && **line != '=')) //25.08.21
+					   (**line && **line != ' ' && **line != '$' && **line != 39 && **line != 34 &&
+						**line != '=')) //25.08.21
 				{
 					if (*str_find)
 					{
@@ -499,12 +458,14 @@ void ft_change_var(char **line, t_memory *mem)
 						j++;
 						str_find++;
 					}
-					while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' && **line != '=')  //25.08.21
+					while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' &&
+						   **line != '=')  //25.08.21
 						(*line)++;
 				}
-				free (tmp_find); //Сергей 25.08.21
+				free(tmp_find); //Сергей 25.08.21
 			}
-		} else
+		}
+		else
 		{
 			tmp[j] = **line;
 			(*line)++;
@@ -517,19 +478,14 @@ void ft_change_var(char **line, t_memory *mem)
 }
 
 
-t_cmd *ft_split_string(char *line, t_memory *mem)
+
+t_cmd *ft_split_string_2(t_cmd *a_cmd, char *line, t_memory *mem, int count_strs)
 {
-	int count_strs;
 	int i;
 	int start;
 	int end;
 	char *tmp;
-	t_cmd *a_cmd;
 
-	count_strs = ft_count_strs(line);
-	if (count_strs == 0)
-		return NULL;
-	a_cmd = (t_cmd *) malloc(sizeof(t_cmd) * (count_strs + 1));
 	i = 0;
 	start = 0;
 	while (i < count_strs)
@@ -539,17 +495,31 @@ t_cmd *ft_split_string(char *line, t_memory *mem)
 		if (i > 0)
 			a_cmd[i].p_priv = a_cmd[i - 1].p_next;
 		tmp = ft_substr(line, start, end - start);
-		ft_change_var(&tmp, mem);    //преобразовываем $
-		//a_cmd[i].cmd = ft_parse_strings(tmp);	//add ref
+		ft_change_var(&tmp, mem);
 		ft_parse_redirect(&tmp, mem, &(a_cmd[i]));
 		pipe(a_cmd[i].fd);
-		free(tmp);  //todo вернуть, крашится
+		free(tmp);
 		start = end + 1;
 		i++;
 	}
-	a_cmd[i].cmd = 0; //add ref
-	return (a_cmd); //add ref
+	a_cmd[i].cmd = 0;
+	return (a_cmd);
 }
+
+t_cmd *ft_split_string(char *line, t_memory *mem)
+{
+	int count_strs;
+	t_cmd *a_cmd;
+
+	count_strs = ft_count_strs(line);
+	if (count_strs == 0)
+		return NULL;
+	a_cmd = (t_cmd *) malloc(sizeof(t_cmd) * (count_strs + 1));
+	ft_split_string_2(a_cmd, line, mem, count_strs);
+	return (a_cmd);
+}
+
+/////////////////////////////////////////////////////////////
 
 void rm_pipe(t_cmd **a_cmd, int i)
 {
