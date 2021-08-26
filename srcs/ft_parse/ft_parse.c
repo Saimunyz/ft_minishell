@@ -223,14 +223,40 @@ void clean_a_cmd(t_cmd *a_cmd)
 	a_cmd->echo = 0;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
+void parse_strings_2(int i, char *spec_char, char ***arr_strings, char **line)
+{
+	int j;
+	int len;
+
+	j = 0;
+	len = ft_str_len_space(*line) + 1;
+	(*arr_strings)[i] = (char *) malloc(sizeof(char) * len);
+	while (**line && j < len)
+	{
+		*spec_char = ft_spec_char_step(*spec_char, line);
+		if ((!(*spec_char) && (**line == 34 || **line == 39)) || (*spec_char) == **line)  //18.08.2021
+			continue;
+		(*arr_strings)[i][j] = **line;
+		if ((**line == ' ' || !(*line)) && !(*spec_char))
+		{
+			ft_go_end_space(line);
+			break;
+		}
+		j++;
+		if (**line)
+			(*line)++;
+	}
+	(*arr_strings)[i][j] = '\0';
+}
+
 char **ft_parse_strings(char *line)
 {
 	char **arr_strings;
 	int count_commands;
 	int i;
-	int j;
 	char spec_char;
-	int len;
 
 	spec_char = 0;
 	count_commands = ft_count_commands(line);
@@ -239,35 +265,20 @@ char **ft_parse_strings(char *line)
 	i = 0;
 	while (i < count_commands)
 	{
-		j = 0;
-		len = ft_str_len_space(line) + 1;
-		arr_strings[i] = (char *) malloc(sizeof(char) * len);
-		while (*line && j < len)
-		{
-			spec_char = ft_spec_char_step(spec_char, &line);
-			if ((!spec_char && (*line == 34 || *line == 39)) || spec_char == *line)  //18.08.2021
-				continue;
-			arr_strings[i][j] = *line;
-			if ((*line == ' ' || !line) && !spec_char)
-			{
-				ft_go_end_space(&line);
-				break;
-			}
-			j++;
-			if (*line)
-				line++;
-		}
-		arr_strings[i][j] = '\0';
+		parse_strings_2(i, &spec_char, &arr_strings, &line);
 		i++;
 	}
 	arr_strings[i] = 0;
 	if (count_commands > 0 && arr_strings[0][0] == 0)
 	{
 		free(arr_strings[0]);
-		arr_strings[0] = ft_strdup("''"); //todo защитить от утечек
+		arr_strings[0] = ft_strdup("''");
 	}
 	return (arr_strings);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
 
 int ft_count_strs(char *line)
 {
@@ -392,7 +403,7 @@ int ft_len_doll(char *line, t_memory *mem)
 }
 
 /////////////////////////////////////////////////////////////////
-void change_doll_var (char ***line, char **str_find, char **tmp, int *j) //ref 26.08.21
+void change_doll_var(char ***line, char **str_find, char **tmp, int *j) //ref 26.08.21
 {
 	char *tmp_find;
 
@@ -415,7 +426,7 @@ void change_doll_var (char ***line, char **str_find, char **tmp, int *j) //ref 2
 	free(tmp_find); //Сергей 25.08.21
 }
 
-void change_doll (char ***line, char **tmp, int *j, t_memory *mem) //ref 26.08.21
+void change_doll(char ***line, char **tmp, int *j, t_memory *mem) //ref 26.08.21
 {
 	char *str_find;
 
@@ -428,7 +439,7 @@ void change_doll (char ***line, char **tmp, int *j, t_memory *mem) //ref 26.08.2
 			(**line)++;
 	}
 	else
-		change_doll_var (line, &str_find, tmp, j);
+		change_doll_var(line, &str_find, tmp, j);
 }
 
 void change_doll_quest(char ***line, char **tmp, int *j) //ref 26.08.21
@@ -458,7 +469,7 @@ void ft_change_tmp(char ***line, char **tmp, int *j)
 	(*j)++;
 }
 
-void ft_change_loop(char ***line, char **tmp_line, char **tmp,  t_memory *mem)
+void ft_change_loop(char ***line, char **tmp_line, char **tmp, t_memory *mem)
 {
 	int j;
 	char spec_char;
@@ -473,7 +484,7 @@ void ft_change_loop(char ***line, char **tmp_line, char **tmp,  t_memory *mem)
 		if (!(***line))//16.08.2021
 		{
 			ft_change_free(line, tmp_line, tmp, &j);
-			return ;//16.08.2021
+			return;//16.08.2021
 		}
 		if (***line == '$' && *((**line) + 1) == '?' && spec_char != 39)
 			change_doll_quest(line, tmp, &j);
