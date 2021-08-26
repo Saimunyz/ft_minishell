@@ -392,11 +392,33 @@ int ft_len_doll(char *line, t_memory *mem)
 }
 
 /////////////////////////////////////////////////////////////////
+void change_doll_var (char ***line, char **str_find, char **tmp, int *j) //ref 26.08.21
+{
+	char *tmp_find;
+
+	tmp_find = *str_find; //Сергей 25.08.21
+	(**line)++;
+	while (**str_find ||
+		   (***line && ***line != ' ' && ***line != '$' && ***line != 39 && ***line != 34 &&
+			***line != '=')) //25.08.21
+	{
+		if (**str_find)
+		{
+			(*tmp)[*j] = **str_find;
+			(*j)++;
+			(*str_find)++;
+		}
+		while (***line && ***line != ' ' && ***line != 39 && ***line != 34 && ***line != '$' &&
+			   ***line != '=')  //25.08.21
+			(**line)++;
+	}
+	free(tmp_find); //Сергей 25.08.21
+}
+
 
 //void change_doll (char ***line, char **str_find, char **tmp, int *j) //ref 26.08.21
 void change_doll (char ***line, char **tmp, int *j, t_memory *mem) //ref 26.08.21
 {
-	char *tmp_find;
 	char *str_find;
 
 	str_find = ft_find_doll(**line, mem);
@@ -408,25 +430,7 @@ void change_doll (char ***line, char **tmp, int *j, t_memory *mem) //ref 26.08.2
 			(**line)++;
 	}
 	else
-	{
-		tmp_find = str_find; //Сергей 25.08.21
-		(**line)++;
-		while (*str_find ||
-			   (***line && ***line != ' ' && ***line != '$' && ***line != 39 && ***line != 34 &&
-				***line != '=')) //25.08.21
-		{
-			if (*str_find)
-			{
-				(*tmp)[*j] = *str_find;
-				(*j)++;
-				str_find++;
-			}
-			while (***line && ***line != ' ' && ***line != 39 && ***line != 34 && ***line != '$' &&
-				   ***line != '=')  //25.08.21
-				(**line)++;
-		}
-		free(tmp_find); //Сергей 25.08.21
-	}
+		change_doll_var (line, &str_find, tmp, j);
 }
 
 void change_doll_quest(char ***line, char **tmp, int *j) //ref 26.08.21
@@ -440,6 +444,13 @@ void change_doll_quest(char ***line, char **tmp, int *j) //ref 26.08.21
 		(*tmp)[(*j)++] = num[i++];
 	free(num);
 	(**line) += 2;
+}
+
+void ft_chane_free(char ***line, char **tmp_line, char **tmp, int *j)
+{
+	(*tmp)[*j] = '\0';
+	free(*tmp_line);
+	**line = *tmp;
 }
 
 void ft_change_var(char **line, t_memory *mem)
@@ -465,9 +476,7 @@ void ft_change_var(char **line, t_memory *mem)
 			continue;
 		if (!(**line))//16.08.2021
 		{
-			tmp[j] = '\0';//16.08.2021
-			free(tmp_line);//16.08.2021
-			*line = tmp;//16.08.2021
+			ft_chane_free(&line, &tmp_line, &tmp, &j);
 			return;//16.08.2021
 		}
 		if (**line == '$' && *((*line) + 1) == '?' && spec_char != 39)
@@ -481,9 +490,7 @@ void ft_change_var(char **line, t_memory *mem)
 			j++;
 		}
 	}
-	tmp[j] = '\0';
-	free(tmp_line);
-	*line = tmp;
+	ft_chane_free(&line, &tmp_line, &tmp, &j);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
