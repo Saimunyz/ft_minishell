@@ -575,14 +575,36 @@ void clear_arr(char **arr)
 	}
 }
 
+void clear_a_cmd(t_cmd *a_cmd, int i) // 26.08.21 ref
+{
+	int j;
+
+	j = 0;
+	while (a_cmd[i].cmd[j]) //Сергей 26.08.21
+		free(a_cmd[i].cmd[j++]);
+	free(a_cmd[i].cmd);
+}
+
+void ft_parse_command(t_cmd *a_cmd, int i, t_memory *mem) // 26.08.21 ref
+{
+	if (a_cmd[i].cmd[0] && a_cmd[i].cmd[0][0] == '\3')
+	{
+		ft_clear_arr(a_cmd[i].cmd); //Сергей 26.08.21
+		free(a_cmd); //Сергей 26.08.21
+		return;
+	}
+	if (!a_cmd[i].red)
+		ft_commands(a_cmd, i, mem);
+	if (a_cmd[i].echo) //Сергей 24.08.21
+		clear_a_cmd(a_cmd, i);
+}
+
 void ft_parse(char *line, char *home, t_memory *mem)
 {
 	t_cmd *a_cmd;
 	int i;
-	int j;
 
 	i = 0;
-
 	a_cmd = ft_split_string(line, mem);
 	ft_write_history(line, home); //перенес вверх, что бы все писало (Сергей)
 	while (a_cmd && a_cmd[i].cmd)
@@ -590,29 +612,11 @@ void ft_parse(char *line, char *home, t_memory *mem)
 		if (ft_variables(a_cmd[i].cmd, mem))
 		{
 			rm_pipe(&a_cmd, i);
-			j = 0;
-			while (a_cmd->cmd[j]) //Сергей 24.08.21
-				free(a_cmd->cmd[j++]);
-			free(a_cmd[i].cmd);
+			clear_a_cmd(a_cmd, i);
 			i++;
 			continue;
 		}
-//		if (a_cmd->cmd[0][0] == '\3') //23.08.21 free
-		if (a_cmd[i].cmd[0] && a_cmd[i].cmd[0][0] == '\3')
-		{
-			ft_clear_arr(a_cmd[i].cmd); //Сергей 26.08.21
-			free(a_cmd); //Сергей 26.08.21
-			return;
-		}
-		if (!a_cmd[i].red)
-			ft_commands(a_cmd, i, mem);
-		if (a_cmd[i].echo) //Сергей 24.08.21
-		{
-			j = 0;
-			while (a_cmd[i].cmd[j]) //Сергей 24.08.21
-				free(a_cmd[i].cmd[j++]);
-			free(a_cmd[i].cmd);
-		}
+		ft_parse_command(a_cmd, i, mem);
 		i++;
 	}
 	free(a_cmd);

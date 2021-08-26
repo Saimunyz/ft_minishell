@@ -155,5 +155,12 @@ export $c=12
 после запуска export --> с=12
 если написать $a=1 то выдаст ошибку
 
+26.08.21
+
+minishell$ unset OLDPWD
+minishell$ export OLDPWD
+minishell$ echo $OLDPWD
+Segmentation fault
+
 
 

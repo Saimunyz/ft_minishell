@@ -12,7 +12,7 @@ CFILE =		minishell.c \
 			utils_1.c \
 			utils_2.c \
 			utils_3.c \
-			ft_parse.c \
+			./ft_parse/ft_parse.c \
 			ft_pwd.c \
 			ft_echo.c \
 			ft_cd.c \
