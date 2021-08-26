@@ -22,15 +22,14 @@ char *ft_find_aur_command(char *command)
 	int splt_len;
 
 	splt_len = ft_strlen(command);
-
 	if (!ft_strncmp(command, "pwd", ft_strlen(command)) && splt_len != 0)
 		return ft_strdup("pwd");
 	else if (!ft_strncmp(command, "echo", ft_strlen(command)) && splt_len != 0)
 		return ft_strdup("echo");
 	else if (!ft_strncmp(command, "cd", ft_strlen(command)) && splt_len != 0)
 		return "cd";
-	//else if (!ft_strncmp(command, "exit", ft_strlen(command)) && splt_len != 0)
-	//	return ft_strdup("exit");
+		//else if (!ft_strncmp(command, "exit", ft_strlen(command)) && splt_len != 0)
+		//	return ft_strdup("exit");
 	else if (!ft_strncmp(command, "env", ft_strlen(command)) && splt_len != 0)
 		return ft_strdup("env");
 	else if (!ft_strncmp(command, "export", ft_strlen(command)) && splt_len != 0)
@@ -73,8 +72,6 @@ char *ft_find_command(char *command, char **path)
 	char *cmd;
 	char **tmp_path;
 
-//	if (ft_find_aur_command(command)) //Сергей 24.08.21
-//		return ft_find_aur_command(command);
 	tmp_path = path;
 	while (*path)
 	{
@@ -106,6 +103,50 @@ void ft_command_not_found(char *cmd)
 	free(tmp_str);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+void commands_close(t_cmd *a_cmd, int i)
+{
+	if (a_cmd[i].files != 0)
+	{
+	}
+	else if (a_cmd[i].p_next && a_cmd[i].p_priv)
+	{
+		close(a_cmd[i - 1].fd[0]);
+		close(a_cmd[i].fd[1]);
+	}
+	else if (a_cmd[i].p_next)
+	{
+		close(a_cmd[i].fd[1]);
+	}
+	else if (a_cmd[i].p_priv)
+	{
+		close(a_cmd[i - 1].fd[0]);
+		close(a_cmd[i].fd[0]);
+		close(a_cmd[i].fd[1]);
+	}
+	else
+	{
+		close(a_cmd[i].fd[0]);
+		close(a_cmd[i].fd[1]);
+	}
+}
+
+int commands_if(t_cmd *a_cmd, int i)
+{
+	if (i == 0 && (ft_strlen(a_cmd[0].cmd[0]) != 0 && (!ft_strncmp(a_cmd[0].cmd[0], "exit", ft_strlen(a_cmd[0].cmd[0]))
+													   ||
+													   (!ft_strncmp(a_cmd[0].cmd[0], "cd", ft_strlen(a_cmd[0].cmd[0])))
+													   || (!ft_strncmp(a_cmd[0].cmd[0], "export",
+																	   ft_strlen(a_cmd[0].cmd[0])))
+													   || (!ft_strncmp(a_cmd[0].cmd[0], "unset", ft_strlen(
+			a_cmd[0].cmd[0]))))))
+	{
+		return (1);
+	}
+	else
+		return (0);
+}
 
 void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 {
@@ -122,21 +163,16 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	local_cmd = NULL;
 	aur_cmd = NULL;
 	cmd = NULL;
-	if (i == 0 && (ft_strlen(a_cmd[0].cmd[0]) != 0 && (!ft_strncmp(a_cmd[0].cmd[0], "exit", ft_strlen(a_cmd[0].cmd[0]))
-		|| (!ft_strncmp(a_cmd[0].cmd[0], "cd", ft_strlen(a_cmd[0].cmd[0])))
-											|| (!ft_strncmp(a_cmd[0].cmd[0], "export", ft_strlen(a_cmd[0].cmd[0])))
-											|| (!ft_strncmp(a_cmd[0].cmd[0], "unset", ft_strlen(
-			a_cmd[0].cmd[0])))))) //костыльный костыль, но и пофиг
+	if (commands_if(a_cmd, i))
 	{
 		if (i == 0)
-		{ //а тут надо только для 0 команды? а если это вторая, десятая? не проходит a=1 | ls
+		{
 			ft_start_commands(a_cmd[i].cmd, mem, 0, env);
 			ft_clear_arr(a_cmd[i].cmd);
 			ft_clear_arr(env);
 			return;
 		}
 	}
-//	if (a_cmd[i].cmd[0][0] == '.' || a_cmd[i].cmd[0][0] == '/')
 	if (a_cmd[i].cmd[0] && (a_cmd[i].cmd[0][0] == '.' || a_cmd[i].cmd[0][0] == '/'))
 	{
 		local_cmd = ft_find_local_command(a_cmd[i].cmd[0]);
@@ -149,11 +185,10 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 			return;
 		}
 	}
-	if (a_cmd[i].echo) //Сергей 24.08.21
-		aur_cmd = a_cmd[i].cmd[0]; //Сергей 24.08.21
-	if (!local_cmd && !a_cmd[i].echo && !a_cmd[i].red)  //Сергей 24.08.21
+	if (a_cmd[i].echo)
+		aur_cmd = a_cmd[i].cmd[0];
+	if (!local_cmd && !a_cmd[i].echo && !a_cmd[i].red)
 		aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
-//	if (!aur_cmd && !local_cmd && !a_cmd[i].red) //Сергей 24.08.21
 	if (!aur_cmd && !local_cmd)
 	{
 		if (!ft_getenv("PATH", mem)) //21.08.21
@@ -165,7 +200,6 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	}
 	if (cmd || aur_cmd || a_cmd[i].files || local_cmd)
 		not_found = 0;
-//	g_error = 0; //todo прверять на ошибки, надо переписывать иначе затирает 126 которая приходит из кейса ./неИсплняемыйФайл
 	if (aur_cmd)
 	{
 		if (!a_cmd[i].files)
@@ -178,18 +212,18 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 		a_cmd[i].cmd[0] = local_cmd;
 	else if (cmd)
 	{
-		free(a_cmd[i].cmd[0]); //TODO вынести из if проверить что нет утечки.
+		free(a_cmd[i].cmd[0]);
 		a_cmd[i].cmd[0] = cmd;
 	}
-	pid = fork(); //todo вернуть
-//pid = 0; // dell
+	pid = fork();
 	if (pid == 0)
 	{
 		if (a_cmd[i].files)
 		{
 			ft_redirect(a_cmd, mem);
 			exit(0);
-		} else if (a_cmd[i].p_next && a_cmd[i].p_priv)
+		}
+		else if (a_cmd[i].p_next && a_cmd[i].p_priv)
 		{
 			dup2(a_cmd[i - 1].fd[0], 0);
 			close(a_cmd[i - 1].fd[0]);
@@ -199,7 +233,8 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 			close(a_cmd[i].fd[1]);
 			ft_start_commands(a_cmd[i].cmd, mem, not_found, env);
 			exit(0);
-		} else if (a_cmd[i].p_next)
+		}
+		else if (a_cmd[i].p_next)
 		{
 			dup2(a_cmd[i].fd[1], 1);
 			close(a_cmd[i].fd[0]);
@@ -207,14 +242,16 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 			ft_start_commands(a_cmd[i].cmd, mem, not_found, env);
 			exit(0);
 
-		} else if (a_cmd[i].p_priv)
+		}
+		else if (a_cmd[i].p_priv)
 		{
 			dup2(a_cmd[i - 1].fd[0], 0);
 			close(a_cmd[i - 1].fd[0]);
 			close(a_cmd[i - 1].fd[1]);
 			ft_start_commands(a_cmd[i].cmd, mem, not_found, env);
 			exit(0);
-		} else
+		}
+		else
 		{
 			close(a_cmd[i].fd[0]);
 			close(a_cmd[i].fd[1]);
@@ -223,26 +260,7 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 		}
 	}
 
-	if (a_cmd[i].files != 0)
-	{
-
-	} else if (a_cmd[i].p_next && a_cmd[i].p_priv)
-	{
-		close(a_cmd[i - 1].fd[0]);
-		close(a_cmd[i].fd[1]);
-	} else if (a_cmd[i].p_next)
-	{
-		close(a_cmd[i].fd[1]);
-	} else if (a_cmd[i].p_priv)
-	{
-		close(a_cmd[i - 1].fd[0]);
-		close(a_cmd[i].fd[0]);
-		close(a_cmd[i].fd[1]);
-	} else
-	{
-		close(a_cmd[i].fd[0]); // TODO не факто что нужно
-		close(a_cmd[i].fd[1]);
-	}
+	commands_close(a_cmd, i);
 	waitpid(pid, &status, 0);
 	if (g_error != 130 && g_error != 131 && g_error != 126)
 		g_error = WEXITSTATUS(status);
@@ -253,3 +271,6 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 		ft_clear_arr(a_cmd[i].cmd);
 	ft_clear_arr(env);
 }
+
+
+///////////////////////////////////////////////////////////////////
