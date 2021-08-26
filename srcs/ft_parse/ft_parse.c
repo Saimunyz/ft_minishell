@@ -415,8 +415,6 @@ void change_doll_var (char ***line, char **str_find, char **tmp, int *j) //ref 2
 	free(tmp_find); //Сергей 25.08.21
 }
 
-
-//void change_doll (char ***line, char **str_find, char **tmp, int *j) //ref 26.08.21
 void change_doll (char ***line, char **tmp, int *j, t_memory *mem) //ref 26.08.21
 {
 	char *str_find;
@@ -446,11 +444,18 @@ void change_doll_quest(char ***line, char **tmp, int *j) //ref 26.08.21
 	(**line) += 2;
 }
 
-void ft_chane_free(char ***line, char **tmp_line, char **tmp, int *j)
+void ft_change_free(char ***line, char **tmp_line, char **tmp, int *j)
 {
 	(*tmp)[*j] = '\0';
 	free(*tmp_line);
 	**line = *tmp;
+}
+
+void ft_change_tmp(char ***line, char **tmp, int *j)
+{
+	(*tmp)[*j] = ***line;
+	(**line)++;
+	(*j)++;
 }
 
 void ft_change_var(char **line, t_memory *mem)
@@ -476,7 +481,7 @@ void ft_change_var(char **line, t_memory *mem)
 			continue;
 		if (!(**line))//16.08.2021
 		{
-			ft_chane_free(&line, &tmp_line, &tmp, &j);
+			ft_change_free(&line, &tmp_line, &tmp, &j);
 			return;//16.08.2021
 		}
 		if (**line == '$' && *((*line) + 1) == '?' && spec_char != 39)
@@ -484,13 +489,9 @@ void ft_change_var(char **line, t_memory *mem)
 		else if (**line == '$' && *((*line) + 1) != ' ' && *((*line) + 1) && spec_char != 39)
 			change_doll (&line, &tmp, &j, mem);
 		else
-		{
-			tmp[j] = **line;
-			(*line)++;
-			j++;
-		}
+			ft_change_tmp(&line, &tmp, &j);
 	}
-	ft_chane_free(&line, &tmp_line, &tmp, &j);
+	ft_change_free(&line, &tmp_line, &tmp, &j);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
