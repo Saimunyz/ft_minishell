@@ -416,16 +416,26 @@ void change_doll (char ***line, char **str_find, char **tmp, int *j) //ref 26.08
 	free(tmp_find); //Сергей 25.08.21
 }
 
+void change_doll_quest(char ***line, char **tmp, int *j) //ref 26.08.21
+{
+	int i;
+	char *num;
+
+	i = 0;
+	num = ft_itoa(g_error);
+	while (num[i])
+		(*tmp)[(*j)++] = num[i++];
+	free(num);
+	(**line) += 2;
+}
 
 void ft_change_var(char **line, t_memory *mem)
 {
 	int j;
-	int i;
 	char *tmp;
 	char *str_find;
 	char *tmp_line;
 	char spec_char;
-	char *num;
 	int size;
 
 	spec_char = 0;
@@ -450,14 +460,7 @@ void ft_change_var(char **line, t_memory *mem)
 		}
 
 		if (**line == '$' && *((*line) + 1) == '?' && spec_char != 39)
-		{
-			i = 0;
-			num = ft_itoa(g_error);
-			while (num[i])
-				tmp[j++] = num[i++];
-			free(num);
-			(*line) += 2;
-		}
+			change_doll_quest(&line, &tmp, &j);
 		else if (**line == '$' && *((*line) + 1) != ' ' && *((*line) + 1) && spec_char != 39)
 		{
 			str_find = ft_find_doll(*line, mem);
