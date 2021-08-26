@@ -153,6 +153,23 @@ int commands_1(t_cmd *a_cmd, int i, t_memory *mem, char **env)
 	return (0);
 }
 
+int commands_2(t_cmd *a_cmd, int i, char **env, char **local_cmd)
+{
+	if (a_cmd[i].cmd[0] && (a_cmd[i].cmd[0][0] == '.' || a_cmd[i].cmd[0][0] == '/'))
+	{
+		*local_cmd = ft_find_local_command(a_cmd[i].cmd[0]);
+		if (!(*local_cmd))
+		{
+			ft_command_not_found(a_cmd[i].cmd[0]);
+			if (!a_cmd[i].files)
+				ft_clear_arr(a_cmd[i].cmd);
+			ft_clear_arr(env);
+			return (1);
+		}
+	}
+	return (0);
+}
+
 void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 {
 	pid_t pid;
@@ -169,19 +186,9 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	aur_cmd = NULL;
 	cmd = NULL;
 	if (commands_1(a_cmd, i, mem, env))
-		return ;
-	if (a_cmd[i].cmd[0] && (a_cmd[i].cmd[0][0] == '.' || a_cmd[i].cmd[0][0] == '/'))
-	{
-		local_cmd = ft_find_local_command(a_cmd[i].cmd[0]);
-		if (!local_cmd)
-		{
-			ft_command_not_found(a_cmd[i].cmd[0]);
-			if (!a_cmd[i].files)
-				ft_clear_arr(a_cmd[i].cmd);
-			ft_clear_arr(env);
-			return;
-		}
-	}
+		return;
+	if (commands_2(a_cmd, i, env, &local_cmd))
+		return;
 	if (a_cmd[i].echo)
 		aur_cmd = a_cmd[i].cmd[0];
 	if (!local_cmd && !a_cmd[i].echo && !a_cmd[i].red)
