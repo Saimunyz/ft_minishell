@@ -66,6 +66,19 @@ int ft_variables(char **strs_cmd, t_memory *mem)
 
 }
 
+
+//////////////////////////////////////////////////////////////////////////////
+
+void check_var_splt(char ***splt, t_memory *mem, int *isPlus)
+{
+	if (*splt)
+	{
+		(*splt)[1] = ft_spec_char_loop(&((*splt)[1]));
+		ft_add_var(*splt, mem, *isPlus);
+		free_text(*splt, ft_maslen(*splt));
+	}
+}
+
 void ft_check_var(char *strs_cmd, t_memory *mem)
 {
 	char **splt;
@@ -90,13 +103,12 @@ void ft_check_var(char *strs_cmd, t_memory *mem)
 		splt = ft_split(strs_cmd, '=');
 		isPlus = 0;
 	}
-	if (splt)
-	{
-		splt[1] = ft_spec_char_loop(&splt[1]);
-		ft_add_var(splt, mem, isPlus);
-		free_text(splt, ft_maslen(splt));
-	}
+	check_var_splt(&splt, mem, &isPlus);
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+
 
 void ft_add_var(char **splt, t_memory *mem, int is_plus)
 {
