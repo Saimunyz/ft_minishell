@@ -598,8 +598,12 @@ void ft_parse(char *line, char *home, t_memory *mem)
 			continue;
 		}
 //		if (a_cmd->cmd[0][0] == '\3') //23.08.21 free
-		if (a_cmd[i].cmd[0]&& a_cmd[i].cmd[0][0] == '\3')
+		if (a_cmd[i].cmd[0] && a_cmd[i].cmd[0][0] == '\3')
+		{
+			ft_clear_arr(a_cmd[i].cmd); //Сергей 26.08.21
+			free(a_cmd); //Сергей 26.08.21
 			return;
+		}
 		if (!a_cmd[i].red)
 			ft_commands(a_cmd, i, mem);
 		if (a_cmd[i].echo) //Сергей 24.08.21
