@@ -393,27 +393,40 @@ int ft_len_doll(char *line, t_memory *mem)
 
 /////////////////////////////////////////////////////////////////
 
-void change_doll (char ***line, char **str_find, char **tmp, int *j) //ref 26.08.21
+//void change_doll (char ***line, char **str_find, char **tmp, int *j) //ref 26.08.21
+void change_doll (char ***line, char **tmp, int *j, t_memory *mem) //ref 26.08.21
 {
 	char *tmp_find;
+	char *str_find;
 
-	tmp_find = *str_find; //Сергей 25.08.21
-	(**line)++;
-	while (**str_find ||
-		   (***line && ***line != ' ' && ***line != '$' && ***line != 39 && ***line != 34 &&
-			***line != '=')) //25.08.21
+	str_find = ft_find_doll(**line, mem);
+	if (!str_find)
 	{
-		if (**str_find)
-		{
-			(*tmp)[*j] = **str_find;
-			(*j)++;
-			(*str_find)++;
-		}
+		(**line)++;
 		while (***line && ***line != ' ' && ***line != 39 && ***line != 34 && ***line != '$' &&
-			   ***line != '=')  //25.08.21
+			   ***line != '=')  //16.08.21
 			(**line)++;
 	}
-	free(tmp_find); //Сергей 25.08.21
+	else
+	{
+		tmp_find = str_find; //Сергей 25.08.21
+		(**line)++;
+		while (*str_find ||
+			   (***line && ***line != ' ' && ***line != '$' && ***line != 39 && ***line != 34 &&
+				***line != '=')) //25.08.21
+		{
+			if (*str_find)
+			{
+				(*tmp)[*j] = *str_find;
+				(*j)++;
+				str_find++;
+			}
+			while (***line && ***line != ' ' && ***line != 39 && ***line != 34 && ***line != '$' &&
+				   ***line != '=')  //25.08.21
+				(**line)++;
+		}
+		free(tmp_find); //Сергей 25.08.21
+	}
 }
 
 void change_doll_quest(char ***line, char **tmp, int *j) //ref 26.08.21
@@ -433,7 +446,6 @@ void ft_change_var(char **line, t_memory *mem)
 {
 	int j;
 	char *tmp;
-	char *str_find;
 	char *tmp_line;
 	char spec_char;
 	int size;
@@ -458,22 +470,10 @@ void ft_change_var(char **line, t_memory *mem)
 			*line = tmp;//16.08.2021
 			return;//16.08.2021
 		}
-
 		if (**line == '$' && *((*line) + 1) == '?' && spec_char != 39)
 			change_doll_quest(&line, &tmp, &j);
 		else if (**line == '$' && *((*line) + 1) != ' ' && *((*line) + 1) && spec_char != 39)
-		{
-			str_find = ft_find_doll(*line, mem);
-			if (!str_find)
-			{
-				(*line)++;
-				while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' &&
-					   **line != '=')  //16.08.21
-					(*line)++;
-			}
-			else
-				change_doll (&line, &str_find, &tmp, &j);
-		}
+			change_doll (&line, &tmp, &j, mem);
 		else
 		{
 			tmp[j] = **line;
