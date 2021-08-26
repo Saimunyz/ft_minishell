@@ -391,6 +391,32 @@ int ft_len_doll(char *line, t_memory *mem)
 	return (len);
 }
 
+/////////////////////////////////////////////////////////////////
+
+void change_doll (char ***line, char **str_find, char **tmp, int *j) //ref 26.08.21
+{
+	char *tmp_find;
+
+	tmp_find = *str_find; //Сергей 25.08.21
+	(**line)++;
+	while (**str_find ||
+		   (***line && ***line != ' ' && ***line != '$' && ***line != 39 && ***line != 34 &&
+			***line != '=')) //25.08.21
+	{
+		if (**str_find)
+		{
+			(*tmp)[*j] = **str_find;
+			(*j)++;
+			(*str_find)++;
+		}
+		while (***line && ***line != ' ' && ***line != 39 && ***line != 34 && ***line != '$' &&
+			   ***line != '=')  //25.08.21
+			(**line)++;
+	}
+	free(tmp_find); //Сергей 25.08.21
+}
+
+
 void ft_change_var(char **line, t_memory *mem)
 {
 	int j;
@@ -401,7 +427,6 @@ void ft_change_var(char **line, t_memory *mem)
 	char spec_char;
 	char *num;
 	int size;
-	char *tmp_find;
 
 	spec_char = 0;
 	tmp = 0; //возможно избыточно
@@ -413,7 +438,6 @@ void ft_change_var(char **line, t_memory *mem)
 		return;//TODO тут какая то ошибка должна выводится
 	while (**line)
 	{
-
 		spec_char = ft_spec_char(spec_char, **line);
 		if (!spec_char && (**line == 34 || **line == 39))  //18.08.2021
 			continue;
@@ -445,25 +469,7 @@ void ft_change_var(char **line, t_memory *mem)
 					(*line)++;
 			}
 			else
-			{
-				tmp_find = str_find; //Сергей 25.08.21
-				(*line)++;
-				while (*str_find ||
-					   (**line && **line != ' ' && **line != '$' && **line != 39 && **line != 34 &&
-						**line != '=')) //25.08.21
-				{
-					if (*str_find)
-					{
-						tmp[j] = *str_find;
-						j++;
-						str_find++;
-					}
-					while (**line && **line != ' ' && **line != 39 && **line != 34 && **line != '$' &&
-						   **line != '=')  //25.08.21
-						(*line)++;
-				}
-				free(tmp_find); //Сергей 25.08.21
-			}
+				change_doll (&line, &str_find, &tmp, &j);
 		}
 		else
 		{
@@ -477,7 +483,7 @@ void ft_change_var(char **line, t_memory *mem)
 	*line = tmp;
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////
 
 t_cmd *ft_split_string_2(t_cmd *a_cmd, char *line, t_memory *mem, int count_strs)
 {
