@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:09:41 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/24 17:45:51 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/26 11:27:34 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ void ft_minishell(t_memory *mem)
 	line = NULL;
 	home = getenv("HOME");
 	g_error = 0;
-	signal(SIGINT, ft_sigint_handler);
-	signal(SIGQUIT, ft_sigquit_handler);
+	signal(SIGINT, ft_sig_handler);
+	signal(SIGQUIT, ft_sig_handler);
 	while (1)
 	{
 		write(STDOUT_FILENO, "minishell$ ", 11);

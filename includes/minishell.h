@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/24 17:45:14 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/26 11:23:08 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,7 @@ void	ft_print_varr_err(void);
 char	**ft_parse_strings(char *line);
 void	ft_change_var(char **line,  t_memory *mem);
 char	ft_spec_char(char spec_char, char line);
-void	ft_sigint_handler(int num);
-void	ft_sigquit_handler(int num);
+void	ft_sig_handler(int num);
 char	*ft_getenv(char *name, t_memory *mem);
 char	**ft_lst2str(t_list *lst);
 void	ft_clear_arr(char **arr);

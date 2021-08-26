@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 14:41:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/21 00:22:52 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/26 11:30:14 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,18 +37,16 @@ void	ft_check_eof(char **line, char *character, t_hist *hist)
 	}
 }
 
-void	ft_sigquit_handler(int num)
+void	ft_sig_handler(int num)
 {
-	g_error = num;
-	g_error = 131;
-	ft_putstr_fd("Quit\n", 1);
-	//ft_exit();
-}
-
-void	ft_sigint_handler(int num)
-{
-	g_error = num;
-	g_error = 130;
-	ft_putstr_fd("\n", 1);
-	//ft_exit();
+	if (num == 3)
+	{
+		g_error = 131;
+		ft_putendl_fd("Quit", 1);
+	}
+	if (num == 2)
+	{
+		g_error = 130;
+		ft_putstr_fd("\n", 1);
+	}
 }

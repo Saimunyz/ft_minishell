@@ -117,7 +117,7 @@ exit
 0
 
 5. Return value of a process
-- ls abs --> echo $? --> 2
+- ls abs --> echo $? --> 2 | 1 ON MAC
 - $? + $?
 
 6. Signals
