@@ -377,7 +377,7 @@ char *ft_find_doll(char *line, t_memory *mem)
 	find = ft_lstfind_struct(mem->env, tmp + 1);
 	if (!find)
 		find = ft_lstfind_struct(mem->var, tmp + 1);
-	if (find)
+	if (find && ((t_var *) find->content)->value)
 	{
 		str_find = (char *) ((t_var *) find->content)->value; //TODO тут каст char * можно?
 		free(tmp);
