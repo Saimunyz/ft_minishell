@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-static int ft_add_new_char(char **str, char *newchar, int buff_size)
+static int	ft_add_new_char(char **str, char *newchar, int buff_size)
 {
-	char *tmp;
+	char	*tmp;
 
 	tmp = NULL;
 	if (buff_size > 2147483647)
@@ -15,10 +15,10 @@ static int ft_add_new_char(char **str, char *newchar, int buff_size)
 	return (buff_size);
 }
 
-int ft_write_char(char *character, char **line, t_hist *hist)
+int	ft_write_char(char *character, char **line, t_hist *hist)
 {
-	int ret;
-	int len;
+	int	ret;
+	int	len;
 
 	ret = ft_strlen(character);
 	len = ft_strlen(*line);
@@ -43,12 +43,12 @@ int ft_write_char(char *character, char **line, t_hist *hist)
 	return (len);
 }
 
-int ft_read(char **line, char *home)
+int	ft_read(char **line, char *home)
 {
-	int len;
-	int ret;
-	char *character;
-	t_hist hist;
+	int		len;
+	int		ret;
+	char	*character;
+	t_hist	hist;
 
 	len = 0;
 	ft_change_term_mode(1);
@@ -60,7 +60,7 @@ int ft_read(char **line, char *home)
 		character[ret] = '\0';
 		ft_check_errno();
 		if (ft_check_sigint(line, character))
-			break;
+			break ;
 		len = ft_write_char(character, line, &hist);
 		ft_check_eof(line, character, &hist);
 	}
@@ -71,10 +71,10 @@ int ft_read(char **line, char *home)
 	return (len);
 }
 
-void ft_minishell(t_memory *mem)
+void	ft_minishell(t_memory *mem)
 {
-	char *line;
-	char *home;
+	char	*line;
+	char	*home;
 
 	line = NULL;
 	home = getenv("HOME");
@@ -91,9 +91,9 @@ void ft_minishell(t_memory *mem)
 	}
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	t_memory mem;
+	t_memory	mem;
 
 	errno = 0;
 	(void) argc;
@@ -102,6 +102,5 @@ int main(int argc, char **argv, char **envp)
 		exit(1);
 	ft_init_mem(&mem, envp);
 	ft_minishell(&mem);
-//	ft_lstclear(&mem.env, free); //Сергей мы же сюда никогда не попадаем
 	return (0);
 }

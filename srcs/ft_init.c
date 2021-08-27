@@ -5,13 +5,13 @@ static t_var	*ft_init_val(char *envp)
 	t_var	*tmp_var;
 	char	**splt;
 
-	tmp_var = (t_var *)malloc(sizeof(t_var)); //TODO нет обработки на null
+	tmp_var = (t_var *)malloc(sizeof(t_var));
 	ft_check_errno();
 	splt = ft_split(envp, '=');
 	if (ft_maslen(splt) != 2)
-		ft_check_errno(); // не уверен, что не нул просто
+		ft_check_errno();
 	tmp_var->name = ft_strdup(splt[0]);
-	if (!splt[1])	//Сергей, тут нал бывает и крашится
+	if (!splt[1])
 		tmp_var->value = ft_strdup("");
 	else
 		tmp_var->value = ft_strdup(splt[1]);
@@ -21,11 +21,11 @@ static t_var	*ft_init_val(char *envp)
 
 void	ft_null_mem(t_memory *mem)
 {
-		mem->env = NULL;
-		mem->oldpwd = NULL;
-		mem->var = NULL;
-		mem->shlvl = NULL;
-		mem->pwd = NULL;
+	mem->env = NULL;
+	mem->oldpwd = NULL;
+	mem->var = NULL;
+	mem->shlvl = NULL;
+	mem->pwd = NULL;
 }
 
 void	ft_set_pwd(t_memory *mem)

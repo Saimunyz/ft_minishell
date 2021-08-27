@@ -7,7 +7,7 @@ char	*ft_getenv(char *name, t_memory *mem)
 
 	find = ft_lstfind_struct(mem->env, name);
 	if (!find)
-		return NULL;
-	var = ((t_var*)find->content);
+		return (NULL);
+	var = ((t_var *)find->content);
 	return (var->value);
 }
