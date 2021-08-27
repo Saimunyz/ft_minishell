@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void com_pipe_1(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
+void	com_pipe_1(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 {
 	dup2(a_cmd[i - 1].fd[0], 0);
 	close(a_cmd[i - 1].fd[0]);
@@ -12,7 +12,7 @@ void com_pipe_1(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 	exit(0);
 }
 
-void com_pipe_2(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
+void	com_pipe_2(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 {
 	dup2(a_cmd[i].fd[1], 1);
 	close(a_cmd[i].fd[0]);
@@ -21,7 +21,7 @@ void com_pipe_2(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 	exit(0);
 }
 
-void com_pipe_3(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
+void	com_pipe_3(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 {
 	dup2(a_cmd[i - 1].fd[0], 0);
 	close(a_cmd[i - 1].fd[0]);
@@ -30,7 +30,7 @@ void com_pipe_3(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 	exit(0);
 }
 
-void command_no_pipe(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
+void	command_no_pipe(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 {
 	close(a_cmd[i].fd[0]);
 	close(a_cmd[i].fd[1]);
@@ -38,7 +38,7 @@ void command_no_pipe(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 	exit(0);
 }
 
-void command_pid(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
+void	command_pid(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 {
 	if (a_cmd[i].files)
 	{
@@ -49,12 +49,8 @@ void command_pid(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 		com_pipe_1(a_cmd, i, l_cmds, not_found);
 	else if (a_cmd[i].p_next)
 		com_pipe_2(a_cmd, i, l_cmds, not_found);
-			else
-	if (a_cmd[i].p_priv)
+	else if (a_cmd[i].p_priv)
 		com_pipe_3(a_cmd, i, l_cmds, not_found);
 	else
 		command_no_pipe(a_cmd, i, l_cmds, not_found);
 }
-
-
-
