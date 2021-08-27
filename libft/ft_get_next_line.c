@@ -18,7 +18,6 @@ char	*ft_strdup_gnl(const char *s1, size_t len)
 	char	*str;
 
 	i = 0;
-	//str = (char*)malloc(sizeof(char) * (len + 1));
 	str = (char *)ft_calloc(len + 1, sizeof(char));
 	if (!str)
 		return (NULL);
@@ -51,7 +50,7 @@ char	*save_buff(char *buff, char **line)
 	return (NULL);
 }
 
-int		set_result(int ret, char *line)
+int	set_result(int ret, char *line)
 {
 	if (ret == 0 && line)
 		return (0);
@@ -59,15 +58,13 @@ int		set_result(int ret, char *line)
 		return (-1);
 }
 
-int		get_next_line(int fd, char **line)
+int	get_next_line(int fd, char **line)
 {
 	char			buff[BUFFER_SIZE + 1];
 	static char		*rem;
 	char			*tmp;
 	int				ret;
 
-	// if (fd < 0 || BUFFER_SIZE <= 0 || !line)
-	// 	return (-1); Удалить эти строки для нормы
 	*line = ft_strdup_gnl("", 0);
 	if (rem && *line)
 	{
