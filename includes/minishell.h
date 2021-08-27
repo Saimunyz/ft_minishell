@@ -144,4 +144,10 @@ int		ft_count_strs(char *line);
 int		ft_str_len_space(char *line);
 char	ft_spec_char_step(char spec_char, char **line);
 char	*ft_spec_char_loop(char **str);
+char	*ft_find_local_command(char *command);
+void	ft_command_not_found(char *cmd);
+char	*ft_find_command(char *command, char **path);
+char	*ft_find_aur_command(char *command);
+void	command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds);
+void	command_pid(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found);
 #endif

@@ -26,6 +26,9 @@ CFILE =		minishell.c \
 			ft_history.c \
 			ft_signals.c \
 			./ft_commands/ft_commands.c \
+			./ft_commands/ft_commands2.c \
+			./ft_commands/ft_commands3.c \
+			./ft_commands/ft_commands4.c \
 			ft_init.c \
 			ft_env.c \
 			ft_export.c \
