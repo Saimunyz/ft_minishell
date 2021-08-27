@@ -12,9 +12,6 @@
 
 #include "minishell.h"
 
-// TODO
-// и добавть сортировку export
-
 void	ft_print_export(t_memory *mem)
 {
 	t_list	*tmp;

@@ -50,26 +50,33 @@ void	ft_free_file(void *file)
 
 static void	ft_start_redirect(t_cmd *a_cmd, t_memory *mem)
 {
-//	int	i;
-
-//	i = 0;
-
 	ft_commands(a_cmd, 0, mem);
-	//ft_redirect(a_cmd, mem);
 	ft_lstclear(&a_cmd->files, ft_free_file);
 	a_cmd->files = NULL;
 	unlink("temporary");
 	if (errno != 0)
 		errno = 0;
-//	while (a_cmd->cmd[i]) //Сергей 24.08.21
-//		free(a_cmd->cmd[i++]);
 	ft_clear_arr(a_cmd->cmd);
-//	a_cmd->echo = 1; //dell
 	a_cmd->cmd = (char **) malloc (sizeof (char **) * 3);
-	a_cmd->echo = 1; //Сергей 24.08.21
+	a_cmd->echo = 1;
 	a_cmd->cmd[0] = ft_strdup("echo");
 	a_cmd->cmd[1] = ft_strdup("-n");
 	a_cmd->cmd[2] = NULL;
+}
+
+void	ft_parse_redirect_2(char** str, char *spec_char, int i, t_list	**files)
+{
+	*spec_char = ft_spec_char(*spec_char, str[0][i]);
+	if (str[0][i] == ' ' && (str[0][i + 1] == '>' || str[0][i + 1] == '<') && !(*spec_char))
+		ft_memmove((*str) + i, (*str) + i + 1, ft_strlen(str[0] + i));
+	if (str[0][i] == '>' && str[0][i + 1] == '>' && !(*spec_char))
+		ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 1089, ">"));
+	else if (str[0][i] == '<' && str[0][i + 1] == '<' && !(*spec_char))
+		ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 0, "<<"));
+	else if (str[0][i] == '>' && !(*spec_char))
+		ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 577, ">"));
+	if (str[0][i] == '<' && !(*spec_char))
+		ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 0, "<"));
 }
 
 void	ft_parse_redirect(char** str, t_memory *mem, t_cmd *a_cmd)
@@ -83,17 +90,18 @@ void	ft_parse_redirect(char** str, t_memory *mem, t_cmd *a_cmd)
 	files = NULL;
 	while (str[0][i])
 	{
-		spec_char = ft_spec_char(spec_char, str[0][i]);
-		if (str[0][i] == ' ' && (str[0][i + 1] == '>' || str[0][i + 1] == '<') && !spec_char)
-			ft_memmove((*str) + i, (*str) + i + 1, ft_strlen(str[0] + i));
-		if (str[0][i] == '>' && str[0][i + 1] == '>' && !spec_char)
-			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 1089, ">"));
-		else if (str[0][i] == '<' && str[0][i + 1] == '<' && !spec_char)
-			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 0, "<<"));
-		else if (str[0][i] == '>' && !spec_char)
-			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 577, ">"));
-		if (str[0][i] == '<' && !spec_char)
-			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 0, "<"));
+		ft_parse_redirect_2(str, &spec_char, i, &files);
+//		spec_char = ft_spec_char(spec_char, str[0][i]);
+//		if (str[0][i] == ' ' && (str[0][i + 1] == '>' || str[0][i + 1] == '<') && !spec_char)
+//			ft_memmove((*str) + i, (*str) + i + 1, ft_strlen(str[0] + i));
+//		if (str[0][i] == '>' && str[0][i + 1] == '>' && !spec_char)
+//			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 1089, ">"));
+//		else if (str[0][i] == '<' && str[0][i + 1] == '<' && !spec_char)
+//			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 0, "<<"));
+//		else if (str[0][i] == '>' && !spec_char)
+//			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 577, ">"));
+//		if (str[0][i] == '<' && !spec_char)
+//			ft_lstadd_back(&files, ft_parse_redir(str[0] + i, 0, "<"));
 		i++;
 	}
 	a_cmd->files = files;
