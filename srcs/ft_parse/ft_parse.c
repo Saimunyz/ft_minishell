@@ -34,18 +34,19 @@ void	clear_a_cmd(t_cmd *a_cmd, int i)
 	free(a_cmd[i].cmd);
 }
 
-void	ft_parse_command(t_cmd *a_cmd, int i, t_memory *mem)
+int	ft_parse_command(t_cmd *a_cmd, int i, t_memory *mem)
 {
 	if (a_cmd[i].cmd[0] && a_cmd[i].cmd[0][0] == '\3')
 	{
 		ft_clear_arr(a_cmd[i].cmd);
 		free(a_cmd);
-		return ;
+		return (1);
 	}
 	if (!a_cmd[i].red)
 		ft_commands(a_cmd, i, mem);
 	if (a_cmd[i].echo)
 		clear_a_cmd(a_cmd, i);
+	return (0);
 }
 
 void	ft_parse(char *line, char *home, t_memory *mem)
@@ -65,7 +66,8 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 			i++;
 			continue ;
 		}
-		ft_parse_command(a_cmd, i, mem);
+		if (ft_parse_command(a_cmd, i, mem))
+			return ;
 		i++;
 	}
 	free(a_cmd);
