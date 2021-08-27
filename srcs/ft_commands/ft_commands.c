@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void commands_close(t_cmd *a_cmd, int i)
+void	commands_close(t_cmd *a_cmd, int i)
 {
 	if (a_cmd[i].files != 0)
 	{
@@ -27,15 +27,14 @@ void commands_close(t_cmd *a_cmd, int i)
 	}
 }
 
-int commands_1(t_cmd *a_cmd, int i, t_memory *mem, char **env)
+int	commands_1(t_cmd *a_cmd, int i, t_memory *mem, char **env)
 {
-	if (i == 0 && (ft_strlen(a_cmd[0].cmd[0]) != 0 && (!ft_strncmp(a_cmd[0].cmd[0], "exit", ft_strlen(a_cmd[0].cmd[0]))
-													   ||
-													   (!ft_strncmp(a_cmd[0].cmd[0], "cd", ft_strlen(a_cmd[0].cmd[0])))
-													   || (!ft_strncmp(a_cmd[0].cmd[0], "export",
-																	   ft_strlen(a_cmd[0].cmd[0])))
-													   || (!ft_strncmp(a_cmd[0].cmd[0], "unset", ft_strlen(
-			a_cmd[0].cmd[0]))))))
+	if (i == 0 && (ft_strlen(a_cmd[0].cmd[0]) != 0 \
+		&& (!ft_strncmp(a_cmd[0].cmd[0], "exit", ft_strlen(a_cmd[0].cmd[0])) \
+		|| (!ft_strncmp(a_cmd[0].cmd[0], "cd", ft_strlen(a_cmd[0].cmd[0]))) \
+		|| (!ft_strncmp(a_cmd[0].cmd[0], "export", ft_strlen(a_cmd[0].cmd[0]))) \
+		|| \
+		(!ft_strncmp(a_cmd[0].cmd[0], "unset", ft_strlen(a_cmd[0].cmd[0]))))))
 	{
 		if (i == 0)
 		{
@@ -48,9 +47,10 @@ int commands_1(t_cmd *a_cmd, int i, t_memory *mem, char **env)
 	return (0);
 }
 
-int commands_2(t_cmd *a_cmd, int i, char **env, char **local_cmd)
+int	commands_2(t_cmd *a_cmd, int i, char **env, char **local_cmd)
 {
-	if (a_cmd[i].cmd[0] && (a_cmd[i].cmd[0][0] == '.' || a_cmd[i].cmd[0][0] == '/'))
+	if (a_cmd[i].cmd[0] && (a_cmd[i].cmd[0][0] == '.' \
+		|| a_cmd[i].cmd[0][0] == '/'))
 	{
 		*local_cmd = ft_find_local_command(a_cmd[i].cmd[0]);
 		if (!(*local_cmd))
@@ -65,19 +65,20 @@ int commands_2(t_cmd *a_cmd, int i, char **env, char **local_cmd)
 	return (0);
 }
 
-void command_cmd(t_cmd *a_cmd, int i, t_l_cmd *l_cmds)
+void	command_cmd(t_cmd *a_cmd, int i, t_l_cmd *l_cmds)
 {
-	if (!ft_getenv("PATH", (*l_cmds).mem)) //21.08.21
+	if (!ft_getenv("PATH", (*l_cmds).mem))
 		(*l_cmds).cmd = NULL;
-	else if (!a_cmd[i].cmd[0])  //Сергей 25.08.21
-		(*l_cmds).cmd = NULL;  //Сергей 25.08.21
+	else if (!a_cmd[i].cmd[0])
+		(*l_cmds).cmd = NULL;
 	else
-		(*l_cmds).cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(ft_getenv("PATH", (*l_cmds).mem), ':')); //21.08.21
+		(*l_cmds).cmd = ft_find_command(a_cmd[i].cmd[0], \
+			ft_split(ft_getenv("PATH", (*l_cmds).mem), ':'));
 }
 
-void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
+void	ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 {
-	t_l_cmd l_cmds;
+	t_l_cmd	l_cmds;
 
 	l_cmds.mem = mem;
 	l_cmds.env = ft_lst2str(mem->env);
@@ -85,9 +86,9 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	l_cmds.aur_cmd = NULL;
 	l_cmds.cmd = NULL;
 	if (commands_1(a_cmd, i, mem, l_cmds.env))
-		return;
+		return ;
 	if (commands_2(a_cmd, i, l_cmds.env, &l_cmds.local_cmd))
-		return;
+		return ;
 	if (a_cmd[i].echo)
 		l_cmds.aur_cmd = a_cmd[i].cmd[0];
 	if (!l_cmds.local_cmd && !a_cmd[i].echo && !a_cmd[i].red)
