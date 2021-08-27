@@ -255,14 +255,22 @@ void command_fork(t_cmd *a_cmd, int i, char **env, t_memory *mem, t_l_cmd l_cmds
 
 }
 
+void command_cmd(t_cmd *a_cmd, int i, t_l_cmd *l_cmds)
+{
+	if (!ft_getenv("PATH", (*l_cmds).mem)) //21.08.21
+		(*l_cmds).cmd = NULL;
+	else if (!a_cmd[i].cmd[0])  //Сергей 25.08.21
+		(*l_cmds).cmd = NULL;  //Сергей 25.08.21
+	else
+		(*l_cmds).cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(ft_getenv("PATH", (*l_cmds).mem), ':')); //21.08.21
+}
+
 void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 {
-//	char *cmd;
-//	char *local_cmd;
-//	char *aur_cmd;
 	char **env;
 	t_l_cmd	l_cmds;
 
+	l_cmds.mem = mem;
 	env = ft_lst2str(mem->env);
 	l_cmds.local_cmd = NULL;
 	l_cmds.aur_cmd = NULL;
@@ -276,17 +284,15 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	if (!l_cmds.local_cmd && !a_cmd[i].echo && !a_cmd[i].red)
 		l_cmds.aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
 	if (!l_cmds.aur_cmd && !l_cmds.local_cmd)
-	{
-		if (!ft_getenv("PATH", mem)) //21.08.21
-			l_cmds.cmd = NULL;
-		else if (!a_cmd[i].cmd[0])  //Сергей 25.08.21
-			l_cmds.cmd = NULL;  //Сергей 25.08.21
-		else
-			l_cmds.cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(ft_getenv("PATH", mem), ':')); //21.08.21
-	}
-//	l_cmds.cmd = cmd;
-//	l_cmds.local_cmd = local_cmd;
-//	l_cmds.aur_cmd = aur_cmd;
+//	{
+//		if (!ft_getenv("PATH", mem)) //21.08.21
+//			l_cmds.cmd = NULL;
+//		else if (!a_cmd[i].cmd[0])  //Сергей 25.08.21
+//			l_cmds.cmd = NULL;  //Сергей 25.08.21
+//		else
+//			l_cmds.cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(ft_getenv("PATH", mem), ':')); //21.08.21
+//	}
+	command_cmd(a_cmd, i, &l_cmds);
 	command_fork(a_cmd, i, env, mem, l_cmds);
 	if (!a_cmd[i].files)
 		ft_clear_arr(a_cmd[i].cmd);
