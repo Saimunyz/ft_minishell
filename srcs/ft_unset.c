@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static void ft_list_rem(t_list **begin_list, t_list *delete)
+static void	ft_list_rem(t_list **begin_list, t_list *delete)
 {
 	t_list	*tmp;
 
@@ -51,9 +51,10 @@ void	ft_unset(t_memory *mem, char **var)
 		{
 			if (!ft_isalpha(var[i][0]))
 			{
-				printf("minishell$: uset: '%s' not a valid identifier\n", var[i]);
+				printf("minishell$: ");
+				printf("uset: '%s' not a valid identifier\n", var[i]);
 				i++;
-				continue;
+				continue ;
 			}
 			tmp_env = ft_lstfind_struct(mem->env, var[i]);
 			tmp_var = ft_lstfind_struct(mem->var, var[i]);

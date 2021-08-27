@@ -48,8 +48,7 @@ int	ft_get_term_info(void)
 
 	if (!isatty(STDIN_FILENO))
 		return (ft_print_error(GET_DATA_ERR));
-	//term = getenv("TERM");
-	term = "xterm-256color"; // DEBUG ONLY
+	term = "xterm-256color";
 	if (term == 0)
 		return (ft_print_error(GET_DATA_ERR));
 	ret = tgetent(0, term);
