@@ -1,24 +1,5 @@
 #include "minishell.h"
 
-void	ft_print_export(t_memory *mem)
-{
-	t_list	*tmp;
-	char	*name;
-	char	*value;
-
-	tmp = ft_bubble_sort(mem->env);
-	while (tmp)
-	{
-		name = ((t_var *)tmp->content)->name;
-		value = ((t_var *)tmp->content)->value;
-		if (value)
-			printf("declare -x %s=\"%s\"\n", name, value);
-		else
-			printf("declare -x %s\n", name);
-		tmp = tmp->next;
-	}
-}
-
 void	ft_export_set(t_memory *mem, char *name, t_list *find_var)
 {
 	t_list	*find_env;
@@ -77,10 +58,18 @@ int	ft_chek_name(char *name, int *i)
 	return (0);
 }
 
+void	ft_export2(t_memory *mem, char *name, char **splt)
+{
+	t_list	*find_var;
+
+	find_var = ft_lstfind_struct(mem->var, name);
+	ft_export_set(mem, name, find_var);
+	free_text(splt, ft_maslen(splt));
+}
+
 void	ft_export(t_memory *mem, char **strs_cmd)
 {
 	char	**splt;
-	t_list	*find_var;
 	int		i;
 	char	*name;
 
@@ -88,20 +77,20 @@ void	ft_export(t_memory *mem, char **strs_cmd)
 	if (!strs_cmd[1])
 		ft_print_export(mem);
 	else
+	{
 		while (strs_cmd && strs_cmd[i])
 		{
 			name = strs_cmd[i];
 			if (ft_chek_name(name, &i))
-				continue;
+				continue ;
 			splt = ft_wise_split(strs_cmd[i]);
 			if (splt)
 			{
 				name = splt[0];
 				ft_check_var(strs_cmd[i], mem);
 			}
-			find_var = ft_lstfind_struct(mem->var, name);
-			ft_export_set(mem, name, find_var);
-			free_text(splt, ft_maslen(splt));
+			ft_export2(mem, name, splt);
 			i++;
+		}
 	}
 }

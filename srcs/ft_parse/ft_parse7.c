@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char ft_spec_char_step(char spec_char, char **line)
+char	ft_spec_char_step(char spec_char, char **line)
 {
 	if (spec_char == 0)
 	{
@@ -8,7 +8,7 @@ char ft_spec_char_step(char spec_char, char **line)
 		{
 			spec_char = **line;
 			(*line)++;
-			return spec_char;
+			return (spec_char);
 		}
 	}
 	else if (spec_char == **line)
@@ -19,12 +19,12 @@ char ft_spec_char_step(char spec_char, char **line)
 	return (spec_char);
 }
 
-char *ft_spec_char_loop(char **str)
+char	*ft_spec_char_loop(char **str)
 {
-	int i;
-	char *tmp;
-	char spec_char;
-	char *tmp_str;
+	int		i;
+	char	*tmp;
+	char	spec_char;
+	char	*tmp_str;
 
 	i = 0;
 	tmp_str = *str;
@@ -41,18 +41,18 @@ char *ft_spec_char_loop(char **str)
 	}
 	tmp[i] = '\0';
 	free(tmp_str);
-	return tmp;
+	return (tmp);
 }
 
-int ft_variables(char **strs_cmd, t_memory *mem)
+int	ft_variables(char **strs_cmd, t_memory *mem)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (strs_cmd && strs_cmd[i])
 	{
-		if (!ft_strnstr(strs_cmd[i], "=", ft_strlen(strs_cmd[i])) || strs_cmd[i][0] == '='
-			|| !ft_isalpha(strs_cmd[i][0]))
+		if (!ft_strnstr(strs_cmd[i], "=", ft_strlen(strs_cmd[i])) \
+			|| strs_cmd[i][0] == '=' || !ft_isalpha(strs_cmd[i][0]))
 			return (0);
 		i++;
 	}
@@ -63,6 +63,4 @@ int ft_variables(char **strs_cmd, t_memory *mem)
 		i++;
 	}
 	return (1);
-
 }
-

@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/27 21:29:56 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/27 21:40:15 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,5 +146,6 @@ char	*ft_find_command(char *command, char **path);
 char	*ft_find_aur_command(char *command);
 void	command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds);
 void	command_pid(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found);
+void	ft_print_export(t_memory *mem);
 
 #endif

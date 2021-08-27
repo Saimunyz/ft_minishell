@@ -1,15 +1,15 @@
 #include "minishell.h"
 
-void ft_go_end_space(char **line)
+void	ft_go_end_space(char **line)
 {
 	while (**line && **line == ' ')
 		(*line)++;
 }
 
-int ft_count_commands(char *line)
+int	ft_count_commands(char *line)
 {
-	int count;
-	char spec_char;
+	int		count;
+	char	spec_char;
 
 	spec_char = 0;
 	ft_go_end_space(&line);
@@ -29,10 +29,10 @@ int ft_count_commands(char *line)
 		else if (*line)
 			line++;
 	}
-	return count;
+	return (count);
 }
 
-void clean_a_cmd(t_cmd *a_cmd)
+void	clean_a_cmd(t_cmd *a_cmd)
 {
 	a_cmd->p_priv = 0;
 	a_cmd->p_next = 0;
@@ -40,12 +40,11 @@ void clean_a_cmd(t_cmd *a_cmd)
 	a_cmd->echo = 0;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
-void parse_strings_2(int i, char *spec_char, char ***arr_strings, char **line)
+void
+	parse_strings_2(int i, char *spec_char, char ***arr_strings, char **line)
 {
-	int j;
-	int len;
+	int	j;
+	int	len;
 
 	j = 0;
 	len = ft_str_len_space(*line) + 1;
@@ -53,13 +52,14 @@ void parse_strings_2(int i, char *spec_char, char ***arr_strings, char **line)
 	while (**line && j < len)
 	{
 		*spec_char = ft_spec_char_step(*spec_char, line);
-		if ((!(*spec_char) && (**line == 34 || **line == 39)) || (*spec_char) == **line)  //18.08.2021
-			continue;
+		if ((!(*spec_char) && (**line == 34 || **line == 39)) \
+			|| (*spec_char) == **line)
+			continue ;
 		(*arr_strings)[i][j] = **line;
 		if ((**line == ' ' || !(*line)) && !(*spec_char))
 		{
 			ft_go_end_space(line);
-			break;
+			break ;
 		}
 		j++;
 		if (**line)
@@ -68,12 +68,12 @@ void parse_strings_2(int i, char *spec_char, char ***arr_strings, char **line)
 	(*arr_strings)[i][j] = '\0';
 }
 
-char **ft_parse_strings(char *line)
+char	**ft_parse_strings(char *line)
 {
-	char **arr_strings;
-	int count_commands;
-	int i;
-	char spec_char;
+	char	**arr_strings;
+	int		count_commands;
+	int		i;
+	char	spec_char;
 
 	spec_char = 0;
 	count_commands = ft_count_commands(line);

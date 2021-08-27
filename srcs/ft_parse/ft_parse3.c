@@ -1,10 +1,10 @@
 #include "minishell.h"
 
-int ft_len_doll(char *line, t_memory *mem)
+int	ft_len_doll(char *line, t_memory *mem)
 {
-	int len;
-	int doll;
-	char *tmp;
+	int		len;
+	int		doll;
+	char	*tmp;
 
 	len = 0;
 	doll = 1;
@@ -13,10 +13,10 @@ int ft_len_doll(char *line, t_memory *mem)
 		if (*line == '$')
 		{
 			doll = 1;
-			tmp = ft_find_doll(line, mem); //Сергей 25.08.21
-			len = len + ft_strlen(tmp); //Сергей 25.08.21
+			tmp = ft_find_doll(line, mem);
+			len = len + ft_strlen(tmp);
 			if (tmp)
-				free(tmp); //Сергей 25.08.21
+				free(tmp);
 		}
 		if (doll && *line == ' ')
 			doll = 0;
@@ -27,16 +27,14 @@ int ft_len_doll(char *line, t_memory *mem)
 	return (len);
 }
 
-
-void change_doll_var(char ***line, char **str_find, char **tmp, int *j) //ref 26.08.21
+void	change_doll_var(char ***line, char **str_find, char **tmp, int *j)
 {
-	char *tmp_find;
+	char	*tmp_find;
 
-	tmp_find = *str_find; //Сергей 25.08.21
+	tmp_find = *str_find;
 	(**line)++;
-	while (**str_find ||
-		   (***line && ***line != ' ' && ***line != '$' && ***line != 39 && ***line != 34 &&
-			***line != '=')) //25.08.21
+	while (**str_find || (***line && ***line != ' ' \
+		&& ***line != '$' && ***line != 39 && ***line != 34 && ***line != '='))
 	{
 		if (**str_find)
 		{
@@ -44,36 +42,36 @@ void change_doll_var(char ***line, char **str_find, char **tmp, int *j) //ref 26
 			(*j)++;
 			(*str_find)++;
 		}
-		while (***line && ***line != ' ' && ***line != 39 && ***line != 34 && ***line != '$' &&
-			   ***line != '=')  //25.08.21
+		while (***line && ***line != ' ' && ***line != 39 && \
+			***line != 34 && ***line != '$' && ***line != '=')
 			(**line)++;
 	}
-	free(tmp_find); //Сергей 25.08.21
+	free(tmp_find);
 }
 
-void change_doll(char ***line, char **tmp, int *j, t_memory *mem) //ref 26.08.21
+void	change_doll(char ***line, char **tmp, int *j, t_memory *mem)
 {
-	char *str_find;
+	char	*str_find;
 
 	str_find = ft_find_doll(**line, mem);
 	if (!str_find)
 	{
 		(**line)++;
-		while (***line && ***line != ' ' && ***line != 39 && ***line != 34 && ***line != '$' &&
-			   ***line != '=')  //16.08.21
+		while (***line && ***line != ' ' && ***line != 39 && \
+			***line != 34 && ***line != '$' && ***line != '=')
 			(**line)++;
 	}
 	else
 		change_doll_var(line, &str_find, tmp, j);
 }
 
-
-t_cmd *ft_split_string_2(t_cmd *a_cmd, char *line, t_memory *mem, int count_strs)
+t_cmd
+	*ft_split_string_2(t_cmd *a_cmd, char *line, t_memory *mem, int count_strs)
 {
-	int i;
-	int start;
-	int end;
-	char *tmp;
+	int		i;
+	int		start;
+	int		end;
+	char	*tmp;
 
 	i = 0;
 	start = 0;
@@ -95,14 +93,14 @@ t_cmd *ft_split_string_2(t_cmd *a_cmd, char *line, t_memory *mem, int count_strs
 	return (a_cmd);
 }
 
-t_cmd *ft_split_string(char *line, t_memory *mem)
+t_cmd	*ft_split_string(char *line, t_memory *mem)
 {
-	int count_strs;
-	t_cmd *a_cmd;
+	int		count_strs;
+	t_cmd	*a_cmd;
 
 	count_strs = ft_count_strs(line);
 	if (count_strs == 0)
-		return NULL;
+		return (NULL);
 	a_cmd = (t_cmd *) malloc(sizeof(t_cmd) * (count_strs + 1));
 	ft_split_string_2(a_cmd, line, mem, count_strs);
 	return (a_cmd);
