@@ -1,11 +1,11 @@
 #include "minishell.h"
 
-char *ft_find_local_command(char *command)
+char	*ft_find_local_command(char *command)
 {
-	int st;
-	struct stat buf;
+	int			st;
+	struct stat	buf;
 
-	st = stat(command, &buf); //TODO это что и откуда?
+	st = stat(command, &buf);
 	if (st == -1)
 	{
 		errno = 0;
@@ -13,24 +13,24 @@ char *ft_find_local_command(char *command)
 	}
 	else if (!(buf.st_mode & S_IXUSR))
 	{
-		printf("%s: Permission denied\n", command); //todo перепроверить на маке
+		printf("%s: Permission denied\n", command);
 		g_error = 126;
 	}
 	else if (buf.st_mode & S_IFDIR)
 	{
-		printf("%s: Is a directory\n", command); //todo перепроверить на маке
+		printf("%s: Is a directory\n", command);
 		g_error = 0;
 	}
 	return (command);
 }
 
-char *ft_find_command(char *command, char **path)
+char	*ft_find_command(char *command, char **path)
 {
-	int st;
-	struct stat buf;
-	char *tmp_cmd;
-	char *cmd;
-	char **tmp_path;
+	int			st;
+	struct stat	buf;
+	char		*tmp_cmd;
+	char		*cmd;
+	char		**tmp_path;
 
 	tmp_path = path;
 	while (*path)
@@ -53,17 +53,17 @@ char *ft_find_command(char *command, char **path)
 	return (0);
 }
 
-void ft_command_not_found(char *cmd)
+void	ft_command_not_found(char *cmd)
 {
-	char *tmp_str;
+	char	*tmp_str;
 
 	g_error = 127;
 	tmp_str = ft_strjoin(cmd, ": command not found\n");
-	ft_putstr_fd(tmp_str, 2); //todo а в какой канал ошибку выводить? во второй?
+	ft_putstr_fd(tmp_str, 2);
 	free(tmp_str);
 }
 
-t_l_cmd command_if_l_cmd(t_cmd *a_cmd, int i, t_l_cmd l_cmds, int *not_found)
+t_l_cmd	command_if_l_cmd(t_cmd *a_cmd, int i, t_l_cmd l_cmds, int *not_found)
 {
 	if (l_cmds.cmd || l_cmds.aur_cmd || a_cmd[i].files || l_cmds.local_cmd)
 		*not_found = 0;
@@ -82,14 +82,14 @@ t_l_cmd command_if_l_cmd(t_cmd *a_cmd, int i, t_l_cmd l_cmds, int *not_found)
 		free(a_cmd[i].cmd[0]);
 		a_cmd[i].cmd[0] = l_cmds.cmd;
 	}
-	return l_cmds;
+	return (l_cmds);
 }
 
-void command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds)
+void	command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds)
 {
-	pid_t pid;
-	int status;
-	int not_found;
+	pid_t	pid;
+	int		status;
+	int		not_found;
 
 	not_found = 1;
 	l_cmds = command_if_l_cmd(a_cmd, i, l_cmds, &not_found);
@@ -103,4 +103,3 @@ void command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds)
 	if (!l_cmds.aur_cmd && !l_cmds.local_cmd && !l_cmds.cmd)
 		ft_command_not_found(a_cmd[i].cmd[0]);
 }
-
