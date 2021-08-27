@@ -86,7 +86,7 @@ typedef	struct s_l_cmd
 	char *aur_cmd;
 	char **env;
 	t_memory *mem;
-}				t_l_cmd;
+}		t_l_cmd;
 
 int		g_error;
 
@@ -133,4 +133,15 @@ void	ft_clear_arr(char **arr);
 int		ft_chek_for_equal_sign(char **strs_cmd);
 int		ft_check_symbols(char chr);
 void	commands_close(t_cmd *a_cmd, int i);
+t_cmd	*ft_split_string(char *line, t_memory *mem);
+int		ft_variables(char **strs_cmd, t_memory *mem);
+void	change_doll(char ***line, char **tmp, int *j, t_memory *mem);
+int		ft_len_doll(char *line, t_memory *mem);
+char	*ft_find_doll(char *line, t_memory *mem);
+void	clean_a_cmd(t_cmd *a_cmd);
+int		ft_find_char(char *str, int i, t_cmd *a_cmd);
+int		ft_count_strs(char *line);
+int		ft_str_len_space(char *line);
+char	ft_spec_char_step(char spec_char, char **line);
+char	*ft_spec_char_loop(char **str);
 #endif
