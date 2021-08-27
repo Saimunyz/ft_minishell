@@ -28,6 +28,9 @@
 # define GET_DATA_ERR 1
 # define COMMAND_ERR 2
 
+
+
+
 typedef	struct s_file
 {
 	char	*filename;
@@ -75,6 +78,15 @@ typedef struct s_memory
 	t_list	*env;
 	t_list	*var;
 }			t_memory;
+
+typedef	struct s_l_cmd
+{
+	char *cmd;
+	char *local_cmd;
+	char *aur_cmd;
+	char **env;
+	t_memory *mem;
+}				t_l_cmd;
 
 int		g_error;
 

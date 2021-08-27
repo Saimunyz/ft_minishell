@@ -170,10 +170,33 @@ int commands_2(t_cmd *a_cmd, int i, char **env, char **local_cmd)
 	return (0);
 }
 
-void command_fork(t_cmd *a_cmd, int i, char **env, int not_found, t_memory *mem)
+void command_fork(t_cmd *a_cmd, int i, char **env, t_memory *mem, t_l_cmd l_cmds)
 {
 	pid_t pid;
 	int status;
+	int not_found;
+
+
+	not_found = 1;
+	if (l_cmds.cmd || l_cmds.aur_cmd || a_cmd[i].files || l_cmds.local_cmd)
+		not_found = 0;
+	if (l_cmds.aur_cmd)
+	{
+		if (!a_cmd[i].files)
+		{
+			free(a_cmd[i].cmd[0]);
+			a_cmd[i].cmd[0] = l_cmds.aur_cmd;
+		}
+	}
+	else if (l_cmds.local_cmd)
+		a_cmd[i].cmd[0] = l_cmds.local_cmd;
+	else if (l_cmds.cmd)
+	{
+		free(a_cmd[i].cmd[0]);
+		a_cmd[i].cmd[0] = l_cmds.cmd;
+	}
+
+
 
 	pid = fork();
 	if (pid == 0)
@@ -219,25 +242,30 @@ void command_fork(t_cmd *a_cmd, int i, char **env, int not_found, t_memory *mem)
 			exit(0);
 		}
 	}
-
 	commands_close(a_cmd, i);
 	waitpid(pid, &status, 0);
 	if (g_error != 130 && g_error != 131 && g_error != 126)
 		g_error = WEXITSTATUS(status);
+
+
+
+
+	if (!l_cmds.aur_cmd && !l_cmds.local_cmd && !l_cmds.cmd)
+		ft_command_not_found(a_cmd[i].cmd[0]);
+
 }
 
 void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 {
-//	pid_t pid;
 	char *cmd;
 	char *local_cmd;
 	char *aur_cmd;
-//	int status;
-	int not_found;
+//	int not_found;
 	char **env;
+	t_l_cmd	l_cmds;
 
 	env = ft_lst2str(mem->env);
-	not_found = 1;
+//	not_found = 1;
 	local_cmd = NULL;
 	aur_cmd = NULL;
 	cmd = NULL;
@@ -258,75 +286,30 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 		else
 			cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(ft_getenv("PATH", mem), ':')); //21.08.21
 	}
-	if (cmd || aur_cmd || a_cmd[i].files || local_cmd)
-		not_found = 0;
-	if (aur_cmd)
-	{
-		if (!a_cmd[i].files)
-		{
-			free(a_cmd[i].cmd[0]);
-			a_cmd[i].cmd[0] = aur_cmd;
-		}
-	}
-	else if (local_cmd)
-		a_cmd[i].cmd[0] = local_cmd;
-	else if (cmd)
-	{
-		free(a_cmd[i].cmd[0]);
-		a_cmd[i].cmd[0] = cmd;
-	}
-	command_fork(a_cmd, i, env, not_found, mem);
-//	pid = fork();
-//	if (pid == 0)
+//	if (cmd || aur_cmd || a_cmd[i].files || local_cmd)
+//		not_found = 0;
+//	if (aur_cmd)
 //	{
-//		if (a_cmd[i].files)
+//		if (!a_cmd[i].files)
 //		{
-//			ft_redirect(a_cmd, mem);
-//			exit(0);
-//		}
-//		else if (a_cmd[i].p_next && a_cmd[i].p_priv)
-//		{
-//			dup2(a_cmd[i - 1].fd[0], 0);
-//			close(a_cmd[i - 1].fd[0]);
-//			close(a_cmd[i - 1].fd[1]);
-//			dup2(a_cmd[i].fd[1], 1);
-//			close(a_cmd[i].fd[0]);
-//			close(a_cmd[i].fd[1]);
-//			ft_start_commands(a_cmd[i].cmd, mem, not_found, env);
-//			exit(0);
-//		}
-//		else if (a_cmd[i].p_next)
-//		{
-//			dup2(a_cmd[i].fd[1], 1);
-//			close(a_cmd[i].fd[0]);
-//			close(a_cmd[i].fd[1]);
-//			ft_start_commands(a_cmd[i].cmd, mem, not_found, env);
-//			exit(0);
-//
-//		}
-//		else if (a_cmd[i].p_priv)
-//		{
-//			dup2(a_cmd[i - 1].fd[0], 0);
-//			close(a_cmd[i - 1].fd[0]);
-//			close(a_cmd[i - 1].fd[1]);
-//			ft_start_commands(a_cmd[i].cmd, mem, not_found, env);
-//			exit(0);
-//		}
-//		else
-//		{
-//			close(a_cmd[i].fd[0]);
-//			close(a_cmd[i].fd[1]);
-//			ft_start_commands(a_cmd[i].cmd, mem, not_found, env);
-//			exit(0);
+//			free(a_cmd[i].cmd[0]);
+//			a_cmd[i].cmd[0] = aur_cmd;
 //		}
 //	}
-//
-//	commands_close(a_cmd, i);
-//	waitpid(pid, &status, 0);
-//	if (g_error != 130 && g_error != 131 && g_error != 126)
-//		g_error = WEXITSTATUS(status);
-	if (!aur_cmd && !local_cmd && !cmd)
-		ft_command_not_found(a_cmd[i].cmd[0]);
+//	else if (local_cmd)
+//		a_cmd[i].cmd[0] = local_cmd;
+//	else if (cmd)
+//	{
+//		free(a_cmd[i].cmd[0]);
+//		a_cmd[i].cmd[0] = cmd;
+//	}
+	l_cmds.cmd = cmd;
+	l_cmds.local_cmd = local_cmd;
+	l_cmds.aur_cmd = aur_cmd;
+
+	command_fork(a_cmd, i, env, mem, l_cmds);
+//	if (!aur_cmd && !local_cmd && !cmd)
+//		ft_command_not_found(a_cmd[i].cmd[0]);
 
 	if (!a_cmd[i].files)
 		ft_clear_arr(a_cmd[i].cmd);
