@@ -127,7 +127,7 @@ t_l_cmd command_if_l_cmd(t_cmd *a_cmd, int i, t_l_cmd l_cmds, int *not_found)
 	return l_cmds;
 }
 
-void command_pid(t_cmd *a_cmd, int i, char **env, t_l_cmd *l_cmds, int not_found)
+void command_pid(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 {
 	if (a_cmd[i].files)
 	{
@@ -142,7 +142,7 @@ void command_pid(t_cmd *a_cmd, int i, char **env, t_l_cmd *l_cmds, int not_found
 		dup2(a_cmd[i].fd[1], 1);
 		close(a_cmd[i].fd[0]);
 		close(a_cmd[i].fd[1]);
-		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, env);
+		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
 		exit(0);
 	}
 	else if (a_cmd[i].p_next)
@@ -150,7 +150,7 @@ void command_pid(t_cmd *a_cmd, int i, char **env, t_l_cmd *l_cmds, int not_found
 		dup2(a_cmd[i].fd[1], 1);
 		close(a_cmd[i].fd[0]);
 		close(a_cmd[i].fd[1]);
-		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, env);
+		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
 		exit(0);
 	}
 	else if (a_cmd[i].p_priv)
@@ -158,19 +158,19 @@ void command_pid(t_cmd *a_cmd, int i, char **env, t_l_cmd *l_cmds, int not_found
 		dup2(a_cmd[i - 1].fd[0], 0);
 		close(a_cmd[i - 1].fd[0]);
 		close(a_cmd[i - 1].fd[1]);
-		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, env);
+		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
 		exit(0);
 	}
 	else
 	{
 		close(a_cmd[i].fd[0]);
 		close(a_cmd[i].fd[1]);
-		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, env);
+		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
 		exit(0);
 	}
 }
 
-void command_fork(t_cmd *a_cmd, int i, char **env, t_l_cmd l_cmds)
+void command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds)
 {
 	pid_t pid;
 	int status;
@@ -180,48 +180,7 @@ void command_fork(t_cmd *a_cmd, int i, char **env, t_l_cmd l_cmds)
 	l_cmds = command_if_l_cmd(a_cmd, i, l_cmds, &not_found);
 	pid = fork();
 	if (pid == 0)
-	{
-		command_pid(a_cmd,  i, env, &l_cmds, not_found);
-//		if (a_cmd[i].files)
-//		{
-//			ft_redirect(a_cmd, l_cmds.mem);
-//			exit(0);
-//		}
-//		else if (a_cmd[i].p_next && a_cmd[i].p_priv)
-//		{
-//			dup2(a_cmd[i - 1].fd[0], 0);
-//			close(a_cmd[i - 1].fd[0]);
-//			close(a_cmd[i - 1].fd[1]);
-//			dup2(a_cmd[i].fd[1], 1);
-//			close(a_cmd[i].fd[0]);
-//			close(a_cmd[i].fd[1]);
-//			ft_start_commands(a_cmd[i].cmd, l_cmds.mem, not_found, env);
-//			exit(0);
-//		}
-//		else if (a_cmd[i].p_next)
-//		{
-//			dup2(a_cmd[i].fd[1], 1);
-//			close(a_cmd[i].fd[0]);
-//			close(a_cmd[i].fd[1]);
-//			ft_start_commands(a_cmd[i].cmd, l_cmds.mem, not_found, env);
-//			exit(0);
-//		}
-//		else if (a_cmd[i].p_priv)
-//		{
-//			dup2(a_cmd[i - 1].fd[0], 0);
-//			close(a_cmd[i - 1].fd[0]);
-//			close(a_cmd[i - 1].fd[1]);
-//			ft_start_commands(a_cmd[i].cmd, l_cmds.mem, not_found, env);
-//			exit(0);
-//		}
-//		else
-//		{
-//			close(a_cmd[i].fd[0]);
-//			close(a_cmd[i].fd[1]);
-//			ft_start_commands(a_cmd[i].cmd, l_cmds.mem, not_found, env);
-//			exit(0);
-//		}
-	}
+		command_pid(a_cmd,  i, &l_cmds, not_found);
 	commands_close(a_cmd, i);
 	waitpid(pid, &status, 0);
 	if (g_error != 130 && g_error != 131 && g_error != 126)
@@ -314,17 +273,17 @@ void command_cmd(t_cmd *a_cmd, int i, t_l_cmd *l_cmds)
 
 void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 {
-	char **env;
+//	char **env;
 	t_l_cmd l_cmds;
 
 	l_cmds.mem = mem;
-	env = ft_lst2str(mem->env);
+	l_cmds.env = ft_lst2str(mem->env);
 	l_cmds.local_cmd = NULL;
 	l_cmds.aur_cmd = NULL;
 	l_cmds.cmd = NULL;
-	if (commands_1(a_cmd, i, mem, env))
+	if (commands_1(a_cmd, i, mem, l_cmds.env))
 		return;
-	if (commands_2(a_cmd, i, env, &l_cmds.local_cmd))
+	if (commands_2(a_cmd, i, l_cmds.env, &l_cmds.local_cmd))
 		return;
 	if (a_cmd[i].echo)
 		l_cmds.aur_cmd = a_cmd[i].cmd[0];
@@ -332,10 +291,10 @@ void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 		l_cmds.aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
 	if (!l_cmds.aur_cmd && !l_cmds.local_cmd)
 		command_cmd(a_cmd, i, &l_cmds);
-	command_fork(a_cmd, i, env, l_cmds);
+	command_fork(a_cmd, i, l_cmds);
 	if (!a_cmd[i].files)
 		ft_clear_arr(a_cmd[i].cmd);
-	ft_clear_arr(env);
+	ft_clear_arr(l_cmds.env);
 }
 
 
