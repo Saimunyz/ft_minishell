@@ -52,10 +52,11 @@ static void	ft_start_redirect(t_cmd *a_cmd, t_memory *mem)
 	a_cmd->cmd[2] = NULL;
 }
 
-void	ft_parse_redirect_2(char** str, char *spec_char, int i, t_list	**files)
+void	ft_parse_redirect_2(char **str, char *spec_char, int i, t_list	**files)
 {
 	*spec_char = ft_spec_char(*spec_char, str[0][i]);
-	if (str[0][i] == ' ' && (str[0][i + 1] == '>' || str[0][i + 1] == '<') && !(*spec_char))
+	if (str[0][i] == ' ' && (str[0][i + 1] == '>' || str[0][i + 1] == '<') \
+		&& !(*spec_char))
 		ft_memmove((*str) + i, (*str) + i + 1, ft_strlen(str[0] + i));
 	if (str[0][i] == '>' && str[0][i + 1] == '>' && !(*spec_char))
 		ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 1089, ">"));
@@ -67,11 +68,11 @@ void	ft_parse_redirect_2(char** str, char *spec_char, int i, t_list	**files)
 		ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 0, "<"));
 }
 
-void	ft_parse_redirect(char** str, t_memory *mem, t_cmd *a_cmd)
+void	ft_parse_redirect(char **str, t_memory *mem, t_cmd *a_cmd)
 {
 	t_list	*files;
 	int		i;
-	char spec_char;
+	char	spec_char;
 
 	spec_char = 0;
 	i = 0;
@@ -85,8 +86,9 @@ void	ft_parse_redirect(char** str, t_memory *mem, t_cmd *a_cmd)
 	a_cmd->cmd = ft_parse_strings(str[0]);
 	if (a_cmd->files)
 	{
-		a_cmd->red = 1; //Сергей 23.08.21
+		a_cmd->red = 1;
 		ft_start_redirect(a_cmd, mem);
-	} else
-		a_cmd->red = 0; //Сергей 23.08.21
+	}
+	else
+		a_cmd->red = 0;
 }
