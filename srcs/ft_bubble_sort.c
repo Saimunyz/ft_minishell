@@ -20,7 +20,7 @@ t_list	*ft_bubble_sort(t_list *lst)
 	while (lst_curr && lst_curr->next)
 	{
 		lst_next = lst_curr->next;
-		while(lst_next)
+		while (lst_next)
 		{
 			name_curr = ((t_var *)lst_curr->content)->name;
 			name_next = ((t_var *)lst_next->content)->name;

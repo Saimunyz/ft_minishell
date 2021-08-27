@@ -150,4 +150,5 @@ char	*ft_find_command(char *command, char **path);
 char	*ft_find_aur_command(char *command);
 void	command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds);
 void	command_pid(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found);
+void	ft_print_export(t_memory *mem);
 #endif

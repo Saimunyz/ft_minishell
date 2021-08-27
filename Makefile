@@ -32,6 +32,7 @@ CFILE =		minishell.c \
 			ft_init.c \
 			ft_env.c \
 			ft_export.c \
+			ft_export2.c \
 			ft_unset.c \
 			./ft_redirect/ft_redirect.c \
 			./ft_redirect/ft_redirect2.c \

@@ -47,7 +47,7 @@ void	ft_cd(char *path, t_memory *mem)
 
 	g_error = 0;
 	if (!path)
-		return;
+		return ;
 	ans = chdir(path);
 	if (ans < 0 || path == NULL)
 	{

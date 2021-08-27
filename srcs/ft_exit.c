@@ -9,7 +9,7 @@ static int	ft_check_exit_num(char *str)
 	i = 0;
 	if (str[0] == '-' || str[0] == '+')
 		i = 1;
-	while(str[i])
+	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
 			return (1);
