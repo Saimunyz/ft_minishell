@@ -257,60 +257,37 @@ void command_fork(t_cmd *a_cmd, int i, char **env, t_memory *mem, t_l_cmd l_cmds
 
 void ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 {
-	char *cmd;
-	char *local_cmd;
-	char *aur_cmd;
-//	int not_found;
+//	char *cmd;
+//	char *local_cmd;
+//	char *aur_cmd;
 	char **env;
 	t_l_cmd	l_cmds;
 
 	env = ft_lst2str(mem->env);
-//	not_found = 1;
-	local_cmd = NULL;
-	aur_cmd = NULL;
-	cmd = NULL;
+	l_cmds.local_cmd = NULL;
+	l_cmds.aur_cmd = NULL;
+	l_cmds.cmd = NULL;
 	if (commands_1(a_cmd, i, mem, env))
 		return;
-	if (commands_2(a_cmd, i, env, &local_cmd))
+	if (commands_2(a_cmd, i, env, &l_cmds.local_cmd))
 		return;
 	if (a_cmd[i].echo)
-		aur_cmd = a_cmd[i].cmd[0];
-	if (!local_cmd && !a_cmd[i].echo && !a_cmd[i].red)
-		aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
-	if (!aur_cmd && !local_cmd)
+		l_cmds.aur_cmd = a_cmd[i].cmd[0];
+	if (!l_cmds.local_cmd && !a_cmd[i].echo && !a_cmd[i].red)
+		l_cmds.aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
+	if (!l_cmds.aur_cmd && !l_cmds.local_cmd)
 	{
 		if (!ft_getenv("PATH", mem)) //21.08.21
-			cmd = NULL;
+			l_cmds.cmd = NULL;
 		else if (!a_cmd[i].cmd[0])  //Сергей 25.08.21
-			cmd = NULL;  //Сергей 25.08.21
+			l_cmds.cmd = NULL;  //Сергей 25.08.21
 		else
-			cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(ft_getenv("PATH", mem), ':')); //21.08.21
+			l_cmds.cmd = ft_find_command(a_cmd[i].cmd[0], ft_split(ft_getenv("PATH", mem), ':')); //21.08.21
 	}
-//	if (cmd || aur_cmd || a_cmd[i].files || local_cmd)
-//		not_found = 0;
-//	if (aur_cmd)
-//	{
-//		if (!a_cmd[i].files)
-//		{
-//			free(a_cmd[i].cmd[0]);
-//			a_cmd[i].cmd[0] = aur_cmd;
-//		}
-//	}
-//	else if (local_cmd)
-//		a_cmd[i].cmd[0] = local_cmd;
-//	else if (cmd)
-//	{
-//		free(a_cmd[i].cmd[0]);
-//		a_cmd[i].cmd[0] = cmd;
-//	}
-	l_cmds.cmd = cmd;
-	l_cmds.local_cmd = local_cmd;
-	l_cmds.aur_cmd = aur_cmd;
-
+//	l_cmds.cmd = cmd;
+//	l_cmds.local_cmd = local_cmd;
+//	l_cmds.aur_cmd = aur_cmd;
 	command_fork(a_cmd, i, env, mem, l_cmds);
-//	if (!aur_cmd && !local_cmd && !cmd)
-//		ft_command_not_found(a_cmd[i].cmd[0]);
-
 	if (!a_cmd[i].files)
 		ft_clear_arr(a_cmd[i].cmd);
 	ft_clear_arr(env);
