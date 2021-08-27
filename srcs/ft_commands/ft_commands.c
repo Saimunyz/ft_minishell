@@ -78,7 +78,7 @@ char *ft_find_command(char *command, char **path)
 		tmp_cmd = ft_strjoin(*path, "/");
 		cmd = ft_strjoin(tmp_cmd, command);
 		free(tmp_cmd);
-		st = stat(cmd, &buf); //TODO это что и откуда?
+		st = stat(cmd, &buf);
 		if (st == -1)
 			errno = 0;
 		else
@@ -102,6 +102,96 @@ void ft_command_not_found(char *cmd)
 	ft_putstr_fd(tmp_str, 2); //todo а в какой канал ошибку выводить? во второй?
 	free(tmp_str);
 }
+
+///////////////////////////////////////////////////////////////////////////////
+void com_pipe_1(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
+{
+	dup2(a_cmd[i - 1].fd[0], 0);
+	close(a_cmd[i - 1].fd[0]);
+	close(a_cmd[i - 1].fd[1]);
+	dup2(a_cmd[i].fd[1], 1);
+	close(a_cmd[i].fd[0]);
+	close(a_cmd[i].fd[1]);
+	ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
+	exit(0);
+}
+
+void com_pipe_2(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
+{
+	dup2(a_cmd[i].fd[1], 1);
+	close(a_cmd[i].fd[0]);
+	close(a_cmd[i].fd[1]);
+	ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
+	exit(0);
+}
+
+void com_pipe_3(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
+{
+	dup2(a_cmd[i - 1].fd[0], 0);
+	close(a_cmd[i - 1].fd[0]);
+	close(a_cmd[i - 1].fd[1]);
+	ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
+	exit(0);
+}
+
+void command_no_pipe(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
+{
+	close(a_cmd[i].fd[0]);
+	close(a_cmd[i].fd[1]);
+	ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
+	exit(0);
+}
+
+void command_pid(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
+{
+	if (a_cmd[i].files)
+	{
+		ft_redirect(a_cmd, (*l_cmds).mem);
+		exit(0);
+	}
+	else if (a_cmd[i].p_next && a_cmd[i].p_priv)
+		com_pipe_1(a_cmd, i, l_cmds, not_found);
+//	{
+//		dup2(a_cmd[i - 1].fd[0], 0);
+//		close(a_cmd[i - 1].fd[0]);
+//		close(a_cmd[i - 1].fd[1]);
+//		dup2(a_cmd[i].fd[1], 1);
+//		close(a_cmd[i].fd[0]);
+//		close(a_cmd[i].fd[1]);
+//		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
+//		exit(0);
+//	}
+	else if (a_cmd[i].p_next)
+		com_pipe_2(a_cmd, i, l_cmds, not_found);
+//	{
+//		dup2(a_cmd[i].fd[1], 1);
+//		close(a_cmd[i].fd[0]);
+//		close(a_cmd[i].fd[1]);
+//		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
+//		exit(0);
+//	}
+			else
+	if (a_cmd[i].p_priv)
+		com_pipe_3(a_cmd, i, l_cmds, not_found);
+//	{
+//		dup2(a_cmd[i - 1].fd[0], 0);
+//		close(a_cmd[i - 1].fd[0]);
+//		close(a_cmd[i - 1].fd[1]);
+//		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
+//		exit(0);
+//	}
+	else
+		command_no_pipe(a_cmd, i, l_cmds, not_found);
+//	{
+//		close(a_cmd[i].fd[0]);
+//		close(a_cmd[i].fd[1]);
+//		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
+//		exit(0);
+//	}
+}
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -127,49 +217,6 @@ t_l_cmd command_if_l_cmd(t_cmd *a_cmd, int i, t_l_cmd l_cmds, int *not_found)
 	return l_cmds;
 }
 
-void command_pid(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
-{
-	if (a_cmd[i].files)
-	{
-		ft_redirect(a_cmd, (*l_cmds).mem);
-		exit(0);
-	}
-	else if (a_cmd[i].p_next && a_cmd[i].p_priv)
-	{
-		dup2(a_cmd[i - 1].fd[0], 0);
-		close(a_cmd[i - 1].fd[0]);
-		close(a_cmd[i - 1].fd[1]);
-		dup2(a_cmd[i].fd[1], 1);
-		close(a_cmd[i].fd[0]);
-		close(a_cmd[i].fd[1]);
-		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
-		exit(0);
-	}
-	else if (a_cmd[i].p_next)
-	{
-		dup2(a_cmd[i].fd[1], 1);
-		close(a_cmd[i].fd[0]);
-		close(a_cmd[i].fd[1]);
-		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
-		exit(0);
-	}
-	else if (a_cmd[i].p_priv)
-	{
-		dup2(a_cmd[i - 1].fd[0], 0);
-		close(a_cmd[i - 1].fd[0]);
-		close(a_cmd[i - 1].fd[1]);
-		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
-		exit(0);
-	}
-	else
-	{
-		close(a_cmd[i].fd[0]);
-		close(a_cmd[i].fd[1]);
-		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
-		exit(0);
-	}
-}
-
 void command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds)
 {
 	pid_t pid;
@@ -180,7 +227,7 @@ void command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds)
 	l_cmds = command_if_l_cmd(a_cmd, i, l_cmds, &not_found);
 	pid = fork();
 	if (pid == 0)
-		command_pid(a_cmd,  i, &l_cmds, not_found);
+		command_pid(a_cmd, i, &l_cmds, not_found);
 	commands_close(a_cmd, i);
 	waitpid(pid, &status, 0);
 	if (g_error != 130 && g_error != 131 && g_error != 126)
@@ -258,7 +305,6 @@ int commands_2(t_cmd *a_cmd, int i, char **env, char **local_cmd)
 	}
 	return (0);
 }
-
 
 
 void command_cmd(t_cmd *a_cmd, int i, t_l_cmd *l_cmds)
