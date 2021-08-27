@@ -82,6 +82,7 @@ typedef struct s_l_cmd
 	char		*local_cmd;
 	char		*aur_cmd;
 	char		**env;
+	int 		not_found;
 	t_memory	*mem;
 }				t_l_cmd;
 

@@ -27,13 +27,13 @@ char	*ft_find_aur_command(char *command)
 	else if (!ft_strncmp(command, "echo", ft_strlen(command)) && splt_len != 0)
 		return (ft_strdup("echo"));
 	else if (!ft_strncmp(command, "cd", ft_strlen(command)) && splt_len != 0)
-		return ("cd");
+		return (ft_strdup("cd"));
 	else if (!ft_strncmp(command, "env", ft_strlen(command)) && splt_len != 0)
 		return (ft_strdup("env"));
 	else if (!ft_strncmp(command, "export", \
 		ft_strlen(command)) && splt_len != 0)
-		return ("export");
+		return (ft_strdup("export"));
 	else if (!ft_strncmp(command, "unset", ft_strlen(command)) && splt_len != 0)
-		return ("unset");
+		return (ft_strdup("unset"));
 	return (0);
 }

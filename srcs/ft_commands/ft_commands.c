@@ -36,7 +36,7 @@ int	commands_1(t_cmd *a_cmd, int i, t_memory *mem, char **env)
 		|| \
 		(!ft_strncmp(a_cmd[0].cmd[0], "unset", ft_strlen(a_cmd[0].cmd[0]))))))
 	{
-		if (i == 0)
+		if (i == 0 && !a_cmd[i].p_next && !a_cmd[i].p_priv)
 		{
 			ft_start_commands(a_cmd[i].cmd, mem, 0, env);
 			ft_clear_arr(a_cmd[i].cmd);
@@ -47,7 +47,7 @@ int	commands_1(t_cmd *a_cmd, int i, t_memory *mem, char **env)
 	return (0);
 }
 
-int	commands_2(t_cmd *a_cmd, int i, char **env, char **local_cmd)
+int	commands_2(t_cmd *a_cmd, int i, char **local_cmd, t_l_cmd *l_cmds)
 {
 	if (a_cmd[i].cmd[0] && (a_cmd[i].cmd[0][0] == '.' \
 		|| a_cmd[i].cmd[0][0] == '/'))
@@ -55,10 +55,13 @@ int	commands_2(t_cmd *a_cmd, int i, char **env, char **local_cmd)
 		*local_cmd = ft_find_local_command(a_cmd[i].cmd[0]);
 		if (!(*local_cmd))
 		{
-			ft_command_not_found(a_cmd[i].cmd[0]);
-			if (!a_cmd[i].files)
-				ft_clear_arr(a_cmd[i].cmd);
-			ft_clear_arr(env);
+			*local_cmd = a_cmd[i].cmd[0];
+			l_cmds->not_found = 1;
+			printf("%s: No such file or directory\n", a_cmd[i].cmd[0]);
+//			ft_command_not_found(a_cmd[i].cmd[0]);
+//			if (!a_cmd[i].files)
+//				ft_clear_arr(a_cmd[i].cmd);
+//			ft_clear_arr(env);
 			return (1);
 		}
 	}
@@ -80,6 +83,7 @@ void	ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 {
 	t_l_cmd	l_cmds;
 
+	l_cmds.not_found = 0;
 	l_cmds.mem = mem;
 	l_cmds.env = ft_lst2str(mem->env);
 	l_cmds.local_cmd = NULL;
@@ -88,8 +92,8 @@ void	ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	g_error = 0;
 	if (commands_1(a_cmd, i, mem, l_cmds.env))
 		return ;
-	if (commands_2(a_cmd, i, l_cmds.env, &l_cmds.local_cmd))
-		return ;
+	if (commands_2(a_cmd, i, &l_cmds.local_cmd, &l_cmds))
+//		return ;
 	if (a_cmd[i].echo)
 		l_cmds.aur_cmd = a_cmd[i].cmd[0];
 	if (!l_cmds.local_cmd && !a_cmd[i].echo && !a_cmd[i].red)

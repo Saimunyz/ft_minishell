@@ -163,8 +163,13 @@ minishell$ echo $OLDPWD
 Segmentation fault
 
 27.08.21
-ctrl c краш
--./неисполняемыйФайл  $? 126 не работает
+ctrl c краш +
+-./неисполняемыйФайл  $? 126 не работает +
+- export | grep asdf
+
+- minishell$ exit asfd
+  exit
+  minishell$: exit: asfd: numeric argument required
 
 
 

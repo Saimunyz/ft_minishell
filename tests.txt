@@ -42,6 +42,7 @@
 - asfd | grep a
 - asfd | ls
 - $?$?
+- export | grep asfd
 
 - minishell
 - exit
