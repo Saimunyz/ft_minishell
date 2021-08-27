@@ -396,6 +396,8 @@ char *ft_find_doll(char *line, t_memory *mem)
 	{
 		str_find = (char *) ((t_var *) find->content)->value; //TODO тут каст char * можно?
 		free(tmp);
+		if (!str_find)
+			return (0);
 		return (ft_strdup(str_find)); //Сергей 25.08.21 костыль для фри
 	}
 	free(tmp);
