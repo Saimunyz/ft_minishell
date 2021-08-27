@@ -49,6 +49,7 @@ void
 	j = 0;
 	len = ft_str_len_space(*line) + 1;
 	(*arr_strings)[i] = (char *) malloc(sizeof(char) * len);
+	ft_check_errno();
 	while (**line && j < len)
 	{
 		*spec_char = ft_spec_char_step(*spec_char, line);
@@ -78,6 +79,7 @@ char	**ft_parse_strings(char *line)
 	spec_char = 0;
 	count_commands = ft_count_commands(line);
 	arr_strings = (char **) malloc(sizeof(char **) * (count_commands + 1));
+	ft_check_errno();
 	ft_go_end_space(&line);
 	i = 0;
 	while (i < count_commands)

@@ -32,6 +32,7 @@ char	*ft_spec_char_loop(char **str)
 	if (!(*str))
 		return (*str);
 	tmp = (char *) malloc(sizeof(char) * (ft_strlen(*str) + 1));
+	ft_check_errno();
 	while (**str)
 	{
 		spec_char = ft_spec_char_step(spec_char, str);

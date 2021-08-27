@@ -11,6 +11,7 @@ char	**ft_lst2str(t_list *lst)
 	i = 0;
 	tmp = lst;
 	env = (char **)malloc(sizeof(char *) * (ft_lstsize(lst) + 1));
+	ft_check_errno();
 	while (tmp)
 	{
 		var = ((t_var *)tmp->content);

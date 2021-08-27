@@ -62,8 +62,6 @@ void	ft_init_read(t_hist *hist, char **line, char **lettr, char *home)
 	*lettr = (char *)ft_calloc(BUFF_SIZE, sizeof(char));
 	ft_check_errno();
 	*line = (char *)ft_calloc(1, sizeof(char));
-	if (!*line)
-		free(*lettr);
 	ft_check_errno();
 	lettr[0][0] = '\0';
 	line[0][0] = '\0';

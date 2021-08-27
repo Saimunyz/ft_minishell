@@ -60,6 +60,7 @@ void	ft_add_var(char **splt, t_memory *mem, int is_plus)
 	else if (ft_maslen(splt) == 2)
 	{
 		tmp_var = (t_var *) malloc(sizeof(t_var));
+		ft_check_errno();
 		tmp_var->name = ft_strdup(splt[0]);
 		tmp_var->value = ft_strdup(splt[1]);
 		ft_lstadd_back(&mem->var, ft_lstnew(tmp_var));

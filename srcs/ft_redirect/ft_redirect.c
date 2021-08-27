@@ -6,6 +6,7 @@ static t_list	*ft_parse_redir(char *redir, int type, char *sign)
 	char	*space;
 
 	f = malloc(sizeof(t_file));
+	ft_check_errno();
 	f->mode = type;
 	f->type = sign;
 	while (*redir == *sign)
@@ -46,6 +47,7 @@ static void	ft_start_redirect(t_cmd *a_cmd, t_memory *mem)
 		errno = 0;
 	ft_clear_arr(a_cmd->cmd);
 	a_cmd->cmd = (char **) malloc (sizeof (char **) * 3);
+	ft_check_errno();
 	a_cmd->echo = 1;
 	a_cmd->cmd[0] = ft_strdup("echo");
 	a_cmd->cmd[1] = ft_strdup("-n");

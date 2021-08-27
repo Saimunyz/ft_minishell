@@ -9,6 +9,7 @@ char	*ft_read_input(char *stop)
 	int		fd;
 
 	str = (char *)malloc(sizeof(char) * 10000);
+	ft_check_errno();
 	delim = ft_strjoin(stop, "\n");
 	line = ft_strdup("");
 	while (1)
