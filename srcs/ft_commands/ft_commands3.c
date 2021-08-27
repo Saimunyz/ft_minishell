@@ -19,7 +19,7 @@ char	*ft_find_local_command(char *command)
 	else if (buf.st_mode & S_IFDIR)
 	{
 		printf("%s: Is a directory\n", command);
-		g_error = 0;
+		g_error = 126;
 	}
 	return (command);
 }

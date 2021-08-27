@@ -85,6 +85,7 @@ void	ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	l_cmds.local_cmd = NULL;
 	l_cmds.aur_cmd = NULL;
 	l_cmds.cmd = NULL;
+	g_error = 0;
 	if (commands_1(a_cmd, i, mem, l_cmds.env))
 		return ;
 	if (commands_2(a_cmd, i, l_cmds.env, &l_cmds.local_cmd))
@@ -93,7 +94,6 @@ void	ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 		l_cmds.aur_cmd = a_cmd[i].cmd[0];
 	if (!l_cmds.local_cmd && !a_cmd[i].echo && !a_cmd[i].red)
 		l_cmds.aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
-	g_error = 0;
 	if (!l_cmds.aur_cmd && !l_cmds.local_cmd)
 		command_cmd(a_cmd, i, &l_cmds);
 	command_fork(a_cmd, i, l_cmds);
