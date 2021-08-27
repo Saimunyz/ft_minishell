@@ -127,6 +127,49 @@ t_l_cmd command_if_l_cmd(t_cmd *a_cmd, int i, t_l_cmd l_cmds, int *not_found)
 	return l_cmds;
 }
 
+void command_pid(t_cmd *a_cmd, int i, char **env, t_l_cmd *l_cmds, int not_found)
+{
+	if (a_cmd[i].files)
+	{
+		ft_redirect(a_cmd, (*l_cmds).mem);
+		exit(0);
+	}
+	else if (a_cmd[i].p_next && a_cmd[i].p_priv)
+	{
+		dup2(a_cmd[i - 1].fd[0], 0);
+		close(a_cmd[i - 1].fd[0]);
+		close(a_cmd[i - 1].fd[1]);
+		dup2(a_cmd[i].fd[1], 1);
+		close(a_cmd[i].fd[0]);
+		close(a_cmd[i].fd[1]);
+		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, env);
+		exit(0);
+	}
+	else if (a_cmd[i].p_next)
+	{
+		dup2(a_cmd[i].fd[1], 1);
+		close(a_cmd[i].fd[0]);
+		close(a_cmd[i].fd[1]);
+		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, env);
+		exit(0);
+	}
+	else if (a_cmd[i].p_priv)
+	{
+		dup2(a_cmd[i - 1].fd[0], 0);
+		close(a_cmd[i - 1].fd[0]);
+		close(a_cmd[i - 1].fd[1]);
+		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, env);
+		exit(0);
+	}
+	else
+	{
+		close(a_cmd[i].fd[0]);
+		close(a_cmd[i].fd[1]);
+		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, env);
+		exit(0);
+	}
+}
+
 void command_fork(t_cmd *a_cmd, int i, char **env, t_l_cmd l_cmds)
 {
 	pid_t pid;
@@ -135,65 +178,49 @@ void command_fork(t_cmd *a_cmd, int i, char **env, t_l_cmd l_cmds)
 
 	not_found = 1;
 	l_cmds = command_if_l_cmd(a_cmd, i, l_cmds, &not_found);
-//	if (l_cmds.cmd || l_cmds.aur_cmd || a_cmd[i].files || l_cmds.local_cmd)
-//		not_found = 0;
-//	if (l_cmds.aur_cmd)
-//	{
-//		if (!a_cmd[i].files)
-//		{
-//			free(a_cmd[i].cmd[0]);
-//			a_cmd[i].cmd[0] = l_cmds.aur_cmd;
-//		}
-//	}
-//	else if (l_cmds.local_cmd)
-//		a_cmd[i].cmd[0] = l_cmds.local_cmd;
-//	else if (l_cmds.cmd)
-//	{
-//		free(a_cmd[i].cmd[0]);
-//		a_cmd[i].cmd[0] = l_cmds.cmd;
-//	}
 	pid = fork();
 	if (pid == 0)
 	{
-		if (a_cmd[i].files)
-		{
-			ft_redirect(a_cmd, l_cmds.mem);
-			exit(0);
-		}
-		else if (a_cmd[i].p_next && a_cmd[i].p_priv)
-		{
-			dup2(a_cmd[i - 1].fd[0], 0);
-			close(a_cmd[i - 1].fd[0]);
-			close(a_cmd[i - 1].fd[1]);
-			dup2(a_cmd[i].fd[1], 1);
-			close(a_cmd[i].fd[0]);
-			close(a_cmd[i].fd[1]);
-			ft_start_commands(a_cmd[i].cmd, l_cmds.mem, not_found, env);
-			exit(0);
-		}
-		else if (a_cmd[i].p_next)
-		{
-			dup2(a_cmd[i].fd[1], 1);
-			close(a_cmd[i].fd[0]);
-			close(a_cmd[i].fd[1]);
-			ft_start_commands(a_cmd[i].cmd, l_cmds.mem, not_found, env);
-			exit(0);
-		}
-		else if (a_cmd[i].p_priv)
-		{
-			dup2(a_cmd[i - 1].fd[0], 0);
-			close(a_cmd[i - 1].fd[0]);
-			close(a_cmd[i - 1].fd[1]);
-			ft_start_commands(a_cmd[i].cmd, l_cmds.mem, not_found, env);
-			exit(0);
-		}
-		else
-		{
-			close(a_cmd[i].fd[0]);
-			close(a_cmd[i].fd[1]);
-			ft_start_commands(a_cmd[i].cmd, l_cmds.mem, not_found, env);
-			exit(0);
-		}
+		command_pid(a_cmd,  i, env, &l_cmds, not_found);
+//		if (a_cmd[i].files)
+//		{
+//			ft_redirect(a_cmd, l_cmds.mem);
+//			exit(0);
+//		}
+//		else if (a_cmd[i].p_next && a_cmd[i].p_priv)
+//		{
+//			dup2(a_cmd[i - 1].fd[0], 0);
+//			close(a_cmd[i - 1].fd[0]);
+//			close(a_cmd[i - 1].fd[1]);
+//			dup2(a_cmd[i].fd[1], 1);
+//			close(a_cmd[i].fd[0]);
+//			close(a_cmd[i].fd[1]);
+//			ft_start_commands(a_cmd[i].cmd, l_cmds.mem, not_found, env);
+//			exit(0);
+//		}
+//		else if (a_cmd[i].p_next)
+//		{
+//			dup2(a_cmd[i].fd[1], 1);
+//			close(a_cmd[i].fd[0]);
+//			close(a_cmd[i].fd[1]);
+//			ft_start_commands(a_cmd[i].cmd, l_cmds.mem, not_found, env);
+//			exit(0);
+//		}
+//		else if (a_cmd[i].p_priv)
+//		{
+//			dup2(a_cmd[i - 1].fd[0], 0);
+//			close(a_cmd[i - 1].fd[0]);
+//			close(a_cmd[i - 1].fd[1]);
+//			ft_start_commands(a_cmd[i].cmd, l_cmds.mem, not_found, env);
+//			exit(0);
+//		}
+//		else
+//		{
+//			close(a_cmd[i].fd[0]);
+//			close(a_cmd[i].fd[1]);
+//			ft_start_commands(a_cmd[i].cmd, l_cmds.mem, not_found, env);
+//			exit(0);
+//		}
 	}
 	commands_close(a_cmd, i);
 	waitpid(pid, &status, 0);
