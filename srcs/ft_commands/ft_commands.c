@@ -105,44 +105,10 @@ void ft_command_not_found(char *cmd)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-
-void commands_close(t_cmd *a_cmd, int i)
+t_l_cmd command_if_l_cmd(t_cmd *a_cmd, int i, t_l_cmd l_cmds, int *not_found)
 {
-	if (a_cmd[i].files != 0)
-	{
-	}
-	else if (a_cmd[i].p_next && a_cmd[i].p_priv)
-	{
-		close(a_cmd[i - 1].fd[0]);
-		close(a_cmd[i].fd[1]);
-	}
-	else if (a_cmd[i].p_next)
-	{
-		close(a_cmd[i].fd[1]);
-	}
-	else if (a_cmd[i].p_priv)
-	{
-		close(a_cmd[i - 1].fd[0]);
-		close(a_cmd[i].fd[0]);
-		close(a_cmd[i].fd[1]);
-	}
-	else
-	{
-		close(a_cmd[i].fd[0]);
-		close(a_cmd[i].fd[1]);
-	}
-}
-
-
-void command_fork(t_cmd *a_cmd, int i, char **env, t_l_cmd l_cmds)
-{
-	pid_t pid;
-	int status;
-	int not_found;
-
-	not_found = 1;
 	if (l_cmds.cmd || l_cmds.aur_cmd || a_cmd[i].files || l_cmds.local_cmd)
-		not_found = 0;
+		*not_found = 0;
 	if (l_cmds.aur_cmd)
 	{
 		if (!a_cmd[i].files)
@@ -158,6 +124,34 @@ void command_fork(t_cmd *a_cmd, int i, char **env, t_l_cmd l_cmds)
 		free(a_cmd[i].cmd[0]);
 		a_cmd[i].cmd[0] = l_cmds.cmd;
 	}
+	return l_cmds;
+}
+
+void command_fork(t_cmd *a_cmd, int i, char **env, t_l_cmd l_cmds)
+{
+	pid_t pid;
+	int status;
+	int not_found;
+
+	not_found = 1;
+	l_cmds = command_if_l_cmd(a_cmd, i, l_cmds, &not_found);
+//	if (l_cmds.cmd || l_cmds.aur_cmd || a_cmd[i].files || l_cmds.local_cmd)
+//		not_found = 0;
+//	if (l_cmds.aur_cmd)
+//	{
+//		if (!a_cmd[i].files)
+//		{
+//			free(a_cmd[i].cmd[0]);
+//			a_cmd[i].cmd[0] = l_cmds.aur_cmd;
+//		}
+//	}
+//	else if (l_cmds.local_cmd)
+//		a_cmd[i].cmd[0] = l_cmds.local_cmd;
+//	else if (l_cmds.cmd)
+//	{
+//		free(a_cmd[i].cmd[0]);
+//		a_cmd[i].cmd[0] = l_cmds.cmd;
+//	}
 	pid = fork();
 	if (pid == 0)
 	{
@@ -211,6 +205,35 @@ void command_fork(t_cmd *a_cmd, int i, char **env, t_l_cmd l_cmds)
 
 
 ///////////////////////////////////////////////////////////////////////////////////
+
+
+
+void commands_close(t_cmd *a_cmd, int i)
+{
+	if (a_cmd[i].files != 0)
+	{
+	}
+	else if (a_cmd[i].p_next && a_cmd[i].p_priv)
+	{
+		close(a_cmd[i - 1].fd[0]);
+		close(a_cmd[i].fd[1]);
+	}
+	else if (a_cmd[i].p_next)
+	{
+		close(a_cmd[i].fd[1]);
+	}
+	else if (a_cmd[i].p_priv)
+	{
+		close(a_cmd[i - 1].fd[0]);
+		close(a_cmd[i].fd[0]);
+		close(a_cmd[i].fd[1]);
+	}
+	else
+	{
+		close(a_cmd[i].fd[0]);
+		close(a_cmd[i].fd[1]);
+	}
+}
 
 int commands_1(t_cmd *a_cmd, int i, t_memory *mem, char **env)
 {

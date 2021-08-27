@@ -132,4 +132,5 @@ char	**ft_lst2str(t_list *lst);
 void	ft_clear_arr(char **arr);
 int		ft_chek_for_equal_sign(char **strs_cmd);
 int		ft_check_symbols(char chr);
+void	commands_close(t_cmd *a_cmd, int i);
 #endif
