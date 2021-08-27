@@ -162,5 +162,9 @@ minishell$ export OLDPWD
 minishell$ echo $OLDPWD
 Segmentation fault
 
+27.08.21
+ctrl c краш
+-./неисполняемыйФайл  $? 126 не работает
+
 
 
