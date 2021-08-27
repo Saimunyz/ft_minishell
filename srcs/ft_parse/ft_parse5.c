@@ -1,16 +1,15 @@
 #include "minishell.h"
 
-int ft_str_len_space(char *line)
+int	ft_str_len_space(char *line)
 {
-	int count;
-	char spec_char;
+	int		count;
+	char	spec_char;
 
 	count = 0;
 	spec_char = 0;
 	spec_char = ft_spec_char(spec_char, *line);
 	while (*line && (*line != ' ' || spec_char))
 	{
-
 		line++;
 		count++;
 		spec_char = ft_spec_char(spec_char, *line);
@@ -18,10 +17,10 @@ int ft_str_len_space(char *line)
 	return (count);
 }
 
-int ft_count_strs(char *line)
+int	ft_count_strs(char *line)
 {
-	int count;
-	char spec_char;
+	int		count;
+	char	spec_char;
 
 	spec_char = 0;
 	if (*line)
@@ -41,15 +40,15 @@ int ft_count_strs(char *line)
 	}
 	if (spec_char != 0)
 	{
-		printf("minishell: syntax error\n"); //TODO доделать
-		return 0;
+		printf("minishell: syntax error\n");
+		return (0);
 	}
-	return count;
+	return (count);
 }
 
-int ft_find_char(char *str, int i, t_cmd *a_cmd)
+int	ft_find_char(char *str, int i, t_cmd *a_cmd)
 {
-	char spec_char;
+	char	spec_char;
 
 	spec_char = 0;
 	if (!str)
@@ -68,45 +67,47 @@ int ft_find_char(char *str, int i, t_cmd *a_cmd)
 	return (ft_strlen(str));
 }
 
-int ft_find_space(char *str)
+int	ft_find_space(char *str)
 {
-	int i = 1;
+	int	i;
 
+	i = 1;
 	if (!str)
 		return (0);
 	while (str[i])
 	{
-		if (str[i] == ' ' || str[i] == '$' || str[i] == '"' || str[i] == 39 || str[i] == '=') //25.08.21
+		if (str[i] == ' ' || str[i] == '$' || str[i] == '"' \
+			|| str[i] == 39 || str[i] == '=')
 			return (i);
 		i++;
 	}
 	return (i);
 }
 
-char *ft_find_doll(char *line, t_memory *mem)
+char	*ft_find_doll(char *line, t_memory *mem)
 {
-	t_list *find;
-	char *str_find;
-	int end;
-	char *tmp;
+	t_list	*find;
+	char	*str_find;
+	int		end;
+	char	*tmp;
 
 	end = ft_find_space(line);
 	tmp = ft_substr(line, 0, end);
-	if (*line == 34 || *line == 39) //костыли
+	if (*line == 34 || *line == 39)
 		return (0);
 	if (end == 1 && *line == '$' && *(line + 1) == '"')
-	{//костыли для "$"
-		free(tmp); //Сергей 25.08.21
+	{
+		free(tmp);
 		return (ft_strdup("$"));
-	} // c=12
+	}
 	find = ft_lstfind_struct(mem->env, tmp + 1);
 	if (!find)
 		find = ft_lstfind_struct(mem->var, tmp + 1);
 	if (find && ((t_var *) find->content)->value)
 	{
-		str_find = (char *) ((t_var *) find->content)->value; //TODO тут каст char * можно?
+		str_find = (char *)((t_var *) find->content)->value;
 		free(tmp);
-		return (ft_strdup(str_find)); //Сергей 25.08.21 костыль для фри
+		return (ft_strdup(str_find));
 	}
 	free(tmp);
 	return (0);
