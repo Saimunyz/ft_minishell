@@ -50,6 +50,21 @@
 - exit
 - до запуска minishell - unset PATH затем ./minishell и ls +
 
+exit | grep asfd
+cd / | grep asd
+cd /
+export a=123
+export | grep a=
+unset a | grep 123
+unset a
+export | grep a=
+
+
+./hello
+./hello1
+./hello | grep h
+./hell1 | grep h
+./hell1 | grep 1
 ./ls
 - cd /bin
 - ls
