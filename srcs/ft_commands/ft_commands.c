@@ -58,10 +58,6 @@ int	commands_2(t_cmd *a_cmd, int i, char **local_cmd, t_l_cmd *l_cmds)
 			*local_cmd = a_cmd[i].cmd[0];
 			l_cmds->not_found = 1;
 			printf("%s: No such file or directory\n", a_cmd[i].cmd[0]);
-//			ft_command_not_found(a_cmd[i].cmd[0]);
-//			if (!a_cmd[i].files)
-//				ft_clear_arr(a_cmd[i].cmd);
-//			ft_clear_arr(env);
 			return (1);
 		}
 	}
@@ -93,7 +89,7 @@ void	ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	if (commands_1(a_cmd, i, mem, l_cmds.env))
 		return ;
 	if (commands_2(a_cmd, i, &l_cmds.local_cmd, &l_cmds))
-//		return ;
+		return ;
 	if (a_cmd[i].echo)
 		l_cmds.aur_cmd = a_cmd[i].cmd[0];
 	if (!l_cmds.local_cmd && !a_cmd[i].echo && !a_cmd[i].red)
