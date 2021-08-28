@@ -172,7 +172,8 @@ a=1 +
 
 sadfasdfs^C -
 
-
+!!!!!!!!
+не работает pwd и redirect (>a --> Segmentation fault)
 
 
 

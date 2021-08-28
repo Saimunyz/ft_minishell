@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:02:57 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/28 11:02:58 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/28 16:28:21 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	ft_unset(t_memory *mem, char **var)
 			if (!ft_isalpha(var[i][0]))
 			{
 				printf("minishell$: ");
-				printf("uset: '%s' not a valid identifier\n", var[i]);
+				printf("unset: '%s' not a valid identifier\n", var[i]);
 				i++;
 				continue ;
 			}
