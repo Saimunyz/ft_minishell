@@ -167,9 +167,13 @@ ctrl c краш +
 -./неисполняемыйФайл  $? 126 не работает +
 - export | grep asdf
 
-- minishell$ exit asfd
-  exit
-  minishell$: exit: asfd: numeric argument required
+28.08.21
+a=1 +
+
+sadfasdfs^C -
+
+
+
 
 
 

@@ -1,4 +1,5 @@
 - $abc
+- $abc | grep a
 - echo $abc
 - $a $b
 - echo $a $b
@@ -8,7 +9,10 @@
 - a = 1
 - a=1
 - b=2
+- abc=123 | grep a
 - abc=123
+- $abc | grep a
+- echo $abc | grep a
 - повторить верх
 
 - echo "$PATH"

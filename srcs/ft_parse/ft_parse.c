@@ -57,14 +57,15 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 	i = 0;
 	a_cmd = ft_split_string(line, mem);
 	ft_write_history(line, home);
+	g_error = 0;
 	while (a_cmd && a_cmd[i].cmd)
 	{
 		if (ft_variables(a_cmd[i].cmd, mem))
 		{
-			rm_pipe(&a_cmd, i);
 			clear_a_cmd(a_cmd, i);
-			i++;
-			continue ;
+			a_cmd[i].cmd = (char **) malloc(sizeof(char *) * 2);
+			a_cmd[i].cmd[0] = ft_strdup("");
+			a_cmd[i].cmd[1] = NULL;
 		}
 		if (ft_parse_command(a_cmd, i, mem))
 			return ;
