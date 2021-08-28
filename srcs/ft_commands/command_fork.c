@@ -112,7 +112,7 @@ void	command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds)
 	waitpid(pid, &status, 0);
 	if (g_error != 130 && g_error != 131 && g_error != 126)
 		g_error = WEXITSTATUS(status);
-	if (!l_cmds.aur_cmd && !l_cmds.local_cmd && !l_cmds.cmd \
-		&& *a_cmd[i].cmd[0] != 0)
+	if (a_cmd[i].cmd[0] && !l_cmds.aur_cmd && !l_cmds.local_cmd \
+			&& !l_cmds.cmd && a_cmd[i].cmd[0][0] != 0)
 		ft_command_not_found(a_cmd[i].cmd[0]);
 }
