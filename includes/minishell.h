@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/27 21:40:15 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/28 10:58:19 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ typedef struct s_l_cmd
 	char		*local_cmd;
 	char		*aur_cmd;
 	char		**env;
-	int 		not_found;
+	int			not_found;
 	t_memory	*mem;
 }				t_l_cmd;
 
