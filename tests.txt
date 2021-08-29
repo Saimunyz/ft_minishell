@@ -47,6 +47,10 @@
 - asfd | ls
 - $?$?
 - export | grep asfd
+- a >
+- a >>
+- cat < 1 | grep hello
+
 
 - minishell
 - exit
