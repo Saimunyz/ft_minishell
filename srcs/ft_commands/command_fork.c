@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_commands3.c                                     :+:      :+:    :+:   */
+/*   command_fork.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:03:39 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/28 11:03:39 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/29 12:42:21 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,10 @@ void	command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds)
 	l_cmds = command_if_l_cmd(a_cmd, i, l_cmds, &not_found);
 	pid = fork();
 	if (pid == 0)
+	{
+		errno = 0;
 		command_pid(a_cmd, i, &l_cmds, not_found);
+	}
 	commands_close(a_cmd, i);
 	waitpid(pid, &status, 0);
 	if (g_error != 130 && g_error != 131 && g_error != 126)
