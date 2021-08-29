@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:34 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/29 12:38:10 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/29 12:50:12 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	clear_a_cmd(t_cmd *a_cmd, int i)
 	free(a_cmd[i].cmd);
 }
 
-int	 ft_parse_command(t_cmd *a_cmd, int i, t_memory *mem)
+int	ft_parse_command(t_cmd *a_cmd, int i, t_memory *mem)
 {
 	if (a_cmd[i].cmd[0] && a_cmd[i].cmd[0][0] == '\3')
 	{

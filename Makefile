@@ -52,10 +52,10 @@ $(OBJ) : $(HEADER)
 
 $(NAME): $(LIBFT)/libft.h $(LIB_F) $(OBJ)
 		@make -C $(LIBFT)
-		gcc -g $(FLAGS) $(OBJ) $(LFLAGS) -o $(NAME)
+		gcc $(FLAGS) $(OBJ) $(LFLAGS) -o $(NAME)
 
 %.o : %.c
-		gcc -g $(FLAGS) $(ALL_INC) -c $< -o $@
+		gcc $(FLAGS) $(ALL_INC) -c $< -o $@
 
 clean:
 		@make clean -C $(LIBFT)

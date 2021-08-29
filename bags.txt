@@ -175,6 +175,13 @@ sadfasdfs^C -
 !!!!!!!!
 не работает pwd и redirect (>a --> Segmentation fault)
 
+29.08.21
+
+
+- a >>
+- cat < 1 | grep hello
+- a > | grep hello
+
 
 
 
