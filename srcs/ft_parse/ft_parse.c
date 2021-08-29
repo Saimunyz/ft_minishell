@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:34 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/29 12:50:12 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/29 18:06:18 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 	i = 0;
 	a_cmd = ft_split_string(line, mem);
 	ft_write_history(line, home);
-	g_error = 0;
 	while (a_cmd && a_cmd[i].cmd)
 	{
 		if (ft_variables(a_cmd[i].cmd, mem))
@@ -83,5 +82,7 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 			return ;
 		i++;
 	}
+	if (line && line[0] == '\0')
+		g_error = 0;
 	free(a_cmd);
 }
