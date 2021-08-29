@@ -50,6 +50,7 @@ void	clean_a_cmd(t_cmd *a_cmd)
 	a_cmd->p_next = 0;
 	a_cmd->files = 0;
 	a_cmd->echo = 0;
+	a_cmd->red_err = 0;
 }
 
 void

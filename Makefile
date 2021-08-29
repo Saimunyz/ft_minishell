@@ -17,7 +17,7 @@ CFILE =		minishell.c \
 			./ft_parse/ft_parse3.c \
 			./ft_parse/ft_parse4.c \
 			./ft_parse/ft_parse5.c \
-			./ft_parse/ft_parse6.c \
+			./ft_parse/ft_start_commands.c \
 			./ft_parse/ft_parse7.c \
 			ft_pwd.c \
 			ft_echo.c \
@@ -26,7 +26,7 @@ CFILE =		minishell.c \
 			ft_history.c \
 			ft_signals.c \
 			./ft_commands/ft_commands.c \
-			./ft_commands/ft_commands2.c \
+			./ft_commands/command_pid.c \
 			./ft_commands/command_fork.c \
 			./ft_commands/ft_commands4.c \
 			ft_init.c \
@@ -52,10 +52,10 @@ $(OBJ) : $(HEADER)
 
 $(NAME): $(LIBFT)/libft.h $(LIB_F) $(OBJ)
 		@make -C $(LIBFT)
-		gcc $(FLAGS) $(OBJ) $(LFLAGS) -o $(NAME)
+		gcc -g $(FLAGS) $(OBJ) $(LFLAGS) -o $(NAME)
 
 %.o : %.c
-		gcc $(FLAGS) $(ALL_INC) -c $< -o $@
+		gcc -g $(FLAGS) $(ALL_INC) -c $< -o $@
 
 clean:
 		@make clean -C $(LIBFT)

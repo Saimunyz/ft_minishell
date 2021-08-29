@@ -77,7 +77,7 @@ int	ft_other_redirects(t_file *file)
 	return (fd);
 }
 
-int	ft_check_filename(t_list *lst)
+int	ft_check_filename(t_list *lst, t_cmd *cmd)
 {
 	t_list	*tmp;
 	t_file	*f;
@@ -91,6 +91,7 @@ int	ft_check_filename(t_list *lst)
 		if (ft_strchr(f->filename, '<') || ft_strchr(f->filename, '>') \
 			|| len == 0)
 		{
+			cmd->red_err = 1;
 			if (f->filename && f->filename[0] == '\0')
 				printf("syntax error near unexpected token `newline'\n");
 			else
@@ -110,7 +111,7 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem)
 	char	**env;
 
 	tmp = cmd->files;
-	if (ft_check_filename(tmp))
+	if (ft_check_filename(tmp, cmd))
 		return ;
 	while (tmp)
 	{

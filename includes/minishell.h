@@ -45,6 +45,7 @@ typedef struct s_cmd
 	t_list	*files;
 	int		red;
 	int		echo;
+	int 	red_err;
 }			t_cmd;
 
 typedef struct s_var

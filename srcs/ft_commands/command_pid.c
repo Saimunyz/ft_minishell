@@ -52,7 +52,7 @@ void	command_no_pipe(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 
 void	command_pid(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 {
-	if (a_cmd[i].files)
+	if (a_cmd[i].files && !a_cmd[i].red_err)  // тут косяк при a >> | grep a
 	{
 		ft_redirect(a_cmd, (*l_cmds).mem);
 		exit(0);
