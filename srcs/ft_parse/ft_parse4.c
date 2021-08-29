@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:43 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/28 11:00:56 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/29 22:12:13 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	clean_a_cmd(t_cmd *a_cmd)
 	a_cmd->p_next = 0;
 	a_cmd->files = 0;
 	a_cmd->echo = 0;
-	a_cmd->red_err = 0;
+	a_cmd->red = 0;
 }
 
 void

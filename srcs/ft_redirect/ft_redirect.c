@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:04 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/28 11:00:25 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/29 22:20:49 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,10 @@ void	ft_parse_redirect(char **str, t_memory *mem, t_cmd *a_cmd)
 	}
 	a_cmd->files = files;
 	a_cmd->cmd = ft_parse_strings(str[0]);
+	if (a_cmd->files)
+		a_cmd->red = 1;
+	if (ft_check_filename(files))
+		return ;
 	if (a_cmd->files)
 	{
 		a_cmd->red = 1;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_commands2.c                                     :+:      :+:    :+:   */
+/*   command_pid.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:03:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/28 11:03:37 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/29 21:46:05 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	command_no_pipe(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 
 void	command_pid(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 {
-	if (a_cmd[i].files && !a_cmd[i].red_err)  // тут косяк при a >> | grep a
+	if (a_cmd[i].files)
 	{
 		ft_redirect(a_cmd, (*l_cmds).mem);
 		exit(0);

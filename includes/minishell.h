@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/28 10:58:19 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/29 21:47:17 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ typedef struct s_cmd
 	t_list	*files;
 	int		red;
 	int		echo;
-	int 	red_err;
 }			t_cmd;
 
 typedef struct s_var
@@ -149,5 +148,6 @@ char	*ft_find_aur_command(char *command);
 void	command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds);
 void	command_pid(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found);
 void	ft_print_export(t_memory *mem);
+int		ft_check_filename(t_list *lst);
 
 #endif
