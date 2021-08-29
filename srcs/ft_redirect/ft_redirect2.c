@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:09 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/28 11:00:09 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/29 12:42:14 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,10 @@ int	ft_check_filename(t_list *lst)
 		if (ft_strchr(f->filename, '<') || ft_strchr(f->filename, '>') \
 			|| len == 0)
 		{
-			printf("syntax error near unexpected token `%s'\n", f->filename);
+			if (f->filename && f->filename[0] == '\0')
+				printf("syntax error near unexpected token `newline'\n");
+			else
+				printf("syntax error near unexpected token `%s'\n", f->filename);
 			return (1);
 		}
 		tmp = tmp->next;
