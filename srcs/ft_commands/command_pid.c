@@ -54,7 +54,7 @@ void	command_pid(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 {
 	if (a_cmd[i].files && !a_cmd[i].red_err)
 	{
-		ft_redirect(a_cmd, (*l_cmds).mem);
+		ft_redirect(a_cmd, (*l_cmds).mem, (*l_cmds).env);
 		exit(0);
 	}
 	else if (a_cmd[i].p_next && a_cmd[i].p_priv)

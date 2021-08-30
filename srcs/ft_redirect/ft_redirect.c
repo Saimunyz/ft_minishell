@@ -58,12 +58,16 @@ static void	ft_start_redirect(t_cmd *a_cmd, t_memory *mem)
 	if (errno != 0)
 		errno = 0;
 	ft_clear_arr(a_cmd->cmd);
-	a_cmd->cmd = (char **) malloc (sizeof (char **) * 3);
+	a_cmd->cmd = (char **) malloc (sizeof (char **) * 2);
 	ft_check_errno();
-	a_cmd->echo = 1;
-	a_cmd->cmd[0] = ft_strdup("echo");
-	a_cmd->cmd[1] = ft_strdup("-n");
-	a_cmd->cmd[2] = NULL;
+
+	a_cmd->cmd[0] = ft_strdup("");
+	a_cmd->cmd[1] = NULL;
+
+//	a_cmd->echo = 1;
+//	a_cmd->cmd[0] = ft_strdup("echo");
+//	a_cmd->cmd[1] = ft_strdup("-n");
+//	a_cmd->cmd[2] = NULL;
 }
 
 void	ft_parse_redirect_2(char **str, char *spec_char, int i, t_list	**files)

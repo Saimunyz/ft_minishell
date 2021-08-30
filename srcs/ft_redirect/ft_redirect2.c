@@ -103,12 +103,12 @@ int	ft_check_filename(t_list *lst)
 	return (0);
 }
 
-void	ft_redirect(t_cmd *cmd, t_memory *mem)
+void	ft_redirect(t_cmd *cmd, t_memory *mem, char	**env)
 {
 	int		fd;
 	t_list	*tmp;
 	t_file	*f;
-	char	**env;
+//	char	**env;
 
 	tmp = cmd->files;
 	while (tmp)
@@ -124,8 +124,8 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem)
 		}
 		tmp = tmp->next;
 	}
-	env = ft_lst2str(mem->env);
+//	env = ft_lst2str(mem->env);
 	if (cmd->cmd[0])
 		ft_start_commands(cmd->cmd, mem, 0, env);
-	ft_clear_arr(env);
+//	ft_clear_arr(env);
 }

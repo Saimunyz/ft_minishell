@@ -54,10 +54,10 @@ int	ft_parse_command(t_cmd *a_cmd, int i, t_memory *mem)
 		free(a_cmd);
 		return (1);
 	}
-	if (!a_cmd[i].red)
+//	if (!a_cmd[i].red)
 		ft_commands(a_cmd, i, mem);
-	if (a_cmd[i].echo)
-		clear_a_cmd(a_cmd, i);
+//	if (a_cmd[i].echo)
+//		clear_a_cmd(a_cmd, i);
 	return (0);
 }
 

@@ -113,6 +113,7 @@ void	ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	if (!l_cmds.aur_cmd && !l_cmds.not_found)
 		command_cmd(a_cmd, i, &l_cmds);
 	command_fork(a_cmd, i, l_cmds);
+//	if (!a_cmd[i].files && !a_cmd[i].red)
 	if (!a_cmd[i].files)
 		ft_clear_arr(a_cmd[i].cmd);
 	ft_clear_arr(l_cmds.env);
