@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:03:39 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/29 12:42:21 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/30 14:13:44 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,13 @@ void	command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds)
 
 	not_found = 1;
 	l_cmds = command_if_l_cmd(a_cmd, i, l_cmds, &not_found);
+	if (!ft_strncmp(a_cmd->cmd[0], "./minishell", ft_strlen(a_cmd->cmd[0])))
+		ft_turn_signals(0);
 	pid = fork();
+<<<<<<< HEAD
 //	pid = 0;
+=======
+>>>>>>> 0321fb385eee5c08d0a30eb66ee5ba4914997a88
 	if (pid == 0)
 	{
 		errno = 0;
@@ -121,4 +126,5 @@ void	command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds)
 	if (a_cmd[i].cmd[0] && !l_cmds.aur_cmd && !l_cmds.local_cmd \
 			&& !l_cmds.cmd && a_cmd[i].cmd[0][0] != 0)
 		ft_command_not_found(a_cmd[i].cmd[0]);
+	ft_turn_signals(1);
 }
