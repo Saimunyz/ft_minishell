@@ -77,8 +77,8 @@ void	ft_command_not_found(char *cmd)
 
 t_l_cmd	command_if_l_cmd(t_cmd *a_cmd, int i, t_l_cmd l_cmds, int *not_found)
 {
-//	if (l_cmds.cmd || l_cmds.aur_cmd || a_cmd[i].files || l_cmds.local_cmd)
-	if (l_cmds.cmd || l_cmds.aur_cmd  || l_cmds.local_cmd) //29.08.21  зависает a >> | grep a
+	if (l_cmds.cmd || l_cmds.aur_cmd || a_cmd[i].files || l_cmds.local_cmd)
+//	if (l_cmds.cmd || l_cmds.aur_cmd  || l_cmds.local_cmd) //29.08.21  зависает a >> | grep a
 		*not_found = 0;
 	if (l_cmds.aur_cmd)
 	{
@@ -107,8 +107,8 @@ void	command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds)
 	not_found = 1;
 	l_cmds = command_if_l_cmd(a_cmd, i, l_cmds, &not_found);
 	pid = fork();
-//	pid = 0;
-	if (pid == 0)
+	pid = 0;
+//	if (pid == 0)
 	{
 		errno = 0;
 		command_pid(a_cmd, i, &l_cmds, not_found);

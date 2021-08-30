@@ -44,6 +44,7 @@ typedef struct s_cmd
 	int		original;
 	t_list	*files;
 	int		red;
+	int		red_err;
 	int		echo;
 }			t_cmd;
 
