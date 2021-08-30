@@ -110,10 +110,7 @@ void	command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds)
 	if (!ft_strncmp(a_cmd->cmd[0], "./minishell", ft_strlen(a_cmd->cmd[0])))
 		ft_turn_signals(0);
 	pid = fork();
-<<<<<<< HEAD
 //	pid = 0;
-=======
->>>>>>> 0321fb385eee5c08d0a30eb66ee5ba4914997a88
 	if (pid == 0)
 	{
 		errno = 0;
