@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:03:11 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/28 11:03:12 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/30 14:13:08 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,20 @@ char	**ft_lst2str(t_list *lst)
 	}
 	env[i] = NULL;
 	return (env);
+}
+
+void	ft_turn_signals(int on)
+{
+	if (on)
+	{
+		signal(SIGINT, ft_sig_handler);
+		signal(SIGQUIT, ft_sig_handler);
+	}
+	else
+	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
+	}
 }
 
 int	ft_check_symbols(char chr)
