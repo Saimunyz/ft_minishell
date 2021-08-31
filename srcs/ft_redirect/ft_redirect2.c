@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:09 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 17:35:19 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 17:45:46 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ int	ft_check_filename(t_list *lst)
 		if (ft_strchr(f->filename, '<') || ft_strchr(f->filename, '>') \
 			|| len == 0)
 		{
+
 			if (f->filename && f->filename[0] == '\0')
 				printf("syntax error near unexpected token `newline'\n");
 			else
@@ -144,7 +145,7 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem, char	**env, int i)
 			close(cmd[i].fd[0]);
 			close(cmd[i].fd[1]);
 		}
-		else if (cmd->p_next)
+		else if (cmd->p_next && !cmd->p_priv)
 		{
 			dup2(cmd->fd[1], 1);
 			close(cmd->fd[0]);
