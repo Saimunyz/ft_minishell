@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:09 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 16:21:29 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 16:32:31 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,8 +135,6 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem, char	**env)
 		}
 		//////
 	}
-
-
 //	env = ft_lst2str(mem->env);
 	if (cmd->cmd[0])
 		ft_start_commands(cmd->cmd, mem, 0, env);
