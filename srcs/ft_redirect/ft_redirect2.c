@@ -40,7 +40,7 @@ char	*ft_read_input(char *stop)
 	return (line);
 }
 
-void	ft_here_document(t_file *f)
+void	ft_here_document(t_file *f, t_cmd *cmd)
 {
 	int		fd;
 	char	*line;
@@ -54,9 +54,15 @@ void	ft_here_document(t_file *f)
 	dup2(orig, 1);
 	close(fd);
 	free(line);
+
 	fd = open("temporary", O_RDONLY, 0755);
 	dup2(fd, 0);
 	close(fd);
+	/////
+	dup2(cmd->fd[1], 1);
+	close(cmd->fd[0]);
+	close(cmd->fd[1]);
+	//////
 }
 
 int	ft_other_redirects(t_file *file)
@@ -115,7 +121,7 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem, char	**env)
 	{
 		f = ((t_file *) tmp->content);
 		if (!ft_strncmp(f->type, "<<", ft_strlen(f->type)))
-			ft_here_document(f);
+			ft_here_document(f, cmd);
 		else
 		{
 			fd = ft_other_redirects(f);

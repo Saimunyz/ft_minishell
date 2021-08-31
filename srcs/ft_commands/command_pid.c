@@ -32,9 +32,9 @@ void	com_pipe_1(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 
 void	com_pipe_2(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 {
-	dup2(a_cmd[i].fd[1], 1);
-	close(a_cmd[i].fd[0]);
-	close(a_cmd[i].fd[1]);
+//	dup2(a_cmd[i].fd[1], 1);
+//	close(a_cmd[i].fd[0]);
+//	close(a_cmd[i].fd[1]);
 	if (a_cmd[i].files && !a_cmd[i].red_err)
 	{
 		ft_redirect(a_cmd, (*l_cmds).mem, (*l_cmds).env);
