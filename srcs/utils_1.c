@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:03:04 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/28 11:03:06 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 23:05:09 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,14 @@ void	ft_check_errno(void)
 	if (errno != 0)
 	{
 		ft_putendl_fd(strerror(errno), 2);
+		if (errno == ENOMEM)
+		{
+			errno = 0;
+			ft_change_term_mode(0);
+			exit(1);
+		}
+		errno = 0;
 		ft_change_term_mode(0);
-		exit(1);
 	}
 }
 
