@@ -41,7 +41,6 @@ typedef struct s_cmd
 	int		p_next;
 	int		p_priv;
 	int		fd[2];
-//	int		original; //удалять?
 	t_list	*files;
 	int		red;
 	int		red_err;
@@ -54,14 +53,6 @@ typedef struct s_var
 	char	*name;
 	char	*value;
 }			t_var;
-
-//typedef struct s_pipe
-//{
-//	int		fd0; //удалять?
-//	int		fd1;
-//	int		fd[2];
-//	int		order;
-//}			t_pipe;
 
 typedef struct s_hist
 {
@@ -121,7 +112,6 @@ void	ft_unset(t_memory *mem, char **var);
 void	ft_parse_redirect(char **str, t_memory *mem, t_cmd *a_cmd);
 void	ft_redirect(t_cmd *cmd, t_memory *mem, char	**env, int i);
 t_list	*ft_bubble_sort(t_list *lst);
-//void	ft_print_varr_err(void); //удалять?
 char	**ft_parse_strings(char *line);
 void	ft_change_var(char **line, t_memory *mem);
 char	ft_spec_char(char spec_char, char line);
@@ -129,7 +119,6 @@ void	ft_sig_handler(int num);
 char	*ft_getenv(char *name, t_memory *mem);
 char	**ft_lst2str(t_list *lst);
 void	ft_clear_arr(char **arr);
-//int		ft_chek_for_equal_sign(char **strs_cmd);  //удалять?
 int		ft_check_symbols(char chr);
 void	commands_close(t_cmd *a_cmd, int i);
 t_cmd	*ft_split_string(char *line, t_memory *mem);
@@ -153,5 +142,6 @@ void	ft_print_export(t_memory *mem);
 int		ft_check_filename(t_list *lst);
 void	ft_turn_signals(int on);
 void	ft_free_file(void *file);
+void	ft_dup_pip_1(t_cmd *a_cmd, int i);
 
 #endif

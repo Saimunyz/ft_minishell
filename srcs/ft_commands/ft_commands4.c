@@ -12,6 +12,16 @@
 
 #include "minishell.h"
 
+void	ft_dup_pip_1(t_cmd *a_cmd, int i)
+{
+	dup2(a_cmd[i - 1].fd[0], 0);
+	close(a_cmd[i - 1].fd[0]);
+	close(a_cmd[i - 1].fd[1]);
+	dup2(a_cmd[i].fd[1], 1);
+	close(a_cmd[i].fd[0]);
+	close(a_cmd[i].fd[1]);
+}
+
 void	ft_clear_arr(char **arr)
 {
 	char	*tmp;
