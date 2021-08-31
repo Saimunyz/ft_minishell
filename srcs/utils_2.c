@@ -37,11 +37,11 @@ void	ft_del_line(int *len, char **line)
 	*line = NULL;
 }
 
-void	ft_print_varr_err(void)
-{
-	printf("%d: command not found\n", g_error);
-	g_error = 127;
-}
+//void	ft_print_varr_err(void) //удалять?
+//{
+//	printf("%d: command not found\n", g_error);
+//	g_error = 127;
+//}
 
 void	ft_free_content(void *content)
 {
