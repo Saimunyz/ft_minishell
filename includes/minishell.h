@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 15:33:28 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 17:19:27 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void	ft_start_commands(char **strs_cmd, t_memory *mem, int nfnd, char **env);
 char	**ft_wise_split(char *strs_cmd);
 void	ft_unset(t_memory *mem, char **var);
 void	ft_parse_redirect(char **str, t_memory *mem, t_cmd *a_cmd);
-void	ft_redirect(t_cmd *cmd, t_memory *mem, char	**env);
+void	ft_redirect(t_cmd *cmd, t_memory *mem, char	**env, int i);
 t_list	*ft_bubble_sort(t_list *lst);
 void	ft_print_varr_err(void);
 char	**ft_parse_strings(char *line);

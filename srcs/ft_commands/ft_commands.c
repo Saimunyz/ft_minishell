@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:03:34 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/29 18:45:33 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 17:29:32 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void	ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 		command_cmd(a_cmd, i, &l_cmds);
 	command_fork(a_cmd, i, l_cmds);
 //	if (!a_cmd[i].files && !a_cmd[i].red)
-	if (!a_cmd[i].files)
-		ft_clear_arr(a_cmd[i].cmd);
+	// if (!a_cmd[i].files)
+	ft_clear_arr(a_cmd[i].cmd);
 	ft_clear_arr(l_cmds.env);
 }
