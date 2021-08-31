@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:09 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 15:59:35 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 16:21:29 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*ft_read_input(char *stop)
 	return (line);
 }
 
-void	ft_here_document(t_file *f, t_cmd *cmd)
+void	ft_here_document(t_file *f)
 {
 	int		fd;
 	char	*line;
@@ -54,17 +54,6 @@ void	ft_here_document(t_file *f, t_cmd *cmd)
 	dup2(orig, 1);
 	close(fd);
 	free(line);
-	fd = open(".temporary", O_RDONLY, 0755);
-	dup2(fd, 0);
-	close(fd);
-	/////
-	if (cmd->p_next)
-	{
-		dup2(cmd->fd[1], 1);
-		close(cmd->fd[0]);
-		close(cmd->fd[1]);
-	}
-	//////
 }
 
 int	ft_other_redirects(t_file *file)
@@ -123,7 +112,7 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem, char	**env)
 	{
 		f = ((t_file *) tmp->content);
 		if (!ft_strncmp(f->type, "<<", ft_strlen(f->type)))
-			ft_here_document(f, cmd);
+			ft_here_document(f);
 		else
 		{
 			fd = ft_other_redirects(f);
@@ -132,6 +121,22 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem, char	**env)
 		}
 		tmp = tmp->next;
 	}
+	if (cmd->red_d_l)
+	{
+		fd = open(".temporary", O_RDONLY, 0755);
+		dup2(fd, 0);
+		close(fd);
+		/////
+		if (cmd->p_next)
+		{
+			dup2(cmd->fd[1], 1);
+			close(cmd->fd[0]);
+			close(cmd->fd[1]);
+		}
+		//////
+	}
+
+
 //	env = ft_lst2str(mem->env);
 	if (cmd->cmd[0])
 		ft_start_commands(cmd->cmd, mem, 0, env);
