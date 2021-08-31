@@ -71,10 +71,12 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 	ft_write_history(line, home);
 	while (a_cmd && a_cmd[i].cmd)
 	{
+		if (a_cmd[i].red_err)
+			break ; //todo возможно потечет
 		if (a_cmd[i].red)
 		{
 			i++;
-			continue;
+			continue ;
 		}
 		if (ft_variables(a_cmd[i].cmd, mem))
 		{
