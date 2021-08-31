@@ -12,6 +12,27 @@
 
 #include "minishell.h"
 
+void	ft_clear_var(t_cmd	*a_cmd, int i)
+{
+	clear_a_cmd(a_cmd, i);
+	a_cmd[i].cmd = (char **) malloc(sizeof(char *) * 2);
+	a_cmd[i].cmd[0] = ft_strdup("");
+	a_cmd[i].cmd[1] = NULL;
+}
+
+void	ft_free_parse(t_cmd	*a_cmd)
+{
+	int	i;
+
+	i = 0;
+	while (a_cmd && a_cmd[i].cmd)
+	{
+		ft_clear_arr(a_cmd[i].cmd);
+		i++;
+	}
+	free(a_cmd);
+}
+
 char	ft_spec_char_step(char spec_char, char **line)
 {
 	if (spec_char == 0)

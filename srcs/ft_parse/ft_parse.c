@@ -76,23 +76,12 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 			continue ;
 		}
 		if (ft_variables(a_cmd[i].cmd, mem))
-		{
-			clear_a_cmd(a_cmd, i);
-			a_cmd[i].cmd = (char **) malloc(sizeof(char *) * 2);
-			a_cmd[i].cmd[0] = ft_strdup("");
-			a_cmd[i].cmd[1] = NULL;
-		}
+			ft_clear_var(a_cmd, i);
 		if (ft_parse_command(a_cmd, i, mem))
 			return ;
 		i++;
 	}
 	if (line && line[0] == '\0')
 		g_error = 0;
-	i = 0;
-	while (a_cmd && a_cmd[i].cmd)
-	{
-		ft_clear_arr(a_cmd[i].cmd);
-		i++;
-	}
-	free(a_cmd);
+	ft_free_parse(a_cmd);
 }
