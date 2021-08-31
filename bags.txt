@@ -198,3 +198,6 @@ cat << | grep h
 cat < | grep a
 cat << a | cat << b
 
+minishell$ cat afdas > 1
+/usr/bin/cat: afdas: No such file or directory
+

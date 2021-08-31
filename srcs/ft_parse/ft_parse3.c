@@ -97,7 +97,6 @@ t_cmd
 		ft_change_var(&tmp, mem);
 		pipe(a_cmd[i].fd);
 		ft_parse_redirect(&tmp, mem, &(a_cmd[i]));
-//		pipe(a_cmd[i].fd);
 		free(tmp);
 		start = end + 1;
 		i++;

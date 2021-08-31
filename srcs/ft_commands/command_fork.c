@@ -110,15 +110,14 @@ void	command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds)
 	if (!ft_strncmp(a_cmd->cmd[0], "./minishell", ft_strlen(a_cmd->cmd[0])))
 		ft_turn_signals(0);
 	pid = fork();
-	// pid = 0;
 	if (pid == 0)
 	{
 		errno = 0;
 		command_pid(a_cmd, i, &l_cmds, not_found);
 	}
-//	commands_close(a_cmd, i);
-	waitpid(pid, &status, 0);
 	commands_close(a_cmd, i);
+	waitpid(pid, &status, 0);
+//	commands_close(a_cmd, i);
 	if (g_error != 130 && g_error != 131 && g_error != 126)
 		g_error = WEXITSTATUS(status);
 	if (a_cmd[i].cmd[0] && !l_cmds.aur_cmd && !l_cmds.local_cmd \

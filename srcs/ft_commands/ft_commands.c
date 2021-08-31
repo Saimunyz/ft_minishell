@@ -14,11 +14,7 @@
 
 void	commands_close(t_cmd *a_cmd, int i)
 {
-//	if (a_cmd[i].files != 0)
-//	{
-//	}
-//	else
-		if (a_cmd[i].p_next && a_cmd[i].p_priv)
+	if (a_cmd[i].p_next && a_cmd[i].p_priv)
 	{
 		close(a_cmd[i - 1].fd[0]);
 		close(a_cmd[i].fd[1]);
@@ -106,16 +102,11 @@ void	ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 		return ;
 	if (commands_2(a_cmd, i, &l_cmds.local_cmd, &l_cmds))
 		return ;
-//	if (a_cmd[i].echo)
-//	if (a_cmd[i].red)		//с этим не отрабатывает cat < 1
-//		l_cmds.aur_cmd = a_cmd[i].cmd[0];
 	if (!l_cmds.not_found && !a_cmd[i].echo && !a_cmd[i].red)
 		l_cmds.aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
 	if (!l_cmds.aur_cmd && !l_cmds.not_found)
 		command_cmd(a_cmd, i, &l_cmds);
 	command_fork(a_cmd, i, l_cmds);
-//	if (!a_cmd[i].files && !a_cmd[i].red)
-	// if (!a_cmd[i].files)
 	ft_clear_arr(a_cmd[i].cmd);
 	ft_clear_arr(l_cmds.env);
 }
