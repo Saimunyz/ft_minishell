@@ -181,6 +181,8 @@ sadfasdfs^C -
 - a >>
 - cat < 1 | grep hello
 - a > | grep hello
+cat | cat << a
+cat << | grep h
 
 
 Что делает каждый редирект

@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:09 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 15:35:15 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 15:59:35 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	ft_here_document(t_file *f, t_cmd *cmd)
 	dup2(orig, 1);
 	close(fd);
 	free(line);
-
 	fd = open(".temporary", O_RDONLY, 0755);
 	dup2(fd, 0);
 	close(fd);
