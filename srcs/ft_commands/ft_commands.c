@@ -106,8 +106,8 @@ void	ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	if (commands_2(a_cmd, i, &l_cmds.local_cmd, &l_cmds))
 		return ;
 //	if (a_cmd[i].echo)
-	if (a_cmd[i].red)
-		l_cmds.aur_cmd = a_cmd[i].cmd[0];
+//	if (a_cmd[i].red)		//с этим не отрабатывает cat < 1
+//		l_cmds.aur_cmd = a_cmd[i].cmd[0];
 	if (!l_cmds.not_found && !a_cmd[i].echo && !a_cmd[i].red)
 		l_cmds.aur_cmd = ft_find_aur_command(a_cmd[i].cmd[0]);
 	if (!l_cmds.aur_cmd && !l_cmds.not_found)
