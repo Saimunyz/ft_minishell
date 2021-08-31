@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:09 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 17:28:21 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 17:35:19 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,18 +129,27 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem, char	**env, int i)
 			close(cmd[i - 1].fd[0]);
 			close(cmd[i - 1].fd[1]);
 		}
+		else if (cmd->p_priv && cmd-> p_next)
+		{
+			dup2(cmd[i - 1].fd[0], 0);
+			close(cmd[i - 1].fd[0]);
+			close(cmd[i - 1].fd[1]);
+		}
 		fd = open(".temporary", O_RDONLY, 0755);
 		dup2(fd, 0);
 		close(fd);
-		/////
-		if (cmd->p_next)
+		if (cmd->p_priv && cmd-> p_next)
+		{
+			dup2(cmd[i].fd[1], 1);
+			close(cmd[i].fd[0]);
+			close(cmd[i].fd[1]);
+		}
+		else if (cmd->p_next)
 		{
 			dup2(cmd->fd[1], 1);
 			close(cmd->fd[0]);
 			close(cmd->fd[1]);
 		}
-
-		//////
 	}
 //	env = ft_lst2str(mem->env);
 	if (cmd->cmd[0])
