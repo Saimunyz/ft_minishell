@@ -194,7 +194,7 @@ echo a >> a - дописывает в конец файла
 
 31.08
 cat | cat << a
-cat << | grep h
+cat << | grep h течет
 cat < | grep a
 cat << a | cat << b
 

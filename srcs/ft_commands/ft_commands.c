@@ -49,7 +49,7 @@ int	commands_1(t_cmd *a_cmd, int i, t_memory *mem, char **env)
 			!ft_strncmp(a_cmd[0].cmd[0], "exit", ft_strlen(a_cmd[0].cmd[0])))
 		{
 			ft_start_commands(a_cmd[i].cmd, mem, 0, env);
-			ft_clear_arr(a_cmd[i].cmd);
+//			ft_clear_arr(a_cmd[i].cmd);
 			ft_clear_arr(env);
 			return (1);
 		}
@@ -67,7 +67,7 @@ int	commands_2(t_cmd *a_cmd, int i, char **local_cmd, t_l_cmd *l_cmds)
 		{
 			*local_cmd = a_cmd[i].cmd[0];
 			l_cmds->not_found = 1;
-			printf("%s: No such file or directory\n", a_cmd[i].cmd[0]);
+			printf("%s: No such file or directory\n", a_cmd[i].cmd[0]); //todo тут добавить другой вывод
 			return (0);
 		}
 		else
@@ -107,6 +107,9 @@ void	ft_commands(t_cmd *a_cmd, int i, t_memory *mem)
 	if (!l_cmds.aur_cmd && !l_cmds.not_found)
 		command_cmd(a_cmd, i, &l_cmds);
 	command_fork(a_cmd, i, l_cmds);
+	if (l_cmds.aur_cmd)
+		free(l_cmds.aur_cmd);
+//	if (!a_cmd[i].red)
 //	ft_clear_arr(a_cmd[i].cmd);
 	ft_clear_arr(l_cmds.env);
 }
