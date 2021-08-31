@@ -91,5 +91,12 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 	}
 	if (line && line[0] == '\0')
 		g_error = 0;
+
+	i = 0;
+	while (a_cmd && a_cmd[i].cmd)
+	{
+		ft_clear_arr(a_cmd[i].cmd);
+		i++;
+	}
 	free(a_cmd);
 }
