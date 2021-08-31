@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 17:45:52 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 20:27:37 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,5 +152,6 @@ void	command_pid(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found);
 void	ft_print_export(t_memory *mem);
 int		ft_check_filename(t_list *lst);
 void	ft_turn_signals(int on);
+void	ft_free_file(void *file);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:09 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 17:45:46 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 20:27:42 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int	ft_check_filename(t_list *lst)
 			else
 				printf("syntax error near unexpected token `%s'\n", f->filename);
 			g_error = 258;
+			ft_lstclear(&lst, ft_free_file);
 			return (1);
 		}
 		tmp = tmp->next;
