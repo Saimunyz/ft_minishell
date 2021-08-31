@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:03:39 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 16:39:46 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 20:34:23 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,18 +78,8 @@ void	ft_command_not_found(char *cmd)
 t_l_cmd	command_if_l_cmd(t_cmd *a_cmd, int i, t_l_cmd l_cmds, int *not_found)
 {
 	if (l_cmds.cmd || l_cmds.aur_cmd || a_cmd[i].files || l_cmds.local_cmd)
-//	if (l_cmds.cmd || l_cmds.aur_cmd  || l_cmds.local_cmd) //29.08.21  зависает a >> | grep a
 		*not_found = 0;
-//	if (l_cmds.aur_cmd)
-//	{
-//		if (!a_cmd[i].files)
-//		{
-//			free(a_cmd[i].cmd[0]);
-//			a_cmd[i].cmd[0] = l_cmds.aur_cmd;
-//		}
-//	}
-//	else
-		if (l_cmds.local_cmd)
+	if (l_cmds.local_cmd)
 		a_cmd[i].cmd[0] = l_cmds.local_cmd;
 	else if (l_cmds.cmd)
 	{
@@ -117,7 +107,6 @@ void	command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds)
 	}
 	commands_close(a_cmd, i);
 	waitpid(pid, &status, 0);
-//	commands_close(a_cmd, i);
 	if (g_error != 130 && g_error != 131 && g_error != 126)
 		g_error = WEXITSTATUS(status);
 	if (a_cmd[i].cmd[0] && !l_cmds.aur_cmd && !l_cmds.local_cmd \

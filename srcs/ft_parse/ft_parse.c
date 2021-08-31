@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:34 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/29 18:06:18 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 20:38:11 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,7 @@ int	ft_parse_command(t_cmd *a_cmd, int i, t_memory *mem)
 		free(a_cmd);
 		return (1);
 	}
-//	if (!a_cmd[i].red)  //todo вернул 31.08.21 Утечки!
-		ft_commands(a_cmd, i, mem);
-//	if (a_cmd[i].echo)
-//		clear_a_cmd(a_cmd, i);
+	ft_commands(a_cmd, i, mem);
 	return (0);
 }
 
@@ -72,7 +69,7 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 	while (a_cmd && a_cmd[i].cmd)
 	{
 		if (a_cmd[i].red_err)
-			break ; //todo возможно потечет
+			break ;
 		if (a_cmd[i].red)
 		{
 			i++;
@@ -91,7 +88,6 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 	}
 	if (line && line[0] == '\0')
 		g_error = 0;
-
 	i = 0;
 	while (a_cmd && a_cmd[i].cmd)
 	{

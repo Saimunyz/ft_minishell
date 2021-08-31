@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:09 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 20:27:42 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 20:40:48 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ int	ft_check_filename(t_list *lst)
 		if (ft_strchr(f->filename, '<') || ft_strchr(f->filename, '>') \
 			|| len == 0)
 		{
-
 			if (f->filename && f->filename[0] == '\0')
 				printf("syntax error near unexpected token `newline'\n");
 			else
@@ -102,12 +101,11 @@ int	ft_check_filename(t_list *lst)
 	return (0);
 }
 
-void	ft_redirect(t_cmd *cmd, t_memory *mem, char	**env, int i)
+void	ft_redirect(t_cmd *cmd, t_memory *mem, char **env, int i)
 {
 	int		fd;
 	t_list	*tmp;
 	t_file	*f;
-//	char	**env;
 
 	tmp = cmd->files;
 	while (tmp)
@@ -153,8 +151,6 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem, char	**env, int i)
 			close(cmd->fd[1]);
 		}
 	}
-//	env = ft_lst2str(mem->env);
 	if (cmd->cmd[0])
 		ft_start_commands(cmd->cmd, mem, 0, env);
-//	ft_clear_arr(env);
 }

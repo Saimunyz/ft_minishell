@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:04 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 17:46:00 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 20:39:59 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,20 +57,10 @@ static void	ft_start_redirect(t_cmd *a_cmd, t_memory *mem)
 	unlink(".temporary");
 	if (errno != 0)
 		errno = 0;
-//	ft_clear_arr(a_cmd->cmd);  //todo 31.08.21 возможно вернуть
-//	a_cmd->cmd = (char **) malloc (sizeof (char **) * 2);
-//	ft_check_errno();
-//
-//	a_cmd->cmd[0] = ft_strdup("");
-//	a_cmd->cmd[1] = NULL;
-
-//	a_cmd->echo = 1;
-//	a_cmd->cmd[0] = ft_strdup("echo");
-//	a_cmd->cmd[1] = ft_strdup("-n");
-//	a_cmd->cmd[2] = NULL;
 }
 
-void	ft_parse_redirect_2(char **str, char *spec_char, t_list	**files, t_cmd *cmd)
+void
+	ft_parse_redirect_2(char **str, char *spec_char, t_list	**files, t_cmd *cmd)
 {
 	int	i;
 
@@ -110,7 +100,7 @@ void	ft_parse_redirect(char **str, t_memory *mem, t_cmd *a_cmd)
 	{
 		a_cmd->red_err = 1;
 		a_cmd->files = NULL;
-		return;
+		return ;
 	}
 	if (a_cmd->files)
 	{
