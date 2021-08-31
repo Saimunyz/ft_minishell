@@ -36,6 +36,7 @@ CFILE =		minishell.c \
 			ft_unset.c \
 			./ft_redirect/ft_redirect.c \
 			./ft_redirect/ft_redirect2.c \
+			./ft_redirect/ft_redirect3.c \
 			ft_bubble_sort.c \
 			ft_getenv.c \
 

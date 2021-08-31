@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 20:27:37 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 21:14:28 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,5 +153,6 @@ void	ft_print_export(t_memory *mem);
 int		ft_check_filename(t_list *lst);
 void	ft_turn_signals(int on);
 void	ft_free_file(void *file);
+void	ft_left_double_redirect(t_cmd *cmd, int i);
 
 #endif

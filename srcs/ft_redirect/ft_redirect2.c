@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:09 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 20:40:48 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 21:13:31 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,35 +122,7 @@ void	ft_redirect(t_cmd *cmd, t_memory *mem, char **env, int i)
 		tmp = tmp->next;
 	}
 	if (cmd->red_d_l)
-	{
-		if (cmd->p_priv)
-		{
-			dup2(cmd[i - 1].fd[0], 0);
-			close(cmd[i - 1].fd[0]);
-			close(cmd[i - 1].fd[1]);
-		}
-		else if (cmd->p_priv && cmd-> p_next)
-		{
-			dup2(cmd[i - 1].fd[0], 0);
-			close(cmd[i - 1].fd[0]);
-			close(cmd[i - 1].fd[1]);
-		}
-		fd = open(".temporary", O_RDONLY, 0755);
-		dup2(fd, 0);
-		close(fd);
-		if (cmd->p_priv && cmd-> p_next)
-		{
-			dup2(cmd[i].fd[1], 1);
-			close(cmd[i].fd[0]);
-			close(cmd[i].fd[1]);
-		}
-		else if (cmd->p_next && !cmd->p_priv)
-		{
-			dup2(cmd->fd[1], 1);
-			close(cmd->fd[0]);
-			close(cmd->fd[1]);
-		}
-	}
+		ft_left_double_redirect(cmd, i);
 	if (cmd->cmd[0])
 		ft_start_commands(cmd->cmd, mem, 0, env);
 }
