@@ -116,8 +116,9 @@ void	command_fork(t_cmd *a_cmd, int i, t_l_cmd l_cmds)
 		errno = 0;
 		command_pid(a_cmd, i, &l_cmds, not_found);
 	}
-	commands_close(a_cmd, i);
+//	commands_close(a_cmd, i);
 	waitpid(pid, &status, 0);
+	commands_close(a_cmd, i);
 	if (g_error != 130 && g_error != 131 && g_error != 126)
 		g_error = WEXITSTATUS(status);
 	if (a_cmd[i].cmd[0] && !l_cmds.aur_cmd && !l_cmds.local_cmd \

@@ -54,7 +54,7 @@ int	ft_parse_command(t_cmd *a_cmd, int i, t_memory *mem)
 		free(a_cmd);
 		return (1);
 	}
-//	if (!a_cmd[i].red)
+//	if (!a_cmd[i].red)  //todo вернул 31.08.21 Утечки!
 		ft_commands(a_cmd, i, mem);
 //	if (a_cmd[i].echo)
 //		clear_a_cmd(a_cmd, i);
@@ -71,6 +71,11 @@ void	ft_parse(char *line, char *home, t_memory *mem)
 	ft_write_history(line, home);
 	while (a_cmd && a_cmd[i].cmd)
 	{
+		if (a_cmd[i].red)
+		{
+			i++;
+			continue;
+		}
 		if (ft_variables(a_cmd[i].cmd, mem))
 		{
 			clear_a_cmd(a_cmd, i);

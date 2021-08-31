@@ -14,10 +14,11 @@
 
 void	commands_close(t_cmd *a_cmd, int i)
 {
-	if (a_cmd[i].files != 0)
-	{
-	}
-	else if (a_cmd[i].p_next && a_cmd[i].p_priv)
+//	if (a_cmd[i].files != 0)
+//	{
+//	}
+//	else
+		if (a_cmd[i].p_next && a_cmd[i].p_priv)
 	{
 		close(a_cmd[i - 1].fd[0]);
 		close(a_cmd[i].fd[1]);

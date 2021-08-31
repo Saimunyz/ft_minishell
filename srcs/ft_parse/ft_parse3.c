@@ -95,8 +95,9 @@ t_cmd
 			a_cmd[i].p_priv = a_cmd[i - 1].p_next;
 		tmp = ft_substr(line, start, end - start);
 		ft_change_var(&tmp, mem);
-		ft_parse_redirect(&tmp, mem, &(a_cmd[i]));
 		pipe(a_cmd[i].fd);
+		ft_parse_redirect(&tmp, mem, &(a_cmd[i]));
+//		pipe(a_cmd[i].fd);
 		free(tmp);
 		start = end + 1;
 		i++;
