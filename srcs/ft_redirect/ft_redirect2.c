@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:09 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/29 21:47:41 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 15:35:15 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	ft_here_document(t_file *f, t_cmd *cmd)
 	int		orig;
 
 	line = ft_read_input(f->filename);
-	fd = open("temporary", O_WRONLY | O_CREAT, 0755);
+	fd = open(".temporary", O_WRONLY | O_CREAT, 0755);
 	orig = dup(1);
 	dup2(fd, 1);
 	ft_putstr_fd(line, 1);
@@ -55,13 +55,16 @@ void	ft_here_document(t_file *f, t_cmd *cmd)
 	close(fd);
 	free(line);
 
-	fd = open("temporary", O_RDONLY, 0755);
+	fd = open(".temporary", O_RDONLY, 0755);
 	dup2(fd, 0);
 	close(fd);
 	/////
-	dup2(cmd->fd[1], 1);
-	close(cmd->fd[0]);
-	close(cmd->fd[1]);
+	if (cmd->p_next)
+	{
+		dup2(cmd->fd[1], 1);
+		close(cmd->fd[0]);
+		close(cmd->fd[1]);
+	}
 	//////
 }
 

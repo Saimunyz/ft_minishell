@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:03:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/29 21:46:05 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 15:34:11 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,22 @@ void	com_pipe_2(t_cmd *a_cmd, int i, t_l_cmd *l_cmds, int not_found)
 //	close(a_cmd[i].fd[1]);
 	if (a_cmd[i].files && !a_cmd[i].red_err)
 	{
+		if (!a_cmd->red_d_l)
+		{
+			dup2(a_cmd[i].fd[1], 1);
+			close(a_cmd[i].fd[0]);
+			close(a_cmd[i].fd[1]);
+		}
 		ft_redirect(a_cmd, (*l_cmds).mem, (*l_cmds).env);
 		exit(0);
 	}
 	else
+	{
+		dup2(a_cmd[i].fd[1], 1);
+		close(a_cmd[i].fd[0]);
+		close(a_cmd[i].fd[1]);
 		ft_start_commands(a_cmd[i].cmd, (*l_cmds).mem, not_found, (*l_cmds).env);
+	}
 	exit(0);
 }
 

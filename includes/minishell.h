@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/30 14:13:16 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 15:33:28 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_cmd
 	int		red;
 	int		red_err;
 	int		echo;
+	int		red_d_l;
 }			t_cmd;
 
 typedef struct s_var

@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:04 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/29 22:20:49 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/08/31 15:35:51 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static void	ft_start_redirect(t_cmd *a_cmd, t_memory *mem)
 	ft_commands(a_cmd, 0, mem);
 	ft_lstclear(&a_cmd->files, ft_free_file);
 	a_cmd->files = NULL;
-	unlink("temporary");
+	unlink(".temporary");
 	if (errno != 0)
 		errno = 0;
 //	ft_clear_arr(a_cmd->cmd);  //todo 31.08.21 возможно вернуть
@@ -70,36 +70,40 @@ static void	ft_start_redirect(t_cmd *a_cmd, t_memory *mem)
 //	a_cmd->cmd[2] = NULL;
 }
 
-void	ft_parse_redirect_2(char **str, char *spec_char, int i, t_list	**files)
+void	ft_parse_redirect_2(char **str, char *spec_char, t_list	**files, t_cmd *cmd)
 {
-	*spec_char = ft_spec_char(*spec_char, str[0][i]);
-	if (str[0][i] == ' ' && (str[0][i + 1] == '>' || str[0][i + 1] == '<') \
-		&& !(*spec_char))
-		ft_memmove((*str) + i, (*str) + i + 1, ft_strlen(str[0] + i));
-	if (str[0][i] == '>' && str[0][i + 1] == '>' && !(*spec_char))
-		ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 1089, ">"));
-	else if (str[0][i] == '<' && str[0][i + 1] == '<' && !(*spec_char))
-		ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 0, "<<"));
-	else if (str[0][i] == '>' && !(*spec_char))
-		ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 577, ">"));
-	if (str[0][i] == '<' && !(*spec_char))
-		ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 0, "<"));
+	int	i;
+
+	i = 0;
+	while (str[0][i])
+	{
+		*spec_char = ft_spec_char(*spec_char, str[0][i]);
+		if (str[0][i] == ' ' && (str[0][i + 1] == '>' || str[0][i + 1] == '<') \
+			&& !(*spec_char))
+			ft_memmove((*str) + i, (*str) + i + 1, ft_strlen(str[0] + i));
+		if (str[0][i] == '>' && str[0][i + 1] == '>' && !(*spec_char))
+			ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 1089, ">"));
+		else if (str[0][i] == '<' && str[0][i + 1] == '<' && !(*spec_char))
+		{
+			ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 0, "<<"));
+			cmd->red_d_l = 1;
+		}
+		else if (str[0][i] == '>' && !(*spec_char))
+			ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 577, ">"));
+		if (str[0][i] == '<' && !(*spec_char))
+			ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 0, "<"));
+		i++;
+	}
 }
 
 void	ft_parse_redirect(char **str, t_memory *mem, t_cmd *a_cmd)
 {
 	t_list	*files;
-	int		i;
 	char	spec_char;
 
 	spec_char = 0;
-	i = 0;
 	files = NULL;
-	while (str[0][i])
-	{
-		ft_parse_redirect_2(str, &spec_char, i, &files);
-		i++;
-	}
+	ft_parse_redirect_2(str, &spec_char, &files, a_cmd);
 	a_cmd->files = files;
 	a_cmd->cmd = ft_parse_strings(str[0]);
 	if (ft_check_filename(files))
