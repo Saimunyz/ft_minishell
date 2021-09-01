@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:09 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 21:13:31 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/09/01 12:24:59 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ int	ft_other_redirects(t_file *file)
 	fd = open(file->filename, file->mode, 0755);
 	if (fd == -1)
 	{
-		printf("%s: No such file or directory\n", file->filename);
+		ft_putstr_fd("minishell$ ", 1);
+		ft_check_errno();
 		return (fd);
 	}
 	if (!ft_strncmp(file->type, ">", ft_strlen(file->type)))
