@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/10 16:10:37 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 21:17:36 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/09/01 11:52:53 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,11 @@
 # define BUFF_SIZE 10
 # define GET_DATA_ERR 1
 # define COMMAND_ERR 2
+# define R_RED_D (O_WRONLY | O_CREAT | O_APPEND)
+# define R_RED (O_WRONLY | O_CREAT | O_TRUNC)
+# define L_RED (O_RDONLY)
+
+
 
 typedef struct s_file
 {

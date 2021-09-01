@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:02:45 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/28 11:02:46 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/09/01 11:59:26 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	ft_pwd(void)
 	g_error = 0;
 	res = getcwd(NULL, 0);
 	ft_check_errno();
-	printf("%s\n", res);
+	if (res)
+		printf("%s\n", res);
 	free(res);
 }

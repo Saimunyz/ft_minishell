@@ -6,7 +6,7 @@
 /*   By: swagstaf <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/28 11:00:04 by swagstaf          #+#    #+#             */
-/*   Updated: 2021/08/31 22:16:39 by swagstaf         ###   ########.fr       */
+/*   Updated: 2021/09/01 11:55:49 by swagstaf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,16 +74,16 @@ void
 			&& !(*spc_chr))
 			ft_memmove((*str) + i, (*str) + i + 1, ft_strlen(str[0] + i));
 		if (str[0][i] == '>' && str[0][i + 1] == '>' && !(*spc_chr))
-			ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 1089, ">"));
+			ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, R_RED_D, ">"));
 		else if (str[0][i] == '<' && str[0][i + 1] == '<' && !(*spc_chr))
 		{
-			ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 0, "<<"));
+			ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, L_RED, "<<"));
 			cmd->red_d_l = 1;
 		}
 		else if (str[0][i] == '>' && !(*spc_chr))
-			ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 577, ">"));
+			ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, R_RED, ">"));
 		if (str[0][i] == '<' && !(*spc_chr))
-			ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, 0, "<"));
+			ft_lstadd_back(&(*files), ft_parse_redir(str[0] + i, L_RED, "<"));
 		i++;
 	}
 }
